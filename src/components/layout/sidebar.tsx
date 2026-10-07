@@ -144,8 +144,8 @@ export const DashboardNavigationSection = (): JSX.Element => {
           </section>
 
           <Link
-            className="flex h-10 items-center rounded bg-white px-2 text-mode-sidebar-foreground transition-colors hover:bg-slate-50"
-            href="/pmc-entry-u45-default"
+            className={linkClass("/operational/history")}
+            href="/operational/history"
           >
             <History
               className="mr-2 h-6 w-6 shrink-0"
@@ -188,20 +188,7 @@ export const DashboardNavigationSection = (): JSX.Element => {
           />
         </Button>
 
-        <Button
-          type="button"
-          variant="ghost"
-          className="h-auto w-full justify-start gap-2 rounded-none px-4 py-3 text-text-colortext-red hover:bg-red-50 hover:text-text-colortext-red"
-        >
-          <LogOut
-            className="h-6 w-6 shrink-0"
-            strokeWidth={1.5}
-          />
-
-          <span className="font-inter-sm-medium-sm text-sm font-medium leading-5">
-            Logout
-          </span>
-        </Button>
+       
       </footer>
     </aside>
   );
