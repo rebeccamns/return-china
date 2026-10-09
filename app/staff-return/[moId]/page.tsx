@@ -1,26 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import { ArrowLeft } from "lucide-react";
 
 import MobileHeader from "@/components/layout/mobile-header";
 
-import CartonList, {
-  type Carton,
-} from "./_components/CartonList";
+import CartonList, { type Carton } from "./_components/CartonList";
 
 import MaterialDetailForm from "./_components/MaterialDetailForm";
 
-import MaterialList, {
-  type Material,
-} from "./_components/MaterialList";
+import MaterialList, { type Material } from "./_components/MaterialList";
 
 import MoSummaryCard from "./_components/MoSummaryCard";
 
-type Step =
-  | "landing"
-  | "carton-list"
-  | "material-list"
-  | "material-detail";
+type Step = "landing" | "carton-list" | "material-list" | "material-detail";
 
 const MATERIAL_OPTIONS: Material[] = [
   {
@@ -59,23 +52,42 @@ export default function StaffReturnPage({
     },
   ]);
 
-  const [selectedCarton, setSelectedCarton] =
-    useState<Carton | null>(null);
+  const [selectedCarton, setSelectedCarton] = useState<Carton | null>(null);
 
-  const [completedMaterials, setCompletedMaterials] =
-    useState<Material[]>([]);
+  const [completedMaterials, setCompletedMaterials] = useState<Material[]>([]);
 
-  const [selectedMaterialCode, setSelectedMaterialCode] =
-    useState("");
+  const [selectedMaterialCode, setSelectedMaterialCode] = useState("");
 
   const selectedMaterial =
     MATERIAL_OPTIONS.find(
-      (material) =>
-        material.code === selectedMaterialCode
+      (material) => material.code === selectedMaterialCode,
     ) ?? null;
+
+  const allCartonsCompleted =
+    cartons.length > 0 &&
+    cartons.every((carton) => carton.materialCount >= carton.totalMaterials);
+
+  function handleSubmitWO() {
+    if (!allCartonsCompleted) return;
+
+    // TODO: connect to submit API / confirmation modal
+    console.log("Submit WO");
+  }
+
+  function handleRejectWO() {
+    // TODO: open reject confirmation modal
+    console.log("Reject WO");
+  }
 
   function handleCreatePackingList() {
     setStep("carton-list");
+  }
+
+  function handleBackToLanding() {
+    setSelectedCarton(null);
+    setCompletedMaterials([]);
+    setSelectedMaterialCode("");
+    setStep("landing");
   }
 
   function handleAddCarton() {
@@ -110,9 +122,7 @@ export default function StaffReturnPage({
 
   function handleMaterialComplete(material: Material) {
     setCompletedMaterials((prev) => {
-      const exists = prev.some(
-        (item) => item.code === material.code
-      );
+      const exists = prev.some((item) => item.code === material.code);
 
       if (exists) {
         return prev;
@@ -126,11 +136,10 @@ export default function StaffReturnPage({
         carton.id === selectedCarton?.id
           ? {
               ...carton,
-              materialCount:
-                carton.materialCount + 1,
+              materialCount: carton.materialCount + 1,
             }
-          : carton
-      )
+          : carton,
+      ),
     );
 
     setSelectedMaterialCode("");
@@ -143,6 +152,22 @@ export default function StaffReturnPage({
     setSelectedMaterialCode("");
     setStep("carton-list");
   }
+
+  function handleSaveCartonDetail() {
+  if (!selectedCarton) return;
+
+  if (
+    completedMaterials.length !==
+    selectedCarton.totalMaterials
+  ) {
+    return;
+  }
+
+  setSelectedCarton(null);
+  setCompletedMaterials([]);
+  setSelectedMaterialCode("");
+  setStep("carton-list");
+}
 
   return (
     <main className="relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray">
@@ -157,24 +182,39 @@ export default function StaffReturnPage({
       </section>
 
       <MobileHeader />
-<section className="relative z-10 mx-auto w-full max-w-[412px] px-4 pb-8 pt-[170px]">   
-        <h1 className="mb-4 text-[20px] font-semibold leading-[150%] text-text-colortext-black">
-          Staff Return
-        </h1>
-
+      <section className="relative z-10 mx-auto w-full max-w-[412px] px-4 pb-8 pt-[170px]">
         {/* Landing */}
         {step === "landing" && (
-          <MoSummaryCard
-            showCreateButton
-            onCreatePackingList={
-              handleCreatePackingList
-            }
-          />
+          <>
+            <h1 className="mb-4 text-[20px] font-semibold leading-[150%] text-text-colortext-black">
+              Staff Return
+            </h1>
+
+            <MoSummaryCard
+              showCreateButton
+              onCreatePackingList={handleCreatePackingList}
+            />
+          </>
         )}
 
         {/* Carton List */}
         {step === "carton-list" && (
           <>
+            <div className="mb-3 flex items-center justify-between">
+              <h1 className="text-[20px] font-semibold leading-[150%] text-text-colortext-black">
+                Staff Return
+              </h1>
+
+              <button
+                type="button"
+                onClick={handleBackToLanding}
+                className="flex h-9 items-center gap-1.5 rounded-md bg-backgroundbg-white px-3 text-sm font-medium text-slate-700 transition-colors hover:bg-backgroundbg-gray"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back
+              </button>
+            </div>
+
             <MoSummaryCard />
 
             <CartonList
@@ -182,66 +222,68 @@ export default function StaffReturnPage({
               onOpenCarton={handleOpenCarton}
               onAddCarton={handleAddCarton}
             />
+
+            {/* Bottom Actions */}
+            <div className="fixed inset-x-0 bottom-0 z-20 border-t border-strokestroke-gray bg-backgroundbg-white px-4 py-3">
+              <div className="mx-auto flex w-full max-w-[412px] gap-3">
+                <button
+                  type="button"
+                  onClick={handleRejectWO}
+                  className="h-12 flex-1 rounded-md border border-strokestroke-gray bg-backgroundbg-white px-4 text-sm font-semibold --text-colortext-red transition-colors hover:bg-backgroundbg-gray"
+                >
+                  Reject WO
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleSubmitWO}
+                  disabled={!allCartonsCompleted}
+                  className="h-12 flex-1 rounded-md bg-primaryprimary-green px-4 text-sm font-semibold text-white transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-white"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
           </>
         )}
 
         {/* Material List */}
-        {step === "material-list" &&
-          selectedCarton && (
-            <>
-              <MoSummaryCard />
+        {step === "material-list" && selectedCarton && (
+          <>
+            <MoSummaryCard />
 
-              <div className="mt-5">
-                <MaterialList
-                  cartonCode={selectedCarton.code}
-                  completedMaterials={
-                    completedMaterials
-                  }
-                  totalMaterials={
-                    selectedCarton.totalMaterials
-                  }
-                  selectedMaterialCode={
-                    selectedMaterialCode
-                  }
-                  materialOptions={
-                    MATERIAL_OPTIONS
-                  }
-                  onBack={handleBackToCartons}
-                  onSelectMaterial={
-                    handleSelectMaterial
-                  }
-                />
-              </div>
-            </>
-          )}
+            <div className="mt-5">
+              <MaterialList
+                cartonCode={selectedCarton.code}
+                completedMaterials={completedMaterials}
+                totalMaterials={selectedCarton.totalMaterials}
+                selectedMaterialCode={selectedMaterialCode}
+                materialOptions={MATERIAL_OPTIONS}
+                onBack={handleBackToCartons}
+                onSelectMaterial={handleSelectMaterial}
+                 onSaveCarton={handleSaveCartonDetail}
+              />
+            </div>
+          </>
+        )}
 
         {/* Material Detail */}
-        {step === "material-detail" &&
-          selectedCarton &&
-          selectedMaterial && (
-            <>
-              <MoSummaryCard />
+        {step === "material-detail" && selectedCarton && selectedMaterial && (
+          <>
+            <MoSummaryCard />
 
-              <div className="mt-5">
-                <MaterialDetailForm
-                  cartonCode={selectedCarton.code}
-                  material={selectedMaterial}
-                  completedCount={
-                    completedMaterials.length
-                  }
-                  totalMaterials={
-                    selectedCarton.totalMaterials
-                  }
-                  onBack={() =>
-                    setStep("material-list")
-                  }
-                  onComplete={
-                    handleMaterialComplete
-                  }
-                />
-              </div>
-            </>
-          )}
+            <div className="mt-5">
+              <MaterialDetailForm
+                cartonCode={selectedCarton.code}
+                material={selectedMaterial}
+                completedCount={completedMaterials.length}
+                totalMaterials={selectedCarton.totalMaterials}
+                onBack={() => setStep("material-list")}
+                onComplete={handleMaterialComplete}
+              />
+            </div>
+          </>
+        )}
       </section>
     </main>
   );

@@ -27,7 +27,7 @@ export default function MoSummaryCard({
               {mo.code}
             </h2>
 
-            <p className="mt-1 text-[12px] font-medium leading-[125%] text-text-colortext-gray">
+            <p className="mt-1 text-[14px] font-medium leading-[125%] text-text-colortext-gray">
               Submitted at {mo.submittedAt}
             </p>
           </div>
@@ -66,7 +66,7 @@ export default function MoSummaryCard({
             </span>
           </div>
 
-          <div className="h-px w-full bg-strokestroke-gray" />
+          
 
           {showCreateButton && (
             <Button

@@ -1,4 +1,4 @@
-import { ChevronRight, Package, Plus } from "lucide-react";
+import { ChevronRight, Package, Plus, Check} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -73,37 +73,51 @@ export default function CartonList({
 
       {/* Carton list */}
       <div className="mt-5 flex flex-col gap-3">
-        {cartons.map((carton) => (
-          <button
-            key={carton.id}
-            type="button"
-            onClick={() => onOpenCarton(carton)}
-            className="flex w-full items-center gap-4 rounded-lg border border-strokestroke-gray bg-backgroundbg-white p-4 text-left transition-colors hover:bg-backgroundbg-gray"
-          >
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-slate-50">
-              <Package
-                className="h-6 w-6 text-[#929292]"
-                strokeWidth={1.5}
-              />
-            </div>
+  {cartons.map((carton) => {
+    const isComplete =
+      carton.materialCount >= carton.totalMaterials;
 
-            <div className="min-w-0 flex-1">
-              <p className="text-[16px] font-semibold leading-[125%] text-text-colortext-black">
-                {carton.code}
-              </p>
+    return (
+      <button
+        key={carton.id}
+        type="button"
+        onClick={() => onOpenCarton(carton)}
+        className="flex w-full items-center gap-4 rounded-lg border border-strokestroke-gray bg-backgroundbg-white p-4 text-left transition-colors hover:bg-backgroundbg-gray"
+      >
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-slate-50">
+          <Package
+            className="h-6 w-6 text-[#929292]"
+            strokeWidth={1.5}
+          />
+        </div>
 
-              <p className="mt-1 text-[14px] leading-[125%] text-text-colortext-gray">
-                {carton.materialCount}/{carton.totalMaterials} Material
-              </p>
-            </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-[16px] font-semibold leading-[125%] text-text-colortext-black">
+            {carton.code}
+          </p>
 
-            <ChevronRight
-              className="h-5 w-5 shrink-0 text-text-colortext-dark"
-              strokeWidth={1.8}
+          <p className="mt-1 text-[14px] leading-[125%] text-text-colortext-gray">
+            {carton.materialCount}/{carton.totalMaterials} Material
+          </p>
+        </div>
+
+        {isComplete && (
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#e7f5ed]">
+            <Check
+              className="h-5 w-5 text-primaryprimary-green"
+              strokeWidth={2.5}
             />
-          </button>
-        ))}
-      </div>
+          </div>
+        )}
+
+        <ChevronRight
+          className="h-5 w-5 shrink-0 text-text-colortext-dark"
+          strokeWidth={1.8}
+        />
+      </button>
+    );
+  })}
+</div>
     </section>
   );
 }

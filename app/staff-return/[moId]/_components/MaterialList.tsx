@@ -1,4 +1,13 @@
-import { ArrowLeft, ChevronDown, ChevronRight } from "lucide-react";
+"use client";
+
+import { ArrowLeft, ChevronRight } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export type Material = {
   id: string;
@@ -15,6 +24,7 @@ type MaterialListProps = {
   materialOptions: Material[];
   onBack: () => void;
   onSelectMaterial: (code: string) => void;
+  onSaveCarton: () => void;
 };
 
 export default function MaterialList({
@@ -25,112 +35,121 @@ export default function MaterialList({
   materialOptions,
   onBack,
   onSelectMaterial,
+  onSaveCarton,
 }: MaterialListProps) {
-  const remainingMaterials = materialOptions.filter(
-    (material) =>
-      !completedMaterials.some(
-        (completed) => completed.code === material.code
-      )
+  const completedCodes = new Set(
+    completedMaterials.map((m) => m.code)
   );
 
+  const isCartonComplete =
+    completedMaterials.length === totalMaterials;
+
   return (
-    <section className="w-full overflow-hidden rounded-lg border border-strokestroke-gray bg-backgroundbg-white">
+    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-strokestroke-gray px-4 py-4">
-        <div className="flex items-center gap-4">
-          <button
-            type="button"
-            onClick={onBack}
-            className="flex h-7 w-7 items-center justify-center"
-            aria-label="Back to carton list"
-          >
-            <ArrowLeft
-              className="h-5 w-5 text-text-colortext-dark"
-              strokeWidth={2}
-            />
-          </button>
+      <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3.5">
+        <button
+          type="button"
+          onClick={onBack}
+          className="flex items-center gap-3 text-base font-semibold text-slate-900"
+          aria-label="Back to cartons"
+        >
+          <ArrowLeft className="h-4 w-4 text-slate-700" />
+          {cartonCode}
+        </button>
 
-          <span className="text-[16px] font-semibold leading-[150%] text-text-colortext-black">
-            {cartonCode}
-          </span>
-        </div>
-
-        <span className="text-[14px] font-medium leading-[125%] text-text-colortext-gray">
+        <span className="text-sm text-slate-500">
           {completedMaterials.length}/{totalMaterials} Material
         </span>
       </div>
 
-      <div className="p-4">
-        {/* Completed materials */}
-        {completedMaterials.length > 0 && (
-          <div className="flex flex-col gap-3">
-            {completedMaterials.map((material, index) => (
-              <button
-                key={material.id}
-                type="button"
-                className="flex w-full items-center gap-4 rounded-md border border-strokestroke-gray bg-backgroundbg-white p-4 text-left"
-              >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#E7F8ED] text-[14px] font-medium text-[#006B3C]">
-                  {index + 1}
-                </span>
+      <div className="space-y-3 p-4">
+        {/* Materials already added to this carton */}
+        {completedMaterials.map((material, index) => (
+          <div
+            key={material.code}
+            className="flex items-center gap-3 rounded-lg border border-slate-200 px-3 py-3"
+          >
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e6f4ea] text-sm font-medium text-[#0b5934]">
+              {index + 1}
+            </span>
 
-                <div className="min-w-0 flex-1">
-                  <p className="text-[16px] font-semibold leading-[125%] text-text-colortext-black">
-                    {material.code}
-                  </p>
+            <div className="min-w-0 flex-1">
+              <div className="text-base font-semibold text-slate-900">
+                {material.code}
+              </div>
 
-                  <p className="mt-1 text-[14px] font-medium leading-[125%] text-text-colortext-dark">
-                    {material.englishName} {material.chinaName}
-                  </p>
-                </div>
+              <div className="truncate text-sm text-slate-600">
+                {material.englishName}{" "}
+                {material.chinaName}
+              </div>
+            </div>
 
-                <ChevronRight
-                  className="h-5 w-5 shrink-0 text-text-colortext-gray"
-                  strokeWidth={1.8}
-                />
-              </button>
-            ))}
+            <ChevronRight className="h-4 w-4 shrink-0 text-slate-400" />
           </div>
+        ))}
+
+        {/* Material code picker */}
+        {!isCartonComplete && (
+          <>
+            <div className="space-y-2 pt-1">
+              <label className="block text-sm text-slate-500">
+                Material Code
+              </label>
+
+              <Select
+                value={selectedMaterialCode}
+                onValueChange={onSelectMaterial}
+              >
+                <SelectTrigger className="h-12 w-full rounded-lg border-strokestroke-gray px-3 text-sm">
+                  <SelectValue placeholder="Choose material code" />
+                </SelectTrigger>
+
+                <SelectContent>
+                  {materialOptions.map((option) => (
+                    <SelectItem
+                      key={option.id}
+                      value={option.code}
+                      disabled={completedCodes.has(
+                        option.code
+                      )}
+                      className="text-sm"
+                    >
+                      <span className="font-medium">
+                        {option.code}
+                      </span>
+
+                      <span className="ml-2 text-slate-500">
+                        {option.englishName}
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {!selectedMaterialCode && (
+              <p className="py-5 text-center text-sm italic text-slate-400">
+                Choose material code to input material
+                details
+              </p>
+            )}
+          </>
         )}
 
-        {/* Material code */}
-        <div className="mt-6 flex flex-col gap-2">
-          <label className="text-[14px] font-medium leading-[125%] text-text-colortext-dark">
-            Material Code
-          </label>
-
-          <div className="relative">
-            <select
-              value={selectedMaterialCode}
-              onChange={(event) =>
-                onSelectMaterial(event.target.value)
-              }
-              className="h-[56px] w-full appearance-none rounded-md border border-strokestroke-gray bg-backgroundbg-white px-4 pr-12 text-[14px] text-text-colortext-black outline-none focus:border-primaryprimary-green focus:ring-1 focus:ring-primaryprimary-green"
+        {/* Save Carton Detail */}
+        {isCartonComplete && (
+          <div className="pt-2">
+            <button
+              type="button"
+              onClick={onSaveCarton}
+              className="flex h-11 w-full items-center justify-center rounded-lg bg-primaryprimary-green px-4 text-sm font-semibold text-white transition-opacity hover:opacity-90"
             >
-              <option value="">Choose material code</option>
-
-              {remainingMaterials.map((material) => (
-                <option
-                  key={material.id}
-                  value={material.code}
-                >
-                  {material.code}
-                </option>
-              ))}
-            </select>
-
-            <ChevronDown
-              className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-text-colortext-dark"
-              strokeWidth={1.8}
-            />
+              Save Carton Detail
+            </button>
           </div>
-        </div>
-
-        {/* Empty helper */}
-        <p className="mt-12 text-center text-[14px] font-medium italic leading-[125%] text-text-colortext-gray">
-          Choose material code to input material details
-        </p>
+        )}
       </div>
-    </section>
+    </div>
   );
 }
