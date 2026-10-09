@@ -2,36 +2,17 @@
 
 import * as React from "react";
 import { useState } from "react";
-import {
-  CalendarDays,
-  ChevronDown,
-  Filter,
-  Info,
-  MoreHorizontal,
-  Plus,
-} from "lucide-react";
+import { ChevronDown, Info, MoreHorizontal, Plus } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -41,38 +22,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import KpiCard from "@/components/ui/kpichart";
 import { cn } from "@/lib/utils";
+import TaskProgressCard from "./TaskProgressCard";
 
-/* =========================================================
-   DATA
-========================================================= */
+const inputClass =
+  "h-7 w-full rounded-md border border-strokestroke-gray bg-white px-2 text-xs outline-none transition-colors focus:border-primaryprimary-green";
 
-const taskItems = [
-  {
-    name: "BATCH202609 - Return Idle Latte M",
-    progress: "2/12",
-  },
-  {
-    name: "BATCH202609 - Receive Material Latte M",
-    progress: "2/12",
-  },
-  {
-    name: "BATCH202609 - Verify Material Latte M",
-    progress: "2/12",
-  },
-];
-
-const chartItems = [
-  { label: "BATCH202609", normal: 74, abnormal: 26 },
-  { label: "BATCH202610", normal: 137, abnormal: 72 },
-  { label: "BATCH202611", normal: 107, abnormal: 90 },
-  { label: "BATCH202611", normal: 54, abnormal: 107 },
-  { label: "BATCH202611", normal: 117, abnormal: 74 },
-  { label: "BATCH202611", normal: 107, abnormal: 90 },
-];
-
-const axisValues = ["8", "6", "4", "2", "0"];
-
+const nestedHeadClass =
+  "bg-slate-100 px-3 text-xs font-semibold text-slate-700";
 /* =========================================================
    PROGRESS BAR
 ========================================================= */
@@ -89,210 +47,7 @@ function ProgressBar({ value = 46 }: { value?: number }) {
 }
 
 /* =========================================================
-   TASK PROGRESS
-========================================================= */
-
-function TaskProgressCard() {
-  const [view, setView] = useState<"overall" | "details">("overall");
-
-  return (
-    <Card className="min-w-0 flex-1 overflow-hidden rounded-lg border-slate-200">
-      <CardHeader className="flex flex-row items-center justify-between gap-4 border-b px-4 py-3">
-        <CardTitle className="text-sm font-semibold">
-          Task Progress
-        </CardTitle>
-
-        <div className="flex h-8 rounded-md bg-slate-100 p-0.5">
-          {(["overall", "details"] as const).map((item) => (
-            <Button
-              key={item}
-              type="button"
-              variant="ghost"
-              className={cn(
-                "h-7 rounded px-3 text-[10px] font-medium capitalize",
-                view === item
-                  ? "bg-gradient-to-b from-[#058346] to-[#0b5934] text-white hover:text-white"
-                  : "text-slate-700"
-              )}
-              onClick={() => setView(item)}
-            >
-              {item}
-            </Button>
-          ))}
-        </div>
-      </CardHeader>
-
-      <CardContent className="space-y-4 px-4 py-3">
-        {view === "overall" ? (
-          <>
-            <section className="space-y-2">
-              <div className="flex items-end gap-1">
-                <strong className="text-2xl leading-6">1/3</strong>
-
-                <span className="text-xs text-slate-500">
-                  task complete
-                </span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <ProgressBar value={33} />
-
-                <span className="text-[10px] text-slate-600">
-                  33%
-                </span>
-              </div>
-            </section>
-
-            <div className="border-t border-slate-200" />
-
-            <section className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold">
-                  Task List
-                </h3>
-
-                <span className="text-[10px] text-slate-500">
-                  3 task ongoing
-                </span>
-              </div>
-
-              <div className="divide-y divide-slate-200">
-                {taskItems.map((task) => (
-                  <div
-                    key={task.name}
-                    className="flex items-center justify-between gap-3 py-2 text-xs"
-                  >
-                    <span className="truncate">
-                      {task.name}
-                    </span>
-
-                    <span className="shrink-0 text-slate-600">
-                      {task.progress}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </>
-        ) : (
-          <div className="rounded-md border border-slate-200 bg-slate-50 p-4 text-xs text-slate-600">
-            Task details
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
-
-/* =========================================================
-   KPI
-========================================================= */
-
-function KpiCard() {
-  return (
-    <Card className="min-w-0 flex-1 overflow-hidden rounded-lg border-slate-200">
-      <CardHeader className="flex flex-row items-center justify-between gap-3 border-b px-4 py-3">
-        <CardTitle className="text-sm font-semibold">
-          KPI
-        </CardTitle>
-
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            className="h-8 gap-2 px-3 text-[10px]"
-            type="button"
-          >
-            <CalendarDays className="h-3.5 w-3.5" />
-            Today
-          </Button>
-
-          <Select defaultValue="all">
-            <SelectTrigger className="h-8 w-[104px] gap-1 px-3 text-[10px]">
-              <Filter className="h-3.5 w-3.5" />
-              <SelectValue />
-            </SelectTrigger>
-
-            <SelectContent>
-              <SelectItem value="all">
-                All Tasks
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </CardHeader>
-
-      <CardContent className="px-6 py-5">
-        <div className="flex h-[200px] gap-4">
-          <div className="flex w-8 flex-col justify-between pb-5 pt-1 text-[9px] text-slate-700">
-            <span className="rotate-[-90deg] whitespace-nowrap text-slate-500">
-              Lead time (days)
-            </span>
-
-            <div className="flex h-[125px] flex-col justify-between text-right">
-              {axisValues.map((value) => (
-                <span key={value}>{value}</span>
-              ))}
-            </div>
-          </div>
-
-          <div className="relative flex min-w-0 flex-1 items-end border-l border-slate-300">
-            {[0, 25, 50, 75, 100].map((position) => (
-              <div
-                key={position}
-                className="pointer-events-none absolute inset-x-0 border-t border-dashed border-slate-200"
-                style={{ top: `${position}%` }}
-              />
-            ))}
-
-            <div className="relative z-10 flex w-full items-end justify-around gap-2 px-2">
-              {chartItems.map((item, index) => (
-                <div
-                  key={`${item.label}-${index}`}
-                  className="flex min-w-0 flex-1 flex-col items-center gap-1"
-                >
-                  <div className="flex h-[137px] items-end gap-1">
-                    <div
-                      className="w-3 rounded-t-sm bg-gradient-to-t from-[#4ce498] to-[#128d2a]"
-                      style={{
-                        height: `${item.normal}px`,
-                      }}
-                    />
-
-                    <div
-                      className="w-3 rounded-t-sm bg-gradient-to-b from-[#c92230] to-[#ff8b4d]"
-                      style={{
-                        height: `${item.abnormal}px`,
-                      }}
-                    />
-                  </div>
-
-                  <span className="max-w-full truncate text-[10px] font-medium text-slate-500">
-                    {item.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-4 flex justify-center gap-5 text-[9px] text-slate-600">
-          <span className="flex items-center gap-1">
-            <i className="h-2 w-2 rounded-full bg-[#128d2a]" />
-            Flow Normal
-          </span>
-
-          <span className="flex items-center gap-1">
-            <i className="h-2 w-2 rounded-full bg-[#c92230]" />
-            Flow Abnormal
-          </span>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-/* =========================================================
-   MATERIAL / REVISION TYPES
+   TYPES
 ========================================================= */
 
 type Material = {
@@ -374,21 +129,13 @@ const initialRevisionItems: RevisionItem[] = [
 ========================================================= */
 
 export function RevisionNotice() {
-  const [items, setItems] = useState<RevisionItem[]>(
-    initialRevisionItems
-  );
-
+  const [items, setItems] = useState<RevisionItem[]>(initialRevisionItems);
   const [showAll, setShowAll] = useState(false);
-
-  const [expandedId, setExpandedId] =
-    useState<string | null>(null);
-
-  const detailsRef =
-    React.useRef<HTMLDivElement>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const detailsRef = React.useRef<HTMLDivElement>(null);
 
   function toggleShowAll() {
     const nextState = !showAll;
-
     setShowAll(nextState);
 
     if (nextState) {
@@ -404,35 +151,24 @@ export function RevisionNotice() {
   }
 
   function toggleRow(id: string) {
-    setExpandedId((current) =>
-      current === id ? null : id
-    );
+    setExpandedId((current) => (current === id ? null : id));
   }
 
   function addMaterial(itemId: string) {
     setItems((prev) =>
       prev.map((item) =>
         item.id === itemId
-          ? {
-              ...item,
-              materials: [...item.materials, blankMaterial],
-            }
-          : item
-      )
+          ? { ...item, materials: [...item.materials, blankMaterial] }
+          : item,
+      ),
     );
   }
 
   function resubmit(id: string) {
-    const item = items.find(
-      (item) => item.id === id
-    );
+    const item = items.find((item) => item.id === id);
+    console.log("Resubmitting:", item); // TODO: send to your API
 
-    console.log("Resubmitting:", item);
-
-    setItems((prev) =>
-      prev.filter((item) => item.id !== id)
-    );
-
+    setItems((prev) => prev.filter((item) => item.id !== id));
     setExpandedId(null);
   }
 
@@ -440,7 +176,7 @@ export function RevisionNotice() {
     itemId: string,
     materialIndex: number,
     field: keyof Material,
-    value: string
+    value: string,
   ) {
     setItems((prev) =>
       prev.map((item) =>
@@ -448,17 +184,13 @@ export function RevisionNotice() {
           ? item
           : {
               ...item,
-              materials: item.materials.map(
-                (material, index) =>
-                  index === materialIndex
-                    ? {
-                        ...material,
-                        [field]: value,
-                      }
-                    : material
+              materials: item.materials.map((material, index) =>
+                index === materialIndex
+                  ? { ...material, [field]: value }
+                  : material,
               ),
-            }
-      )
+            },
+      ),
     );
   }
 
@@ -472,27 +204,15 @@ export function RevisionNotice() {
             <h2 className="text-sm font-semibold text-red-500">
               Revision Required
             </h2>
-
             <p className="text-xs text-slate-500">
-              These MOs were reflowed by Admin and require
-              data correction before the process can continue.
+              These MOs were reflowed by Admin and require data correction
+              before the process can continue.
             </p>
           </div>
         </div>
 
         <div className="flex shrink-0 items-center gap-5">
-          <Badge
-            className="
-              rounded
-              bg-red-50
-              px-2
-              py-0.5
-              text-xs
-              font-semibold
-              text-red-500
-              hover:bg-red-50
-            "
-          >
+          <Badge className="rounded bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-500 hover:bg-red-50">
             {items.length} Item
             {items.length === 1 ? "" : "s"}
           </Badge>
@@ -501,23 +221,13 @@ export function RevisionNotice() {
             variant="ghost"
             type="button"
             onClick={toggleShowAll}
-            className="
-              h-auto
-              gap-1.5
-              p-0
-              text-xs
-              font-semibold
-              text-slate-700
-              hover:bg-transparent
-              hover:text-slate-900
-            "
+            className="h-auto gap-1.5 p-0 text-xs font-semibold text-slate-700 hover:bg-transparent hover:text-slate-900"
           >
             {showAll ? "Hide All" : "View All"}
-
             <ChevronDown
               className={cn(
                 "h-3.5 w-3.5 transition-transform duration-200",
-                showAll && "rotate-180"
+                showAll && "rotate-180",
               )}
             />
           </Button>
@@ -528,9 +238,7 @@ export function RevisionNotice() {
         ref={detailsRef}
         className={cn(
           "grid transition-[grid-template-rows,opacity] duration-200",
-          showAll
-            ? "grid-rows-[1fr] opacity-100"
-            : "grid-rows-[0fr] opacity-0"
+          showAll ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
         )}
       >
         <div className="min-h-0 overflow-hidden">
@@ -540,19 +248,9 @@ export function RevisionNotice() {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-12 px-3" />
-
-                    <TableHead className="px-3">
-                      MO Code
-                    </TableHead>
-
-                    <TableHead className="px-3">
-                      Reflow From
-                    </TableHead>
-
-                    <TableHead className="px-3">
-                      Reason
-                    </TableHead>
-
+                    <TableHead className="px-3">MO Code</TableHead>
+                    <TableHead className="px-3">Reflow From</TableHead>
+                    <TableHead className="px-3">Reason</TableHead>
                     <TableHead className="w-24 px-3 text-right">
                       Action
                     </TableHead>
@@ -561,8 +259,7 @@ export function RevisionNotice() {
 
                 <TableBody>
                   {items.map((item) => {
-                    const isExpanded =
-                      expandedId === item.id;
+                    const isExpanded = expandedId === item.id;
 
                     return (
                       <React.Fragment key={item.id}>
@@ -580,16 +277,13 @@ export function RevisionNotice() {
                                 toggleRow(item.id);
                               }}
                               aria-label={
-                                isExpanded
-                                  ? "Collapse row"
-                                  : "Expand row"
+                                isExpanded ? "Collapse row" : "Expand row"
                               }
                             >
                               <Plus
                                 className={cn(
                                   "h-3.5 w-3.5 transition-transform duration-200",
-                                  isExpanded &&
-                                    "rotate-45"
+                                  isExpanded && "rotate-45",
                                 )}
                               />
                             </Button>
@@ -598,46 +292,19 @@ export function RevisionNotice() {
                           <TableCell className="px-3 text-xs">
                             {item.code}
                           </TableCell>
-
                           <TableCell className="px-3 text-xs">
                             {item.reflowFrom}
                           </TableCell>
-
                           <TableCell className="px-3 text-xs">
                             {item.reason}
                           </TableCell>
 
+                          {/* Resubmit moved to the bottom of the expanded section */}
                           <TableCell className="px-3 text-right">
-                            {isExpanded ? (
-                              <Button
-                                type="button"
-                                className="
-                                  h-7
-                                  rounded-md
-                                  bg-gradient-to-b
-                                  from-[#058346]
-                                  to-[#0b5934]
-                                  px-3
-                                  text-xs
-                                  text-white
-                                  hover:opacity-90
-                                "
-                                onClick={(event) => {
-                                  event.stopPropagation();
-                                  resubmit(item.id);
-                                }}
-                              >
-                                Resubmit
-                              </Button>
-                            ) : (
+                            {!isExpanded && (
                               <button
                                 type="button"
-                                className="
-                                  text-xs
-                                  font-medium
-                                  text-blue-600
-                                  hover:underline
-                                "
+                                className="text-xs font-medium text-blue-600 hover:underline"
                                 onClick={(event) => {
                                   event.stopPropagation();
                                   toggleRow(item.id);
@@ -651,135 +318,102 @@ export function RevisionNotice() {
 
                         {isExpanded && (
                           <>
-                            <TableRow>
-                              <TableHead className="w-12" />
-
-                              <TableHead className="px-3">
+                            <TableRow className="hover:bg-slate-100">
+                              <TableHead
+                                className={cn(nestedHeadClass, "w-12")}
+                              />
+                              <TableHead className={nestedHeadClass}>
                                 Material Code
                               </TableHead>
-
-                              <TableHead className="px-3">
+                              <TableHead className={nestedHeadClass}>
                                 English Name
                               </TableHead>
-
-                              <TableHead className="px-3">
+                              <TableHead className={nestedHeadClass}>
                                 China Name
                               </TableHead>
-
-                              <TableHead />
+                              <TableHead className={nestedHeadClass} />
                             </TableRow>
 
-                            {item.materials.map(
-                              (material, index) => (
-                                <TableRow key={index}>
-                                  <TableCell />
+                            {item.materials.map((material, index) => (
+                              <TableRow key={index}>
+                                <TableCell />
 
-                                  <TableCell className="px-3 py-2">
-                                    <input
-                                      type="text"
-                                      className="
-                                        h-7
-                                        w-full
-                                        rounded-md
-                                        border
-                                        border-strokestroke-gray
-                                        bg-white
-                                        px-2
-                                        text-xs
-                                        outline-none
-                                        transition-colors
-                                        focus:border-primaryprimary-green
-                                      "
-                                      value={material.code}
-                                      onChange={(e) =>
-                                        updateMaterial(
-                                          item.id,
-                                          index,
-                                          "code",
-                                          e.target.value
-                                        )
-                                      }
-                                    />
-                                  </TableCell>
+                                <TableCell className="px-3 py-2">
+                                  <input
+                                    type="text"
+                                    className={inputClass}
+                                    value={material.code}
+                                    onChange={(e) =>
+                                      updateMaterial(
+                                        item.id,
+                                        index,
+                                        "code",
+                                        e.target.value,
+                                      )
+                                    }
+                                  />
+                                </TableCell>
 
-                                  <TableCell className="px-3 py-2">
-                                    <input
-                                      type="text"
-                                      className="
-                                        h-7
-                                        w-full
-                                        rounded-md
-                                        border
-                                        border-strokestroke-gray
-                                        bg-white
-                                        px-2
-                                        text-xs
-                                        outline-none
-                                        transition-colors
-                                        focus:border-primaryprimary-green
-                                      "
-                                      value={
-                                        material.englishName
-                                      }
-                                      onChange={(e) =>
-                                        updateMaterial(
-                                          item.id,
-                                          index,
-                                          "englishName",
-                                          e.target.value
-                                        )
-                                      }
-                                    />
-                                  </TableCell>
+                                <TableCell className="px-3 py-2">
+                                  <input
+                                    type="text"
+                                    className={inputClass}
+                                    value={material.englishName}
+                                    onChange={(e) =>
+                                      updateMaterial(
+                                        item.id,
+                                        index,
+                                        "englishName",
+                                        e.target.value,
+                                      )
+                                    }
+                                  />
+                                </TableCell>
 
-                                  <TableCell className="px-3 py-2">
-                                    <input
-                                      type="text"
-                                      className="
-                                        h-7
-                                        w-full
-                                        rounded-md
-                                        border
-                                        border-strokestroke-gray
-                                        bg-white
-                                        px-2
-                                        text-xs
-                                        outline-none
-                                        transition-colors
-                                        focus:border-primaryprimary-green
-                                      "
-                                      value={
-                                        material.chinaName
-                                      }
-                                      onChange={(e) =>
-                                        updateMaterial(
-                                          item.id,
-                                          index,
-                                          "chinaName",
-                                          e.target.value
-                                        )
-                                      }
-                                    />
-                                  </TableCell>
+                                <TableCell className="px-3 py-2">
+                                  <input
+                                    type="text"
+                                    className={inputClass}
+                                    value={material.chinaName}
+                                    onChange={(e) =>
+                                      updateMaterial(
+                                        item.id,
+                                        index,
+                                        "chinaName",
+                                        e.target.value,
+                                      )
+                                    }
+                                  />
+                                </TableCell>
 
-                                  <TableCell />
-                                </TableRow>
-                              )
-                            )}
+                                <TableCell />
+                              </TableRow>
+                            ))}
 
-                            <TableRow>
+                            {/* Add Material (left) + Resubmit (bottom right) */}
+                            <TableRow className="hover:bg-transparent">
                               <TableCell />
 
                               <TableCell colSpan={4} className="px-3 py-3">
-                                <Button
-                                  type="button"
-                                  variant="outline"
-                                  className="h-7 rounded-md px-3 text-xs"
-                                  onClick={() => addMaterial(item.id)}
-                                >
-                                  <Plus className="h-3.5 w-3.5" />
-                                  Add Material
-                                </Button>
+                                <div className="flex items-center justify-between">
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    className="h-7 rounded-md px-3 text-xs"
+                                    onClick={() => addMaterial(item.id)}
+                                  >
+                                    <Plus className="h-3.5 w-3.5" />
+                                    Add Material
+                                  </Button>
+
+                                  <Button
+                                    type="button"
+                                    className="h-7 rounded-md bg-gradient-to-b from-[#058346] to-[#0b5934] px-4 text-xs font-semibold text-white hover:opacity-90"
+                                    onClick={() => resubmit(item.id)}
+                                  >
+                                    Resubmit
+                                  </Button>
+                                </div>
                               </TableCell>
                             </TableRow>
                           </>
@@ -864,26 +498,19 @@ const initialOngoingMoRows: MoRow[] = [
 ];
 
 function OngoingMoTable() {
-  const [rows, setRows] =
-    useState<MoRow[]>(initialOngoingMoRows);
-
-  const [expandedId, setExpandedId] =
-    useState<string | null>(null);
-
-  const [editingId, setEditingId] =
-    useState<string | null>(null);
+  const [rows, setRows] = useState<MoRow[]>(initialOngoingMoRows);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   function startEdit(id: string) {
     setRows((prev) =>
       prev.map((row) =>
         row.id === id && row.materials.length === 0
-          ? {
-              ...row,
-              materials: [blankMaterial],
-            }
-          : row
-      )
+          ? { ...row, materials: [blankMaterial] }
+          : row,
+      ),
     );
+
     setEditingId(id);
     setExpandedId(id);
   }
@@ -893,26 +520,25 @@ function OngoingMoTable() {
   }
 
   function submitEdit() {
+    // TODO: send rows.find(r => r.id === editingId) to your API
     setEditingId(null);
   }
 
   function deleteRow(id: string) {
     const confirmed = window.confirm(
-      "Delete this MO's data? This can't be undone."
+      "Delete this MO's data? This can't be undone.",
     );
 
     if (!confirmed) return;
 
-    setRows((prev) =>
-      prev.filter((row) => row.id !== id)
-    );
+    setRows((prev) => prev.filter((row) => row.id !== id));
   }
 
   function updateMaterial(
     rowId: string,
     materialIndex: number,
     field: keyof Material,
-    value: string
+    value: string,
   ) {
     setRows((prev) =>
       prev.map((row) =>
@@ -920,17 +546,13 @@ function OngoingMoTable() {
           ? row
           : {
               ...row,
-              materials: row.materials.map(
-                (material, index) =>
-                  index === materialIndex
-                    ? {
-                        ...material,
-                        [field]: value,
-                      }
-                    : material
+              materials: row.materials.map((material, index) =>
+                index === materialIndex
+                  ? { ...material, [field]: value }
+                  : material,
               ),
-            }
-      )
+            },
+      ),
     );
   }
 
@@ -938,22 +560,21 @@ function OngoingMoTable() {
     setRows((prev) =>
       prev.map((row) =>
         row.id === rowId
-          ? {
-              ...row,
-              materials: [...row.materials, blankMaterial],
-            }
-          : row
-      )
+          ? { ...row, materials: [...row.materials, blankMaterial] }
+          : row,
+      ),
     );
+
     setExpandedId(rowId);
   }
+
+  const cellInputClass =
+    "w-full rounded-md border border-strokestroke-gray px-2 py-1.5 text-xs focus:border-primaryprimary-green focus:outline-none";
 
   return (
     <Card className="overflow-hidden rounded-lg border-[var(--strokestroke-gray)]">
       <CardHeader className="px-4 py-3">
-        <CardTitle className="text-sm font-semibold">
-          Ongoing MO
-        </CardTitle>
+        <CardTitle className="text-sm font-semibold">Ongoing MO</CardTitle>
       </CardHeader>
 
       <CardContent className="px-4 pb-4">
@@ -962,27 +583,11 @@ function OngoingMoTable() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-12 px-3" />
-
-                <TableHead className="px-3">
-                  MO Code
-                </TableHead>
-
-                <TableHead className="px-3">
-                  Model
-                </TableHead>
-
-                <TableHead className="px-3">
-                  Progress
-                </TableHead>
-
-                <TableHead className="px-3">
-                  Current Step
-                </TableHead>
-
-                <TableHead className="px-3">
-                  Last Updated
-                </TableHead>
-
+                <TableHead className="px-3">MO Code</TableHead>
+                <TableHead className="px-3">Model</TableHead>
+                <TableHead className="px-3">Progress</TableHead>
+                <TableHead className="px-3">Current Step</TableHead>
+                <TableHead className="px-3">Last Updated</TableHead>
                 <TableHead className="w-[120px] px-3 text-center">
                   Action
                 </TableHead>
@@ -991,23 +596,14 @@ function OngoingMoTable() {
 
             <TableBody>
               {rows.map((row) => {
-                const isEditing =
-                  editingId === row.id;
-
-                const isExpanded =
-                  expandedId === row.id;
+                const isEditing = editingId === row.id;
+                const isExpanded = expandedId === row.id;
 
                 return (
                   <React.Fragment key={row.id}>
                     <TableRow
                       className="h-12 cursor-pointer hover:bg-slate-50"
-                      onClick={() =>
-                        setExpandedId(
-                          isExpanded
-                            ? null
-                            : row.id
-                        )
-                      }
+                      onClick={() => setExpandedId(isExpanded ? null : row.id)}
                     >
                       <TableCell className="w-12 px-3">
                         <Button
@@ -1016,19 +612,14 @@ function OngoingMoTable() {
                           className="h-7 w-7 rounded-md p-0"
                           onClick={(event) => {
                             event.stopPropagation();
-                            setExpandedId(
-                              isExpanded
-                                ? null
-                                : row.id
-                            );
+                            setExpandedId(isExpanded ? null : row.id);
                           }}
                           aria-label="Expand row"
                         >
                           <Plus
                             className={cn(
                               "h-4 w-4 transition-transform",
-                              isExpanded &&
-                                "rotate-45"
+                              isExpanded && "rotate-45",
                             )}
                           />
                         </Button>
@@ -1037,7 +628,6 @@ function OngoingMoTable() {
                       <TableCell className="max-w-[190px] truncate px-3 text-xs">
                         {row.code}
                       </TableCell>
-
                       <TableCell className="px-3 text-xs">
                         {row.model}
                       </TableCell>
@@ -1045,17 +635,13 @@ function OngoingMoTable() {
                       <TableCell className="px-3">
                         <div className="flex min-w-[120px] items-center gap-2">
                           <ProgressBar value={46} />
-
                           <span className="text-xs text-muted-foreground">
                             3/7
                           </span>
                         </div>
                       </TableCell>
 
-                      <TableCell className="px-3 text-xs">
-                        {row.step}
-                      </TableCell>
-
+                      <TableCell className="px-3 text-xs">{row.step}</TableCell>
                       <TableCell className="px-3 text-xs">
                         {row.updated}
                       </TableCell>
@@ -1102,18 +688,14 @@ function OngoingMoTable() {
 
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem
-                                onClick={() =>
-                                  startEdit(row.id)
-                                }
+                                onClick={() => startEdit(row.id)}
                               >
                                 Edit Data
                               </DropdownMenuItem>
 
                               <DropdownMenuItem
                                 destructive
-                                onClick={() =>
-                                  deleteRow(row.id)
-                                }
+                                onClick={() => deleteRow(row.id)}
                               >
                                 Delete Data
                               </DropdownMenuItem>
@@ -1123,133 +705,87 @@ function OngoingMoTable() {
                       </TableCell>
                     </TableRow>
 
-                    {expandedId === row.id && (
+                    {isExpanded && (
                       <>
-                        <TableRow>
-                          <TableHead className="w-12" />
-
-                          <TableHead>
+                        <TableRow className="backgroundbg-gray-50 hover:bg-gray-50">
+                          <TableHead className={cn(nestedHeadClass, "w-12")} />
+                          <TableHead className={nestedHeadClass}>
                             Material Code
                           </TableHead>
-
-                          <TableHead colSpan={2}>
+                          <TableHead colSpan={2} className={nestedHeadClass}>
                             English Name
                           </TableHead>
-
-                          <TableHead colSpan={3}>
+                          <TableHead colSpan={3} className={nestedHeadClass}>
                             China Name
                           </TableHead>
                         </TableRow>
 
-                        {row.materials.map(
-                          (material, index) => (
-                            <TableRow key={index}>
-                              <TableCell />
+                        {row.materials.map((material, index) => (
+                          <TableRow key={index}>
+                            <TableCell />
 
-                              <TableCell className="text-xs">
-                                {editingId === row.id ? (
-                                  <input
-                                    className="
-                                      w-full
-                                      rounded-md
-                                      border
-                                      border-strokestroke-gray
-                                      px-2
-                                      py-1.5
-                                      text-xs
-                                      focus:border-primaryprimary-green
-                                      focus:outline-none
-                                    "
-                                    value={material.code}
-                                    onChange={(e) =>
-                                      updateMaterial(
-                                        row.id,
-                                        index,
-                                        "code",
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-                                ) : (
-                                  material.code
-                                )}
-                              </TableCell>
+                            <TableCell className="text-xs">
+                              {isEditing ? (
+                                <input
+                                  className={cellInputClass}
+                                  value={material.code}
+                                  onChange={(e) =>
+                                    updateMaterial(
+                                      row.id,
+                                      index,
+                                      "code",
+                                      e.target.value,
+                                    )
+                                  }
+                                />
+                              ) : (
+                                material.code
+                              )}
+                            </TableCell>
 
-                              <TableCell
-                                colSpan={2}
-                                className="text-xs"
-                              >
-                                {editingId === row.id ? (
-                                  <input
-                                    className="
-                                      w-full
-                                      rounded-md
-                                      border
-                                      border-strokestroke-gray
-                                      px-2
-                                      py-1.5
-                                      text-xs
-                                      focus:border-primaryprimary-green
-                                      focus:outline-none
-                                    "
-                                    value={
-                                      material.englishName
-                                    }
-                                    onChange={(e) =>
-                                      updateMaterial(
-                                        row.id,
-                                        index,
-                                        "englishName",
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-                                ) : (
-                                  material.englishName
-                                )}
-                              </TableCell>
+                            <TableCell colSpan={2} className="text-xs">
+                              {isEditing ? (
+                                <input
+                                  className={cellInputClass}
+                                  value={material.englishName}
+                                  onChange={(e) =>
+                                    updateMaterial(
+                                      row.id,
+                                      index,
+                                      "englishName",
+                                      e.target.value,
+                                    )
+                                  }
+                                />
+                              ) : (
+                                material.englishName
+                              )}
+                            </TableCell>
 
-                              <TableCell
-                                colSpan={3}
-                                className="text-xs"
-                              >
-                                {editingId === row.id ? (
-                                  <input
-                                    className="
-                                      w-full
-                                      rounded-md
-                                      border
-                                      border-strokestroke-gray
-                                      px-2
-                                      py-1.5
-                                      text-xs
-                                      focus:border-primaryprimary-green
-                                      focus:outline-none
-                                    "
-                                    value={
-                                      material.chinaName
-                                    }
-                                    onChange={(e) =>
-                                      updateMaterial(
-                                        row.id,
-                                        index,
-                                        "chinaName",
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-                                ) : (
-                                  material.chinaName
-                                )}
-                              </TableCell>
-                            </TableRow>
-                          )
-                        )}
+                            <TableCell colSpan={3} className="text-xs">
+                              {isEditing ? (
+                                <input
+                                  className={cellInputClass}
+                                  value={material.chinaName}
+                                  onChange={(e) =>
+                                    updateMaterial(
+                                      row.id,
+                                      index,
+                                      "chinaName",
+                                      e.target.value,
+                                    )
+                                  }
+                                />
+                              ) : (
+                                material.chinaName
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ))}
 
                         {isEditing && (
                           <TableRow>
                             <TableCell />
-
                             <TableCell colSpan={6} className="py-3">
                               <Button
                                 type="button"
@@ -1284,16 +820,11 @@ export default function DashboardContent(): JSX.Element {
   return (
     <main>
       <div className="mx-auto flex w-full max-w-[1625px] flex-col gap-5">
-        <nav
-          aria-label="Breadcrumb"
-          className="text-xs text-slate-500"
-        >
+        <nav aria-label="Breadcrumb" className="text-xs text-slate-500">
           Dashboard
         </nav>
 
-        <h1 className="text-lg font-semibold text-slate-950">
-          Dashboard
-        </h1>
+        <h1 className="text-lg font-semibold text-slate-950">Dashboard</h1>
 
         <section className="grid grid-cols-1 gap-5 xl:grid-cols-2">
           <TaskProgressCard />

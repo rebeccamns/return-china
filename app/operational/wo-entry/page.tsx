@@ -15,6 +15,10 @@ import {
 } from "@/components/ui/table";
 import Sidebar from "@/components/layout/sidebar";
 import TopBar from "@/components/layout/topbar";
+import { cn } from "@/lib/utils";
+
+const nestedHeadClass =
+  "bg-slate-100 px-3 text-xs font-semibold text-slate-700";
 
 type Material = {
   code: string;
@@ -38,11 +42,31 @@ const initialRows: WoRow[] = [
     model: "Latte-M",
     iqcStatus: "Passed",
     materials: [
-      { code: "621032000320", englishName: "Battery cover AC175", chinaName: "电池盖组件 AC175 绿" },
-      { code: "621032000320", englishName: "Display Panel", chinaName: "显示屏面板" },
-      { code: "621032000320", englishName: "Camera Module", chinaName: "相机模组" },
-      { code: "621032000320", englishName: "Camera Module", chinaName: "相机模组" },
-      { code: "621032000320", englishName: "Display Panel", chinaName: "显示屏面板" },
+      {
+        code: "621032000320",
+        englishName: "Battery cover AC175",
+        chinaName: "电池盖组件 AC175 绿",
+      },
+      {
+        code: "621032000320",
+        englishName: "Display Panel",
+        chinaName: "显示屏面板",
+      },
+      {
+        code: "621032000320",
+        englishName: "Camera Module",
+        chinaName: "相机模组",
+      },
+      {
+        code: "621032000320",
+        englishName: "Camera Module",
+        chinaName: "相机模组",
+      },
+      {
+        code: "621032000320",
+        englishName: "Display Panel",
+        chinaName: "显示屏面板",
+      },
     ],
   },
   {
@@ -51,11 +75,31 @@ const initialRows: WoRow[] = [
     model: "Latte-M",
     iqcStatus: "Passed",
     materials: [
-      { code: "621032000320", englishName: "Battery cover AC175", chinaName: "电池盖组件 AC175 绿" },
-      { code: "621032000320", englishName: "Display Panel", chinaName: "显示屏面板" },
-      { code: "621032000320", englishName: "Camera Module", chinaName: "相机模组" },
-      { code: "621032000320", englishName: "Camera Module", chinaName: "相机模组" },
-      { code: "621032000320", englishName: "Display Panel", chinaName: "显示屏面板" },
+      {
+        code: "621032000320",
+        englishName: "Battery cover AC175",
+        chinaName: "电池盖组件 AC175 绿",
+      },
+      {
+        code: "621032000320",
+        englishName: "Display Panel",
+        chinaName: "显示屏面板",
+      },
+      {
+        code: "621032000320",
+        englishName: "Camera Module",
+        chinaName: "相机模组",
+      },
+      {
+        code: "621032000320",
+        englishName: "Camera Module",
+        chinaName: "相机模组",
+      },
+      {
+        code: "621032000320",
+        englishName: "Display Panel",
+        chinaName: "显示屏面板",
+      },
     ],
   },
   {
@@ -64,11 +108,31 @@ const initialRows: WoRow[] = [
     model: "Latte-M",
     iqcStatus: "Passed",
     materials: [
-      { code: "621032000320", englishName: "Battery cover AC175", chinaName: "电池盖组件 AC175 绿" },
-      { code: "621032000320", englishName: "Display Panel", chinaName: "显示屏面板" },
-      { code: "621032000320", englishName: "Camera Module", chinaName: "相机模组" },
-      { code: "621032000320", englishName: "Camera Module", chinaName: "相机模组" },
-      { code: "621032000320", englishName: "Display Panel", chinaName: "显示屏面板" },
+      {
+        code: "621032000320",
+        englishName: "Battery cover AC175",
+        chinaName: "电池盖组件 AC175 绿",
+      },
+      {
+        code: "621032000320",
+        englishName: "Display Panel",
+        chinaName: "显示屏面板",
+      },
+      {
+        code: "621032000320",
+        englishName: "Camera Module",
+        chinaName: "相机模组",
+      },
+      {
+        code: "621032000320",
+        englishName: "Camera Module",
+        chinaName: "相机模组",
+      },
+      {
+        code: "621032000320",
+        englishName: "Display Panel",
+        chinaName: "显示屏面板",
+      },
     ],
   },
 ];
@@ -99,10 +163,14 @@ export default function WoEntryPage() {
           <nav className="mb-4 flex items-center gap-2 text-xs">
             <span className="text-text-colortext-gray">Entry</span>
             <span className="text-[#B5B5B3]">›</span>
-            <span className="font-medium text-text-colortext-dark">WO Entry</span>
+            <span className="font-medium text-text-colortext-dark">
+              WO Entry
+            </span>
           </nav>
 
-          <h1 className="mb-4 text-lg font-semibold text-[#111111]">WO Entry</h1>
+          <h1 className="mb-4 text-lg font-semibold text-[#111111]">
+            WO Entry
+          </h1>
 
           <div className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
             <div className="px-[18px] py-[18px]">
@@ -134,7 +202,10 @@ export default function WoEntryPage() {
 
                       return (
                         <React.Fragment key={row.id}>
-                          <TableRow key={row.id} className="h-14 hover:bg-[#FAFAFA]">
+                          <TableRow
+                            key={row.id}
+                            className="h-14 hover:bg-[#FAFAFA]"
+                          >
                             <TableCell className="px-3 py-2">
                               <Button
                                 type="button"
@@ -181,7 +252,9 @@ export default function WoEntryPage() {
                               <Input
                                 placeholder="Input WO"
                                 value={woValue}
-                                onChange={(e) => updateWo(row.id, e.target.value)}
+                                onChange={(e) =>
+                                  updateWo(row.id, e.target.value)
+                                }
                                 className="h-9 rounded-md border-strokestroke-gray px-3 text-xs placeholder:text-[#A3A3A1]"
                               />
                             </TableCell>
@@ -205,11 +278,28 @@ export default function WoEntryPage() {
 
                           {isExpanded && (
                             <>
-                              <TableRow key={`${row.id}-header`} className="bg-slate-50 hover:bg-slate-50">
-                                <TableHead className="w-12" />
-                                <TableHead className="text-xs">Material Code</TableHead>
-                                <TableHead colSpan={2} className="text-xs">English Name</TableHead>
-                                <TableHead colSpan={3} className="text-xs">China Name</TableHead>
+                              <TableRow
+                                key={`${row.id}-header`}
+                                className="hover:bg-slate-100"
+                              >
+                                <TableHead
+                                  className={cn(nestedHeadClass, "w-12")}
+                                />
+                                <TableHead className={nestedHeadClass}>
+                                  Material Code
+                                </TableHead>
+                                <TableHead
+                                  colSpan={2}
+                                  className={nestedHeadClass}
+                                >
+                                  English Name
+                                </TableHead>
+                                <TableHead
+                                  colSpan={3}
+                                  className={nestedHeadClass}
+                                >
+                                  China Name
+                                </TableHead>
                               </TableRow>
                               {row.materials.map((material, i) => (
                                 <TableRow
@@ -217,7 +307,9 @@ export default function WoEntryPage() {
                                   className="bg-slate-50/40 hover:bg-slate-50/40"
                                 >
                                   <TableCell />
-                                  <TableCell className="text-xs">{material.code}</TableCell>
+                                  <TableCell className="text-xs">
+                                    {material.code}
+                                  </TableCell>
                                   <TableCell colSpan={2} className="text-xs">
                                     {material.englishName}
                                   </TableCell>
