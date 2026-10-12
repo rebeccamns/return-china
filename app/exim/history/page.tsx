@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Search } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Search, CalendarDays, ChevronDown, RotateCcw } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -17,13 +17,14 @@ import TopBar from "@/components/layout/topbar";
 import { cn } from "@/lib/utils";
 
 type Status = "Submitted" | "Rejected" | "Resubmitted";
+type DateRange = "7" | "30" | "custom" | "all";
 
 type HistoryRow = {
   code: string;
-  materials: number;
+  model: string;
+  wo: string;
   status: Status;
-  notes: string; // "-" when nothing to explain
-  date: string;
+  submittedAt: string;
 };
 
 const STATUS_STYLES: Record<Status, string> = {
@@ -33,26 +34,129 @@ const STATUS_STYLES: Record<Status, string> = {
 };
 
 const headClass =
-  "h-10 whitespace-nowrap bg-[#F8F8F8] px-3 text-xs font-medium text-slate-700";
+  "h-10 whitespace-nowrap bg-primaryprimary-green px-3 text-xs font-semibold text-white";
 
-// TODO: replace with real data from your API
+// Demo data. Replace with your API data when available.
 const rows: HistoryRow[] = [
-  { code: "T2026090410261301041", materials: 11, status: "Submitted", notes: "-", date: "Sep 20, 2026 14:32" },
-  { code: "T2026090410261301039", materials: 5, status: "Rejected", notes: "Photo of UPN label is unreadable", date: "Sep 19, 2026 09:15" },
-  { code: "T2026090410261301033", materials: 8, status: "Resubmitted", notes: "Previously rejected: wrong net weight", date: "Sep 18, 2026 16:48" },
-  { code: "T2026090410261301028", materials: 3, status: "Submitted", notes: "-", date: "Sep 16, 2026 08:40" },
+  {
+    code: "T2026090410261301041",
+    model: "Latte-M",
+    wo: "WO-20260920-001",
+    status: "Submitted",
+    submittedAt: "Sep 20, 2026 14:32",
+  },
+  {
+    code: "T2026090410261301039",
+    model: "Reno 12",
+    wo: "WO-20260919-002",
+    status: "Rejected",
+    submittedAt: "Sep 19, 2026 09:15",
+  },
+  {
+    code: "T2026090410261301033",
+    model: "Latte-M",
+    wo: "WO-20260918-003",
+    status: "Resubmitted",
+    submittedAt: "Sep 18, 2026 16:48",
+  },
+  {
+    code: "T2026090410261301028",
+    model: "A5 Pro",
+    wo: "WO-20260916-004",
+    status: "Submitted",
+    submittedAt: "Sep 16, 2026 08:40",
+  },
 ];
+
+const inputClass =
+  "h-9 w-full rounded-md border border-strokestroke-gray bg-white px-3 text-xs text-[#333] outline-none focus:border-[#046A39] focus:ring-1 focus:ring-[#046A39]/20";
+
+function toLocalDateString(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function getDateValue(value: string) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function getToday() {
+  return toLocalDateString(new Date());
+}
 
 export default function EximHistoryPage() {
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [modelFilter, setModelFilter] = useState("All");
+  const [dateRange, setDateRange] = useState<DateRange>("7");
+  const [customStart, setCustomStart] = useState("");
+  const [customEnd, setCustomEnd] = useState("");
 
-  const query = search.toLowerCase();
-  const filtered = rows.filter(
-    (r) =>
-      r.code.toLowerCase().includes(query) ||
-      r.status.toLowerCase().includes(query) ||
-      r.notes.toLowerCase().includes(query),
+  const models = useMemo(
+    () => Array.from(new Set(rows.map((row) => row.model))).sort(),
+    [],
   );
+
+  const filtered = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    const now = new Date();
+    const today = toLocalDateString(now);
+
+    const startDate = new Date(now);
+    startDate.setHours(0, 0, 0, 0);
+
+    if (dateRange === "7") {
+      startDate.setDate(startDate.getDate() - 6);
+    } else if (dateRange === "30") {
+      startDate.setDate(startDate.getDate() - 29);
+    }
+
+    return rows.filter((row) => {
+      const matchesSearch =
+        !query ||
+        row.code.toLowerCase().includes(query) ||
+        row.model.toLowerCase().includes(query) ||
+        row.wo.toLowerCase().includes(query);
+
+      const matchesStatus =
+        statusFilter === "All" || row.status === statusFilter;
+
+      const matchesModel = modelFilter === "All" || row.model === modelFilter;
+
+      const submittedDate = getDateValue(row.submittedAt);
+      let matchesDate = true;
+
+      if (dateRange === "7" || dateRange === "30") {
+        matchesDate =
+          submittedDate !== null &&
+          submittedDate >= startDate &&
+          submittedDate <= now;
+      } else if (dateRange === "custom") {
+        const rowDate = submittedDate ? toLocalDateString(submittedDate) : "";
+
+        matchesDate =
+          !!rowDate &&
+          (!customStart || rowDate >= customStart) &&
+          (!customEnd || rowDate <= customEnd) &&
+          (!customStart || customStart <= today);
+      }
+
+      return matchesSearch && matchesStatus && matchesModel && matchesDate;
+    });
+  }, [search, statusFilter, modelFilter, dateRange, customStart, customEnd]);
+
+  function resetFilters() {
+    setSearch("");
+    setStatusFilter("All");
+    setModelFilter("All");
+    setDateRange("7");
+    setCustomStart("");
+    setCustomEnd("");
+  }
 
   return (
     <main className="min-h-screen w-full bg-backgroundbg-gray">
@@ -65,38 +169,211 @@ export default function EximHistoryPage() {
           <nav className="mb-4 flex items-center gap-2 text-xs">
             <span className="text-text-colortext-gray">Exim</span>
             <span className="text-[#B5B5B3]">›</span>
-            <span className="font-medium text-text-colortext-dark">History</span>
+            <span className="font-medium text-text-colortext-dark">
+              History
+            </span>
           </nav>
 
           <h1 className="mb-4 text-lg font-semibold text-[#111111]">History</h1>
 
           <div className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
-            <div className="flex items-center justify-between gap-4 px-[18px] py-[18px]">
-              <h2 className="text-sm font-semibold text-[#111111]">Processed MO</h2>
+            
+            {/* Search and filters */}
 
-              <div className="relative w-64">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#A3A3A1]" />
-                <Input
-                  placeholder="Search MO, status, or notes..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="h-9 rounded-md border-strokestroke-gray pl-9 text-xs placeholder:text-[#A3A3A1]"
-                />
+            {/* Search and filters */}
+            <div className="border-b border-strokestroke-gray px-[18px] py-4">
+              {/* Search on the left, filters on the right */}
+              <div className="flex flex-wrap items-end justify-between gap-4">
+                {/* Search */}
+                <div className="w-full sm:w-[280px] sm:shrink-0">
+                  <label
+                    htmlFor="history-search"
+                    className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+                  >
+                    Search
+                  </label>
+
+                  <div className="relative">
+                    <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#A3A3A1]" />
+                    <Input
+                      id="history-search"
+                      placeholder="Search MO, model, or WO..."
+                      value={search}
+                      onChange={(event) => setSearch(event.target.value)}
+                      className="h-9 rounded-md border-strokestroke-gray pl-9 text-xs placeholder:text-[#A3A3A1]"
+                    />
+                  </div>
+                </div>
+
+                {/* Filters — aligned to the far right */}
+                <div className="flex flex-wrap items-end gap-3 sm:ml-auto">
+                  {(search ||
+                    statusFilter !== "All" ||
+                    modelFilter !== "All" ||
+                    dateRange !== "7") && (
+                    <div className="flex h-9 items-center">
+                      <button
+                        type="button"
+                        onClick={resetFilters}
+                        className="text-xs font-medium text-[#046A39] hover:underline"
+                      >
+                        Clear all filters
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Status */}
+                  <div className="w-[140px]">
+                    <label
+                      htmlFor="status-filter"
+                      className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+                    >
+                      Status
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="status-filter"
+                        value={statusFilter}
+                        onChange={(event) =>
+                          setStatusFilter(event.target.value)
+                        }
+                        className={cn(inputClass, "appearance-none pr-8")}
+                      >
+                        <option value="All">All statuses</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Rejected">Rejected</option>
+                        <option value="Resubmitted">Resubmitted</option>
+                      </select>
+                      <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#8F8F8E]" />
+                    </div>
+                  </div>
+
+                  {/* Model */}
+                  <div className="w-[140px]">
+                    <label
+                      htmlFor="model-filter"
+                      className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+                    >
+                      Model
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="model-filter"
+                        value={modelFilter}
+                        onChange={(event) => setModelFilter(event.target.value)}
+                        className={cn(inputClass, "appearance-none pr-8")}
+                      >
+                        <option value="All">All models</option>
+                        {models.map((model) => (
+                          <option key={model} value={model}>
+                            {model}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#8F8F8E]" />
+                    </div>
+                  </div>
+
+                  {/* Date Range */}
+                  <div className="w-[165px]">
+                    <label
+                      htmlFor="date-range"
+                      className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+                    >
+                      Date Range
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="date-range"
+                        value={dateRange}
+                        onChange={(event) =>
+                          setDateRange(event.target.value as DateRange)
+                        }
+                        className={cn(inputClass, "appearance-none pr-8")}
+                      >
+                        <option value="7">Last 7 days</option>
+                        <option value="30">Last 30 days</option>
+                        <option value="custom">Custom range</option>
+                        <option value="all">All time</option>
+                      </select>
+                      <CalendarDays className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#8F8F8E]" />
+                    </div>
+                  </div>
+                </div>
               </div>
+
+              {/* Custom date inputs */}
+              {dateRange === "custom" && (
+                <div className="mt-4 flex flex-wrap items-end gap-3 rounded-md bg-[#FAFAFA] p-3">
+                  <div className="w-[180px]">
+                    <label
+                      htmlFor="date-start"
+                      className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+                    >
+                      From
+                    </label>
+                    <Input
+                      id="date-start"
+                      type="date"
+                      value={customStart}
+                      max={customEnd || getToday()}
+                      onChange={(event) => setCustomStart(event.target.value)}
+                      className="h-9 border-strokestroke-gray text-xs"
+                    />
+                  </div>
+
+                  <div className="w-[180px]">
+                    <label
+                      htmlFor="date-end"
+                      className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+                    >
+                      To
+                    </label>
+                    <Input
+                      id="date-end"
+                      type="date"
+                      value={customEnd}
+                      min={customStart || undefined}
+                      max={getToday()}
+                      onChange={(event) => setCustomEnd(event.target.value)}
+                      className="h-9 border-strokestroke-gray text-xs"
+                    />
+                  </div>
+
+                  {customStart && customEnd && customStart > customEnd && (
+                    <p className="pb-2 text-xs text-red-600">
+                      The start date must be before the end date.
+                    </p>
+                  )}
+                </div>
+              )}
+
+
             </div>
 
-            <div className="border-t border-strokestroke-gray" />
+            {/* History table */}
+            <div className="px-[18px] pb-[18px] pt-2">
+            {/* Result count and reset */}
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+                <p className="h-8 text-xs text-[#8F8F8E]">
+                  Showing{" "}
+                  <span className="font-semibold text-[#333333]">
+                    {filtered.length}
+                  </span>{" "}
+                  of {rows.length} records
+                </p>
+              </div>
 
-            <div className="px-[18px] pb-[18px] pt-4">
               <div className="overflow-x-auto rounded-md border border-strokestroke-gray">
-                <Table className="min-w-[900px]">
-                  <TableHeader className="bg-[#F8F8F8]">
+                
+                <Table className="min-w-[850px]">
+                  <TableHeader>
                     <TableRow className="hover:bg-[#F8F8F8]">
                       <TableHead className={headClass}>MO Code</TableHead>
-                      <TableHead className={headClass}>Materials</TableHead>
+                      <TableHead className={headClass}>Model</TableHead>
                       <TableHead className={headClass}>Status</TableHead>
-                      <TableHead className={headClass}>Notes</TableHead>
-                      <TableHead className={headClass}>Date</TableHead>
+                      <TableHead className={headClass}>Submitted At</TableHead>
+                      <TableHead className={headClass}>Action</TableHead>
                     </TableRow>
                   </TableHeader>
 
@@ -105,40 +382,62 @@ export default function EximHistoryPage() {
                       <TableRow>
                         <TableCell
                           colSpan={5}
-                          className="px-3 py-6 text-center text-xs text-[#8F8F8E]"
+                          className="px-3 py-10 text-center"
                         >
-                          No matching history found.
+                          <p className="text-sm font-medium text-[#333333]">
+                            No matching records
+                          </p>
+                          <p className="mt-1 text-xs text-[#8F8F8E]">
+                            Try changing your search or filter criteria.
+                          </p>
+                          <button
+                            type="button"
+                            onClick={resetFilters}
+                            className="mt-3 text-xs font-medium text-[#046A39] hover:underline"
+                          >
+                            Reset filters
+                          </button>
                         </TableCell>
                       </TableRow>
                     ) : (
                       filtered.map((row) => (
-                        <TableRow key={row.code} className="h-12 hover:bg-[#FAFAFA]">
-                          <TableCell className="px-3 py-2 text-xs font-medium text-[#111111]">
+                        <TableRow
+                          key={row.code}
+                          className="h-12 hover:bg-[#FAFAFA]"
+                        >
+                          <TableCell className="whitespace-nowrap px-3 py-2 text-xs font-medium text-[#111111]">
                             {row.code}
                           </TableCell>
+
                           <TableCell className="px-3 py-2 text-xs text-[#111111]">
-                            {row.materials} items
+                            {row.model}
                           </TableCell>
+
                           <TableCell className="px-3 py-2">
                             <span
                               className={cn(
-                                "inline-flex rounded px-2 py-0.5 text-xs font-semibold",
+                                "inline-flex whitespace-nowrap rounded px-2 py-0.5 text-xs font-semibold",
                                 STATUS_STYLES[row.status],
                               )}
                             >
                               {row.status}
                             </span>
                           </TableCell>
-                          <TableCell
-                            className={cn(
-                              "max-w-[320px] px-3 py-2 text-xs",
-                              row.notes === "-" ? "text-[#8F8F8E]" : "text-[#111111]",
-                            )}
-                          >
-                            {row.notes}
+
+                          <TableCell className="whitespace-nowrap px-3 py-2 text-xs text-[#5F5F5E]">
+                            {row.submittedAt}
                           </TableCell>
-                          <TableCell className="px-3 py-2 text-xs text-[#5F5F5E]">
-                            {row.date}
+
+                          <TableCell className="px-3 py-2">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                console.log("View MO detail:", row.code)
+                              }
+                              className="whitespace-nowrap text-xs font-medium text-[#046A39] hover:underline"
+                            >
+                              See Detail
+                            </button>
                           </TableCell>
                         </TableRow>
                       ))

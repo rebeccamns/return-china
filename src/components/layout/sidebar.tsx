@@ -4,6 +4,7 @@ import {
   ArrowRightLeft,
   ChevronDown,
   ChevronsUpDown,
+  FileText,
   History,
   LayoutDashboard,
   LogOut,
@@ -24,7 +25,7 @@ type NavGroup = {
 };
 type NavItem = NavLink | NavGroup;
 
-export type SidebarVariant = "pmc" | "exim";
+export type SidebarVariant = "pmc" | "exim" | "superadmin";
 
 const NAV: Record<SidebarVariant, NavItem[]> = {
   pmc: [
@@ -42,6 +43,11 @@ const NAV: Record<SidebarVariant, NavItem[]> = {
   exim: [
     { label: "Exim", href: "/exim", icon: ArrowRightLeft },
     { label: "History", href: "/exim/history", icon: History },
+  ],
+    superadmin: [
+    { label: "Dashboard", href: "/superadmin", icon: LayoutDashboard },
+    { label: "MO Monitoring", href: "/superadmin/mo-monitoring", icon: FileText },
+    { label: "History", href: "/superadmin/history", icon: History },
   ],
 };
 

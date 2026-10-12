@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 
 import MobileHeader from "@/components/layout/mobile-header";
@@ -85,8 +85,9 @@ const INITIAL_MATERIALS: IQCMaterial[] = [
 export default function IQCPage({
   params,
 }: {
-  params: { moId: string };
+  params: Promise<{ moId: string }>;
 }) {
+const { moId } = use(params);
   const [step, setStep] = useState<Step>("overview");
   const [materials, setMaterials] = useState<IQCMaterial[]>(INITIAL_MATERIALS);
   const [selectedMaterialId, setSelectedMaterialId] = useState<string | null>(null);
@@ -95,7 +96,7 @@ export default function IQCPage({
   const [submitted, setSubmitted] = useState(false);
 
   const moData = {
-    moNumber: params.moId || "MO-321654987",
+   moNumber: moId || "MO-321654987",
     submittedAt: "2026-09-02 09:05",
     returnId: "RC-20260831-002",
     model: "Latte-M",

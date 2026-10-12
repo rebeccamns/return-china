@@ -25,7 +25,7 @@ export default function MobileHeader() {
 
         <div className="flex flex-col items-start gap-2.5">
           <div className="flex items-center gap-[5px]">
-            <span className="text-[13px] text-[#202124]">🔒</span>
+            <span className="text-[13px] text-[#202124]"></span>
 
             <span className="text-[14px] leading-normal text-[#202124]">
               10.121.123.456
