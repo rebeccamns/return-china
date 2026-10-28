@@ -5,6 +5,8 @@ import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/i18n";
+import type { TranslationKey } from "@/i18n";
 
 /* =========================================================
    TYPES + DATA
@@ -73,6 +75,12 @@ const STATUS_STYLES: Record<Status, string> = {
   "Not started": "bg-slate-100 text-slate-600",
 };
 
+const STATUS_LABEL_KEYS: Record<Status, TranslationKey> = {
+  Completed: "status.completed",
+  "In progress": "status.inProgress",
+  "Not started": "status.notStarted",
+};
+
 const taskName = (t: Task) => `${t.batch} - ${t.type} ${t.model}`;
 
 const percent = (t: Task) =>
@@ -118,6 +126,7 @@ export default function TaskProgressCard({
 }: {
   tasks?: Task[];
 }) {
+  const { t } = useI18n();
   const [view, setView] = useState<View>("overall");
 
   // Ongoing tasks first, completed ones last
@@ -137,11 +146,11 @@ export default function TaskProgressCard({
   return (
     <Card className="min-w-0 flex-1 overflow-hidden rounded-lg border-slate-200">
       <CardHeader className="flex flex-row items-center justify-between gap-4 border-b px-4 py-3">
-        <CardTitle className="text-sm font-semibold">Task Progress</CardTitle>
+        <CardTitle className="text-sm font-semibold">{t("dashboard.taskProgress.title")}</CardTitle>
 
         <div
           role="tablist"
-          aria-label="Task progress view"
+          aria-label={t("dashboard.taskProgress.viewTablist")}
           className="flex h-8 rounded-md bg-slate-100 p-0.5"
         >
           {(["overall", "details"] as const).map((item) => (
@@ -159,7 +168,9 @@ export default function TaskProgressCard({
               )}
               onClick={() => setView(item)}
             >
-              {item}
+              {item === "overall"
+                ? t("dashboard.taskProgress.overall")
+                : t("dashboard.taskProgress.details")}
             </Button>
           ))}
         </div>
@@ -168,8 +179,7 @@ export default function TaskProgressCard({
       <CardContent className="space-y-4 px-4 py-3">
         {tasks.length === 0 ? (
           <div className="rounded-md border border-dashed border-slate-200 bg-slate-50 p-4 text-center text-xs text-slate-500">
-            No tasks yet. A task is created automatically when an MO is entered
-            in MO Entry.
+            {t("dashboard.taskProgress.noTasks")}
           </div>
         ) : view === "overall" ? (
           <>
@@ -178,7 +188,7 @@ export default function TaskProgressCard({
                 <strong className="text-2xl leading-6">
                   {completed}/{tasks.length}
                 </strong>
-                <span className="text-xs text-slate-500">task complete</span>
+                <span className="text-xs text-slate-500">{t("dashboard.taskProgress.taskComplete")}</span>
               </div>
 
               <div className="flex items-center gap-2">
@@ -189,7 +199,7 @@ export default function TaskProgressCard({
               </div>
 
               <p className="text-[11px] text-slate-500">
-                {moDone} of {moTotal} MO done across all tasks
+                {t("dashboard.taskProgress.moDoneSummary", { done: moDone, total: moTotal })}
               </p>
             </section>
 
@@ -197,9 +207,9 @@ export default function TaskProgressCard({
 
             <section className="space-y-2">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold">Task List</h3>
+                <h3 className="text-sm font-semibold">{t("dashboard.taskProgress.taskList")}</h3>
                 <span className="text-[10px] text-slate-500">
-                  {ongoing} task ongoing
+                  {t("dashboard.taskProgress.tasksOngoing", { count: ongoing })}
                 </span>
               </div>
 
@@ -254,7 +264,7 @@ export default function TaskProgressCard({
                         {taskName(task)}
                       </p>
                       <p className="mt-0.5 truncate text-[10px] text-slate-500">
-                        Auto-created from {task.createdFromMo} · {task.createdAt}
+                        {t("dashboard.taskProgress.autoCreated", { mo: task.createdFromMo, date: task.createdAt })}
                       </p>
                     </div>
 
@@ -264,7 +274,7 @@ export default function TaskProgressCard({
                         STATUS_STYLES[status],
                       )}
                     >
-                      {status}
+                      {t(STATUS_LABEL_KEYS[status])}
                     </span>
                   </div>
 
@@ -280,10 +290,10 @@ export default function TaskProgressCard({
                       <strong className="font-semibold text-slate-700">
                         {task.done}
                       </strong>{" "}
-                      of {task.total} MO done
-                      {remaining > 0 && ` · ${remaining} remaining`}
+                      {t("dashboard.taskProgress.moDoneSuffix", { total: task.total })}
+                      {remaining > 0 && ` · ${t("dashboard.taskProgress.remaining", { count: remaining })}`}
                     </span>
-                    <span className="shrink-0">Updated {task.updatedAt}</span>
+                    <span className="shrink-0">{t("dashboard.taskProgress.updated", { date: task.updatedAt })}</span>
                   </div>
                 </li>
               );

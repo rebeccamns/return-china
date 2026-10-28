@@ -4,29 +4,54 @@ import { useMemo, useState } from "react";
 
 import Sidebar from "@/components/layout/sidebar";
 import TopBar from "@/components/layout/topbar";
+import { useI18n } from "@/i18n";
+import type { TranslationKey } from "@/i18n";
 
 import DashboardHeader from "./_components/DashboardHeader";
 import KpiCards from "./_components/KpiCards";
 import RejectionRateChart from "./_components/RejectionRateChart";
 import SltPerformanceCard from "./_components/SltPerformanceCard";
 import {
-  COMPARE_LABEL,
   DEFAULT_PERIOD,
-  PERIOD_OPTIONS,
   getDashboardData,
+  getPeriodOptions,
+  type PeriodOptionTexts,
 } from "./_lib/data";
 import { exportDashboardCsv } from "./_lib/export";
 import type { Mode } from "./_lib/types";
 
+const COMPARE_LABEL_KEYS: Record<Mode, TranslationKey> = {
+  year: "superadmin.compare.year",
+  month: "superadmin.compare.month",
+  date: "superadmin.compare.date",
+  day: "superadmin.compare.day",
+};
+
 export default function SuperadminDashboardPage() {
+  const { t, dictionary } = useI18n();
   const [mode, setMode] = useState<Mode>("year");
   const [period, setPeriod] = useState(DEFAULT_PERIOD.year);
 
   // TODO: replace with a fetch keyed on [mode, period]
   const data = useMemo(() => getDashboardData(mode, period), [mode, period]);
 
+  const periodTexts = useMemo<PeriodOptionTexts>(
+    () => ({
+      monthsShort: dictionary.dates.monthsShort,
+      weekdaysShort: dictionary.dates.weekdaysShort,
+      today: t("dates.today"),
+      yesterday: t("dates.yesterday"),
+      lastNDays: (days) => t("dates.lastNDays", { days }),
+      formatShortDate: (day, monthIndex) =>
+        `${day} ${dictionary.dates.monthsShort[monthIndex]}`,
+    }),
+    [dictionary, t],
+  );
+
   const periodLabel =
-    PERIOD_OPTIONS[mode].find((option) => option.value === period)?.label ?? period;
+    getPeriodOptions(mode, periodTexts).find((option) => option.value === period)?.label ?? period;
+
+  const compareLabel = t(COMPARE_LABEL_KEYS[mode]);
 
   function handleModeChange(next: Mode) {
     setMode(next);
@@ -34,7 +59,7 @@ export default function SuperadminDashboardPage() {
   }
 
   function handleExport() {
-    exportDashboardCsv(data, { mode, periodLabel, compareLabel: COMPARE_LABEL[mode] });
+    exportDashboardCsv(data, { mode, periodLabel, compareLabel });
   }
 
   return (
@@ -46,9 +71,9 @@ export default function SuperadminDashboardPage() {
 
         <div className="mt-[52px] w-full px-[18px] py-5">
           <nav className="mb-5 flex items-center gap-2 text-xs">
-            <span className="text-text-colortext-gray">Dashboard</span>
+            <span className="text-text-colortext-gray">{t("superadmin.dashboard")}</span>
             <span className="text-[#B5B5B3]">›</span>
-            <span className="font-medium text-text-colortext-dark">Dashboard</span>
+            <span className="font-medium text-text-colortext-dark">{t("superadmin.dashboard")}</span>
           </nav>
 
           <DashboardHeader
@@ -60,7 +85,7 @@ export default function SuperadminDashboardPage() {
           />
 
           <div className="mt-5 flex flex-col gap-5">
-            <KpiCards kpis={data.kpis} compareLabel={COMPARE_LABEL[mode]} />
+            <KpiCards kpis={data.kpis} compareLabel={compareLabel} />
             <RejectionRateChart points={data.trend} />
             <SltPerformanceCard rows={data.flows} />
           </div>

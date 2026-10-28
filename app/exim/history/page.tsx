@@ -15,6 +15,8 @@ import {
 import Sidebar from "@/components/layout/sidebar";
 import TopBar from "@/components/layout/topbar";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/i18n";
+import type { TranslationKey } from "@/i18n";
 
 type Status = "Submitted" | "Rejected" | "Resubmitted";
 type DateRange = "7" | "30" | "custom" | "all";
@@ -31,6 +33,12 @@ const STATUS_STYLES: Record<Status, string> = {
   Submitted: "bg-[#E6F4EA] text-[#0b5934]",
   Rejected: "bg-red-50 text-red-600",
   Resubmitted: "bg-amber-50 text-amber-700",
+};
+
+const STATUS_LABEL_KEYS: Record<Status, TranslationKey> = {
+  Submitted: "status.submitted",
+  Rejected: "status.rejected",
+  Resubmitted: "status.resubmitted",
 };
 
 const headClass =
@@ -89,6 +97,7 @@ function getToday() {
 }
 
 export default function EximHistoryPage() {
+  const { t } = useI18n();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [modelFilter, setModelFilter] = useState("All");
@@ -167,14 +176,14 @@ export default function EximHistoryPage() {
 
         <div className="mt-[52px] w-full px-[18px] py-5">
           <nav className="mb-4 flex items-center gap-2 text-xs">
-            <span className="text-text-colortext-gray">Exim</span>
+            <span className="text-text-colortext-gray">{t("exim.title")}</span>
             <span className="text-[#B5B5B3]">›</span>
             <span className="font-medium text-text-colortext-dark">
-              History
+              {t("exim.history.title")}
             </span>
           </nav>
 
-          <h1 className="mb-4 text-lg font-semibold text-[#111111]">History</h1>
+          <h1 className="mb-4 text-lg font-semibold text-[#111111]">{t("exim.history.title")}</h1>
 
           <div className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
             
@@ -190,14 +199,14 @@ export default function EximHistoryPage() {
                     htmlFor="history-search"
                     className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
                   >
-                    Search
+                    {t("exim.history.searchLabel")}
                   </label>
 
                   <div className="relative">
                     <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#A3A3A1]" />
                     <Input
                       id="history-search"
-                      placeholder="Search MO, model, or WO..."
+                      placeholder={t("exim.history.searchPlaceholder")}
                       value={search}
                       onChange={(event) => setSearch(event.target.value)}
                       className="h-9 rounded-md border-strokestroke-gray pl-9 text-xs placeholder:text-[#A3A3A1]"
@@ -217,7 +226,7 @@ export default function EximHistoryPage() {
                         onClick={resetFilters}
                         className="text-xs font-medium text-[#046A39] hover:underline"
                       >
-                        Clear all filters
+                        {t("exim.history.clearFilters")}
                       </button>
                     </div>
                   )}
@@ -227,9 +236,9 @@ export default function EximHistoryPage() {
                     <label
                       htmlFor="status-filter"
                       className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
-                    >
-                      Status
-                    </label>
+                      >
+                        {t("exim.history.statusLabel")}
+                      </label>
                     <div className="relative">
                       <select
                         id="status-filter"
@@ -239,10 +248,10 @@ export default function EximHistoryPage() {
                         }
                         className={cn(inputClass, "appearance-none pr-8")}
                       >
-                        <option value="All">All statuses</option>
-                        <option value="Submitted">Submitted</option>
-                        <option value="Rejected">Rejected</option>
-                        <option value="Resubmitted">Resubmitted</option>
+                        <option value="All">{t("exim.history.allStatuses")}</option>
+                        <option value="Submitted">{t("status.submitted")}</option>
+                        <option value="Rejected">{t("status.rejected")}</option>
+                        <option value="Resubmitted">{t("status.resubmitted")}</option>
                       </select>
                       <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#8F8F8E]" />
                     </div>
@@ -253,9 +262,9 @@ export default function EximHistoryPage() {
                     <label
                       htmlFor="model-filter"
                       className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
-                    >
-                      Model
-                    </label>
+                      >
+                        {t("exim.history.modelLabel")}
+                      </label>
                     <div className="relative">
                       <select
                         id="model-filter"
@@ -263,7 +272,7 @@ export default function EximHistoryPage() {
                         onChange={(event) => setModelFilter(event.target.value)}
                         className={cn(inputClass, "appearance-none pr-8")}
                       >
-                        <option value="All">All models</option>
+                        <option value="All">{t("exim.history.allModels")}</option>
                         {models.map((model) => (
                           <option key={model} value={model}>
                             {model}
@@ -279,9 +288,9 @@ export default function EximHistoryPage() {
                     <label
                       htmlFor="date-range"
                       className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
-                    >
-                      Date Range
-                    </label>
+                      >
+                        {t("exim.history.dateRangeLabel")}
+                      </label>
                     <div className="relative">
                       <select
                         id="date-range"
@@ -291,10 +300,10 @@ export default function EximHistoryPage() {
                         }
                         className={cn(inputClass, "appearance-none pr-8")}
                       >
-                        <option value="7">Last 7 days</option>
-                        <option value="30">Last 30 days</option>
-                        <option value="custom">Custom range</option>
-                        <option value="all">All time</option>
+                        <option value="7">{t("exim.history.last7Days")}</option>
+                        <option value="30">{t("exim.history.last30Days")}</option>
+                        <option value="custom">{t("exim.history.customRange")}</option>
+                        <option value="all">{t("exim.history.allTime")}</option>
                       </select>
                       <CalendarDays className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#8F8F8E]" />
                     </div>
@@ -309,9 +318,9 @@ export default function EximHistoryPage() {
                     <label
                       htmlFor="date-start"
                       className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
-                    >
-                      From
-                    </label>
+                      >
+                        {t("exim.history.from")}
+                      </label>
                     <Input
                       id="date-start"
                       type="date"
@@ -326,9 +335,9 @@ export default function EximHistoryPage() {
                     <label
                       htmlFor="date-end"
                       className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
-                    >
-                      To
-                    </label>
+                      >
+                        {t("exim.history.to")}
+                      </label>
                     <Input
                       id="date-end"
                       type="date"
@@ -342,7 +351,7 @@ export default function EximHistoryPage() {
 
                   {customStart && customEnd && customStart > customEnd && (
                     <p className="pb-2 text-xs text-red-600">
-                      The start date must be before the end date.
+                      {t("exim.history.dateError")}
                     </p>
                   )}
                 </div>
@@ -356,11 +365,7 @@ export default function EximHistoryPage() {
             {/* Result count and reset */}
               <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
                 <p className="h-8 text-xs text-[#8F8F8E]">
-                  Showing{" "}
-                  <span className="font-semibold text-[#333333]">
-                    {filtered.length}
-                  </span>{" "}
-                  of {rows.length} records
+                  {t("exim.history.showingRecords", { shown: filtered.length, total: rows.length })}
                 </p>
               </div>
 
@@ -369,11 +374,11 @@ export default function EximHistoryPage() {
                 <Table className="min-w-[850px]">
                   <TableHeader>
                     <TableRow className="hover:bg-[#F8F8F8]">
-                      <TableHead className={headClass}>MO Code</TableHead>
-                      <TableHead className={headClass}>Model</TableHead>
-                      <TableHead className={headClass}>Status</TableHead>
-                      <TableHead className={headClass}>Submitted At</TableHead>
-                      <TableHead className={headClass}>Action</TableHead>
+                      <TableHead className={headClass}>{t("common.moCode")}</TableHead>
+                      <TableHead className={headClass}>{t("common.model")}</TableHead>
+                      <TableHead className={headClass}>{t("common.status")}</TableHead>
+                      <TableHead className={headClass}>{t("exim.history.submittedAtColumn")}</TableHead>
+                      <TableHead className={headClass}>{t("common.action")}</TableHead>
                     </TableRow>
                   </TableHeader>
 
@@ -385,17 +390,17 @@ export default function EximHistoryPage() {
                           className="px-3 py-10 text-center"
                         >
                           <p className="text-sm font-medium text-[#333333]">
-                            No matching records
+                            {t("exim.history.noMatchingRecords")}
                           </p>
                           <p className="mt-1 text-xs text-[#8F8F8E]">
-                            Try changing your search or filter criteria.
+                            {t("exim.history.noMatchingHint")}
                           </p>
                           <button
                             type="button"
                             onClick={resetFilters}
                             className="mt-3 text-xs font-medium text-[#046A39] hover:underline"
                           >
-                            Reset filters
+                            {t("exim.history.resetFilters")}
                           </button>
                         </TableCell>
                       </TableRow>
@@ -420,7 +425,7 @@ export default function EximHistoryPage() {
                                 STATUS_STYLES[row.status],
                               )}
                             >
-                              {row.status}
+                              {t(STATUS_LABEL_KEYS[row.status])}
                             </span>
                           </TableCell>
 
@@ -436,7 +441,7 @@ export default function EximHistoryPage() {
                               }
                               className="whitespace-nowrap text-xs font-medium text-[#046A39] hover:underline"
                             >
-                              See Detail
+                              {t("common.seeDetail")}
                             </button>
                           </TableCell>
                         </TableRow>

@@ -4,6 +4,8 @@
 import { useState } from "react";
 import { Check, ChevronDown, ChevronRight } from "lucide-react";
 
+import { useI18n } from "@/i18n";
+
 type MoSummaryCardProps = {
   moNumber?: string;
   submittedAt?: string;
@@ -33,6 +35,7 @@ export default function MoSummaryCard({
   onCreatePackingList,
   showCreateButton = false,
 }: MoSummaryCardProps) {
+  const { t } = useI18n();
   const [expanded, setExpanded] = useState(defaultExpanded);
 
   const progress =
@@ -61,7 +64,7 @@ const toggleExpanded = () => {
           </h2>
 
           <p className="mt-1 text-[14px] font-medium leading-[125%] text-text-colortext-gray">
-            Submitted at {submittedAt}
+            {t("common.submittedAt", { date: submittedAt })}
           </p>
         </div>
 
@@ -77,7 +80,7 @@ const toggleExpanded = () => {
           <dl className="grid grid-cols-2 gap-4 border-b border-strokestroke-gray pb-4">
             <div className="flex min-w-0 flex-col gap-1">
               <dt className="text-[14px] font-medium leading-[125%] text-text-colortext-dark">
-                Return ID
+                {t("common.returnId")}
               </dt>
               <dd className="break-words text-[16px] font-medium leading-[125%] text-text-colortext-black">
                 {returnId}
@@ -86,7 +89,7 @@ const toggleExpanded = () => {
 
             <div className="flex min-w-0 flex-col gap-1">
               <dt className="text-[14px] font-medium leading-[125%] text-text-colortext-dark">
-                Model
+                {t("common.model")}
               </dt>
               <dd className="break-words text-[16px] font-medium leading-[125%] text-text-colortext-black">
                 {model}
@@ -95,7 +98,7 @@ const toggleExpanded = () => {
 
             <div className="col-span-2 flex min-w-0 flex-col gap-1">
               <dt className="text-[14px] font-medium leading-[125%] text-text-colortext-dark">
-                WO
+                {t("common.wo")}
               </dt>
               <dd className="break-words text-[16px] font-medium leading-[125%] text-text-colortext-black">
                 {wo}
@@ -109,7 +112,7 @@ const toggleExpanded = () => {
         <div className="px-4 pb-4">
           <div className="mb-3 flex items-center justify-between gap-3">
             <span className="text-[14px] font-medium leading-[125%] text-text-colortext-gray">
-              {scannedCount}/{totalCartons} Carton Stickers Scanned
+              {t("staffReturnSticker.stickersScanned", { scanned: scannedCount, total: totalCartons })}
             </span>
             <span className="text-[14px] font-medium leading-[125%] text-text-colortext-gray">
               {progress}%
@@ -118,7 +121,7 @@ const toggleExpanded = () => {
 
           <div
             role="progressbar"
-            aria-label="Carton sticker scan progress"
+            aria-label={t("staffReturnSticker.scanProgressLabel")}
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={progress}
@@ -133,7 +136,7 @@ const toggleExpanded = () => {
           {totalCartons > 0 && scannedCount >= totalCartons && (
             <div className="mt-3 flex items-center gap-2 text-sm font-medium text-primaryprimary-green">
               <Check className="h-4 w-4" />
-              All carton stickers scanned
+              {t("staffReturnSticker.allScanned")}
             </div>
           )}
         </div>
@@ -146,7 +149,7 @@ const toggleExpanded = () => {
             onClick={onCreatePackingList}
             className="h-10 w-full rounded-md bg-[linear-gradient(0deg,rgba(11,89,52,1)_0%,rgba(5,131,70,1)_100%)] px-3 text-[12px] font-semibold leading-[125%] text-white shadow-none hover:opacity-90"
           >
-            Create Packing List
+            {t("staffReturn.createPackingList")}
           </button>
         </div>
       )}

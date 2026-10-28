@@ -3,6 +3,7 @@
 import { ChangeEvent, useState } from "react";
 import { ArrowLeft, Camera, ScanLine } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useI18n } from "@/i18n";
 import type { IQCMaterial, InspectionStatus } from "./iqc-types";
 
 type Props = {
@@ -16,6 +17,7 @@ export default function MaterialInspectionForm({
   onBack,
   onSave,
 }: Props) {
+  const { t } = useI18n();
   const [upnBarcode, setUpnBarcode] = useState(material.upnBarcode);
   const [photoName, setPhotoName] = useState(material.photoName);
   const [photoPreview, setPhotoPreview] = useState("");
@@ -33,22 +35,22 @@ export default function MaterialInspectionForm({
 
   function handleSave() {
     if (!upnBarcode.trim()) {
-      setError("Please scan or enter the UPN barcode.");
+      setError(t("iqc.form.errorUpnRequired"));
       return;
     }
 
     if (upnBarcode.trim() !== material.code) {
-      setError("The scanned UPN does not match this material code. Please check again.");
+      setError(t("iqc.form.errorUpnMismatch"));
       return;
     }
 
     if (!photoName) {
-      setError("Please take or upload the UPN photo.");
+      setError(t("iqc.form.errorPhotoRequired"));
       return;
     }
 
     if (!status) {
-      setError("Please select PASS / OK or REJECT.");
+      setError(t("iqc.form.errorStatusRequired"));
       return;
     }
 
@@ -68,14 +70,14 @@ export default function MaterialInspectionForm({
           type="button"
           onClick={onBack}
           className="flex items-center gap-3 text-left"
-          aria-label="Back to material list"
+          aria-label={t("iqc.form.backToList")}
         >
           <ArrowLeft className="h-5 w-5 text-text-colortext-dark" />
           <span className="text-[16px] font-semibold text-text-colortext-black">
-            Material Inspection
+            {t("iqc.form.title")}
           </span>
         </button>
-        <span className="text-[12px] text-text-colortext-gray">Required fields *</span>
+        <span className="text-[12px] text-text-colortext-gray">{t("iqc.form.requiredFields")}</span>
       </div>
 
       <div className="p-4">
@@ -87,13 +89,13 @@ export default function MaterialInspectionForm({
             {material.englishName} {material.chinaName}
           </p>
           <p className="mt-2 text-[12px] text-text-colortext-gray">
-            Quantity: {material.qty} pcs
+            {t("iqc.form.quantity", { qty: material.qty })}
           </p>
         </div>
 
         <div className="mt-5">
           <label htmlFor="iqc-upn-barcode" className="mb-2 block text-[14px] font-medium text-text-colortext-dark">
-            Scan UPN Barcode <span className="text-red-500">*</span>
+            {t("common.scanUpnBarcode")} <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <Input
@@ -103,7 +105,7 @@ export default function MaterialInspectionForm({
                 setUpnBarcode(event.target.value);
                 setError("");
               }}
-              placeholder="Scan or type manually..."
+              placeholder={t("common.scanOrTypePlaceholder")}
               className="h-[48px] rounded-md border-strokestroke-gray px-3 pr-11 text-[14px]"
             />
             <ScanLine className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-text-colortext-gray" />
@@ -112,20 +114,20 @@ export default function MaterialInspectionForm({
 
         <div className="mt-5">
           <label className="mb-2 block text-[14px] font-medium text-text-colortext-dark">
-            UPN Photo <span className="text-red-500">*</span>
+            {t("common.upnPhoto")} <span className="text-red-500">*</span>
           </label>
           <label className="flex min-h-[140px] cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#b8d9c5] bg-[#f5fbf7] p-4 text-center transition-colors hover:bg-[#edf8f1]">
             {photoPreview ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={photoPreview} alt="UPN photo preview" className="mb-3 max-h-36 rounded object-contain" />
+              <img src={photoPreview} alt={t("iqc.form.photoPreviewAlt")} className="mb-3 max-h-36 rounded object-contain" />
             ) : (
               <Camera className="mb-2 h-7 w-7 text-primaryprimary-green" strokeWidth={1.8} />
             )}
             <span className="text-[14px] font-medium text-text-colortext-dark">
-              {photoName || "Take or Upload Photo"}
+              {photoName || t("common.takeOrUploadPhoto")}
             </span>
             <span className="mt-1 text-[12px] text-text-colortext-gray">
-              Tap to open your camera or gallery
+              {t("iqc.form.upnPhotoHint")}
             </span>
             <input
               type="file"
@@ -139,7 +141,7 @@ export default function MaterialInspectionForm({
 
         <fieldset className="mt-5">
           <legend className="mb-3 text-[14px] font-medium text-text-colortext-dark">
-            Status Item <span className="text-red-500">*</span>
+            {t("iqc.form.statusItem")} <span className="text-red-500">*</span>
           </legend>
           <div className="grid grid-cols-2 gap-3">
             <button
@@ -155,7 +157,7 @@ export default function MaterialInspectionForm({
                   : "border-red-200 bg-white text-red-600"
               }`}
             >
-              {status === "REJECT" ? "✓ REJECT" : "REJECT"}
+              {status === "REJECT" ? `✓ ${t("status.reject")}` : t("status.reject")}
             </button>
             <button
               type="button"
@@ -170,21 +172,21 @@ export default function MaterialInspectionForm({
                   : "border-[#b7ddc5] bg-white text-[#006B3C]"
               }`}
             >
-              {status === "PASS" ? "✓ PASS / OK" : "PASS / OK"}
+              {status === "PASS" ? `✓ ${t("status.passOk")}` : t("status.passOk")}
             </button>
           </div>
         </fieldset>
 
         <div className="mt-5">
           <label htmlFor="iqc-notes" className="mb-2 block text-[14px] font-medium text-text-colortext-dark">
-            Notes <span className="text-[12px] font-normal text-text-colortext-gray">(Optional)</span>
+            {t("iqc.form.notesLabel")} <span className="text-[12px] font-normal text-text-colortext-gray">{t("common.optional")}</span>
           </label>
           <textarea
             id="iqc-notes"
             rows={3}
             value={notes}
             onChange={(event) => setNotes(event.target.value)}
-            placeholder="Enter inspection notes..."
+            placeholder={t("iqc.form.notesPlaceholder")}
             className="w-full resize-y rounded-md border border-strokestroke-gray px-3 py-3 text-[14px] outline-none focus:border-primaryprimary-green"
           />
         </div>
@@ -200,7 +202,7 @@ export default function MaterialInspectionForm({
           onClick={handleSave}
           className="mt-6 h-11 w-full rounded-md bg-[linear-gradient(0deg,rgba(11,89,52,1)_0%,rgba(5,131,70,1)_100%)] text-[14px] font-semibold text-white shadow-none hover:opacity-90"
         >
-          Save Inspection
+          {t("iqc.form.save")}
         </button>
       </div>
     </section>

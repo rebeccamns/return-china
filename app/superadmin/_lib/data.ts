@@ -39,19 +39,44 @@ export const MODES: { value: Mode; label: string }[] = [
   { value: "day", label: "Day" }, //     chart = one point per working hour of one day
 ];
 
-export const PERIOD_OPTIONS: Record<Mode, PeriodOption[]> = {
-  year: ["2026", "2025", "2024"].map((y) => ({ value: y, label: y })),
-  month: Array.from({ length: TODAY.getMonth() + 1 }, (_, i) => TODAY.getMonth() - i).map((m) => ({
-    value: String(m),
-    label: `${MONTHS[m]} 2026`,
-  })),
-  date: [7, 14, 30].map((n) => ({ value: String(n), label: `Last ${n} days` })),
-  day: Array.from({ length: 7 }, (_, i) => {
-    const d = addDays(TODAY, -i);
-    const prefix = i === 0 ? "Today" : i === 1 ? "Yesterday" : WEEKDAYS[d.getDay()];
-    return { value: isoDay(d), label: `${prefix}, ${shortDate(d)}` };
-  }),
+// Display labels for the period selector are locale-aware; the component
+// supplies the translated fragments and this builds the option list.
+export type PeriodOptionTexts = {
+  monthsShort: readonly string[];
+  weekdaysShort: readonly string[];
+  today: string;
+  yesterday: string;
+  lastNDays: (days: number) => string;
+  formatShortDate: (day: number, monthIndex: number) => string;
 };
+
+export function getPeriodOptions(mode: Mode, texts: PeriodOptionTexts): PeriodOption[] {
+  if (mode === "year") {
+    return ["2026", "2025", "2024"].map((y) => ({ value: y, label: y }));
+  }
+
+  if (mode === "month") {
+    return Array.from({ length: TODAY.getMonth() + 1 }, (_, i) => TODAY.getMonth() - i).map((m) => ({
+      value: String(m),
+      label: `${texts.monthsShort[m] ?? MONTHS[m]} 2026`,
+    }));
+  }
+
+  if (mode === "date") {
+    return [7, 14, 30].map((n) => ({ value: String(n), label: texts.lastNDays(n) }));
+  }
+
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = addDays(TODAY, -i);
+    const prefix =
+      i === 0
+        ? texts.today
+        : i === 1
+          ? texts.yesterday
+          : (texts.weekdaysShort[d.getDay()] ?? WEEKDAYS[d.getDay()]);
+    return { value: isoDay(d), label: `${prefix}, ${texts.formatShortDate(d.getDate(), d.getMonth())}` };
+  });
+}
 
 export const DEFAULT_PERIOD: Record<Mode, string> = {
   year: "2026",

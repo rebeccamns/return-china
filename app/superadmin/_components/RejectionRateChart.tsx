@@ -2,7 +2,9 @@
 
 import { useEffect, useId, useMemo, useState } from "react";
 
+import { useI18n } from "@/i18n";
 import { useElementWidth } from "../_lib/useElementWidth";
+import { stageLabelKey } from "../_lib/stageLabel";
 import type { TrendPoint } from "../_lib/types";
 
 /* Geometry in CSS px (measured from the design) */
@@ -42,6 +44,7 @@ function niceScale(rates: number[]) {
 const clamp = (n: number, min: number, max: number) => Math.min(Math.max(n, min), max);
 
 export default function RejectionRateChart({ points }: { points: TrendPoint[] }) {
+  const { t } = useI18n();
   const [ref, width] = useElementWidth<HTMLDivElement>();
   const [active, setActive] = useState<number | null>(null);
   const gradientId = `rate-fill-${useId().replace(/:/g, "")}`;
@@ -82,7 +85,7 @@ export default function RejectionRateChart({ points }: { points: TrendPoint[] })
   return (
     <section className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
       <header className="flex h-[55px] items-center border-b border-strokestroke-gray px-6">
-        <h2 className="text-base font-semibold text-[#111111]">Rejection rate (%)</h2>
+        <h2 className="text-base font-semibold text-[#111111]">{t("superadmin.chart.rejectionRate")}</h2>
       </header>
 
       <div className="pl-6 pr-8">
@@ -93,9 +96,10 @@ export default function RejectionRateChart({ points }: { points: TrendPoint[] })
                 width={width}
                 height={SVG_H}
                 role="img"
-                aria-label={`Rejection rate, from ${Math.min(...points.map((p) => p.rate))}% to ${Math.max(
-                  ...points.map((p) => p.rate),
-                )}%`}
+                aria-label={t("superadmin.chart.ariaLabel", {
+                  min: Math.min(...points.map((p) => p.rate)),
+                  max: Math.max(...points.map((p) => p.rate)),
+                })}
                 className="block touch-pan-y select-none"
                 onPointerMove={handleMove}
                 onPointerLeave={() => setActive(null)}
@@ -193,18 +197,25 @@ export default function RejectionRateChart({ points }: { points: TrendPoint[] })
                     </p>
 
                     {point.shipments === 0 ? (
-                      <p>No shipments in this period</p>
+                      <p>{t("superadmin.chart.noShipments")}</p>
                     ) : (
                       <>
-                        <p>{point.rate}% rejection rate</p>
+                        <p>{t("superadmin.chart.rejectionRateValue", { rate: point.rate })}</p>
                         <p>
-                          {point.rejected} rejected of {point.shipments.toLocaleString("en-US")}{" "}
-                          shipments
+                          {t("superadmin.chart.rejectedOf", {
+                            rejected: point.rejected,
+                            shipments: point.shipments.toLocaleString("en-US"),
+                          })}
                         </p>
                         {point.topStage && (
                           <p>
-                            Most rejections: {point.topStage} ({point.topStageCount} of{" "}
-                            {point.rejected})
+                            {t("superadmin.chart.mostRejections", {
+                              stage: stageLabelKey(point.topStage)
+                                ? t(stageLabelKey(point.topStage)!)
+                                : point.topStage,
+                              count: point.topStageCount,
+                              total: point.rejected,
+                            })}
                           </p>
                         )}
                       </>

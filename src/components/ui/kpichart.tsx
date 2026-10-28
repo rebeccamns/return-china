@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/i18n";
 
 const chartItems = [
   { label: "BATCH202609", normal: 2.9, abnormal: 0.8 },
@@ -38,6 +39,7 @@ const columns = {
 };
 
 export default function KpiCard() {
+  const { t } = useI18n();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [taskFilter, setTaskFilter] = useState("all");
 
@@ -49,7 +51,7 @@ export default function KpiCard() {
     <Card className="min-w-0 flex-1 overflow-visible rounded-lg border-slate-200 bg-white shadow-none">
       <CardHeader className="flex flex-row items-center justify-between gap-3 border-b px-5 py-3">
         <CardTitle className="text-sm font-semibold text-slate-900">
-          KPI
+          {t("dashboard.kpi.title")}
         </CardTitle>
 
         <div className="flex items-center gap-2">
@@ -59,18 +61,18 @@ export default function KpiCard() {
             type="button"
           >
             <CalendarDays className="h-3.5 w-3.5" />
-            Today
+            {t("dashboard.kpi.today")}
           </Button>
 
           <Select value={taskFilter} onValueChange={setTaskFilter}>
             <SelectTrigger className="h-8 w-[132px] gap-2 border-slate-200 px-3 text-xs font-normal">
               <ListFilter className="h-3.5 w-3.5 shrink-0" />
-              <SelectValue placeholder="All Tasks" />
+              <SelectValue placeholder={t("dashboard.kpi.allTasks")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Tasks</SelectItem>
-              <SelectItem value="normal">Flow Normal</SelectItem>
-              <SelectItem value="abnormal">Flow Abnormal</SelectItem>
+              <SelectItem value="all">{t("dashboard.kpi.allTasks")}</SelectItem>
+              <SelectItem value="normal">{t("dashboard.kpi.flowNormal")}</SelectItem>
+              <SelectItem value="abnormal">{t("dashboard.kpi.flowAbnormal")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -90,7 +92,7 @@ export default function KpiCard() {
                 transform: "rotate(180deg)",
               }}
             >
-              Lead time (days)
+              {t("dashboard.kpi.leadTimeAxis")}
             </span>
           </div>
 
@@ -186,10 +188,10 @@ export default function KpiCard() {
                             <div className="flex items-center justify-between gap-4">
                               <span className="flex items-center gap-1.5 text-slate-600">
                                 <span className="h-2 w-2 rounded-full bg-[#128d2a]" />
-                                Flow Normal
+                                {t("dashboard.kpi.flowNormal")}
                               </span>
                               <span className="font-semibold text-slate-900">
-                                {item.normal.toFixed(1)} days
+                                {t("dashboard.kpi.daysValue", { value: item.normal.toFixed(1) })}
                               </span>
                             </div>
                           )}
@@ -198,10 +200,10 @@ export default function KpiCard() {
                             <div className="mt-1.5 flex items-center justify-between gap-4">
                               <span className="flex items-center gap-1.5 text-slate-600">
                                 <span className="h-2 w-2 rounded-full bg-[#cf2635]" />
-                                Flow Abnormal
+                                {t("dashboard.kpi.flowAbnormal")}
                               </span>
                               <span className="font-semibold text-slate-900">
-                                {item.abnormal.toFixed(1)} days
+                                {t("dashboard.kpi.daysValue", { value: item.abnormal.toFixed(1) })}
                               </span>
                             </div>
                           )}
@@ -257,14 +259,14 @@ export default function KpiCard() {
           {showNormal && (
             <span className="flex items-center gap-1.5">
               <span className="h-2.5 w-2.5 rounded-full bg-[#128d2a]" />
-              Flow Normal
+              {t("dashboard.kpi.flowNormal")}
             </span>
           )}
 
           {showAbnormal && (
             <span className="flex items-center gap-1.5">
               <span className="h-2.5 w-2.5 rounded-full bg-[#cf2635]" />
-              Flow Abnormal
+              {t("dashboard.kpi.flowAbnormal")}
             </span>
           )}
         </div>

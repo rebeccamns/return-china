@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useState } from "react";
-import { ChevronDown, Info, MoreHorizontal, Plus } from "lucide-react";
+import { AlertCircle, ChevronDown, Info, MoreHorizontal, Plus } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,7 @@ import {
 
 import KpiCard from "@/components/ui/kpichart";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/i18n";
 import TaskProgressCard from "./TaskProgressCard";
 
 const inputClass =
@@ -54,6 +55,7 @@ type Material = {
   code: string;
   englishName: string;
   chinaName: string;
+  isRejected?: boolean;
 };
 
 type RevisionItem = {
@@ -85,6 +87,7 @@ const initialRevisionItems: RevisionItem[] = [
         code: "621032000320",
         englishName: "Battery cover AC175",
         chinaName: "电池盖组件 AC175 绿",
+        isRejected: true,
       },
       {
         code: "621032000320",
@@ -129,9 +132,12 @@ const initialRevisionItems: RevisionItem[] = [
 ========================================================= */
 
 export function RevisionNotice() {
+  const { t } = useI18n();
   const [items, setItems] = useState<RevisionItem[]>(initialRevisionItems);
   const [showAll, setShowAll] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [draftMaterials, setDraftMaterials] = useState<Material[]>([]);
   const detailsRef = React.useRef<HTMLDivElement>(null);
 
   function toggleShowAll() {
@@ -147,51 +153,83 @@ export function RevisionNotice() {
       });
     } else {
       setExpandedId(null);
+      setEditingId(null);
+      setDraftMaterials([]);
     }
   }
 
   function toggleRow(id: string) {
-    setExpandedId((current) => (current === id ? null : id));
+    if (editingId && editingId !== id) {
+      setEditingId(null);
+      setDraftMaterials([]);
+    }
+
+    setExpandedId((current) => {
+      if (current === id) {
+        if (editingId === id) {
+          setEditingId(null);
+          setDraftMaterials([]);
+        }
+        return null;
+      }
+      return id;
+    });
   }
 
-  function addMaterial(itemId: string) {
+  function startEdit(item: RevisionItem) {
+    setExpandedId(item.id);
+    setEditingId(item.id);
+    setDraftMaterials(item.materials.map((material) => ({ ...material })));
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+    setDraftMaterials([]);
+  }
+
+  function saveEdit() {
+    if (!editingId) return;
+
     setItems((prev) =>
       prev.map((item) =>
-        item.id === itemId
-          ? { ...item, materials: [...item.materials, blankMaterial] }
+        item.id === editingId
+          ? {
+              ...item,
+              materials: draftMaterials.map((material) => ({ ...material })),
+            }
           : item,
       ),
     );
+
+    setEditingId(null);
+    setDraftMaterials([]);
   }
 
-  function resubmit(id: string) {
-    const item = items.find((item) => item.id === id);
-    console.log("Resubmitting:", item); // TODO: send to your API
-
-    setItems((prev) => prev.filter((item) => item.id !== id));
-    setExpandedId(null);
-  }
-
-  function updateMaterial(
-    itemId: string,
+  function updateDraftMaterial(
     materialIndex: number,
     field: keyof Material,
     value: string,
   ) {
-    setItems((prev) =>
-      prev.map((item) =>
-        item.id !== itemId
-          ? item
-          : {
-              ...item,
-              materials: item.materials.map((material, index) =>
-                index === materialIndex
-                  ? { ...material, [field]: value }
-                  : material,
-              ),
-            },
+    setDraftMaterials((prev) =>
+      prev.map((material, index) =>
+        index === materialIndex ? { ...material, [field]: value } : material,
       ),
     );
+  }
+
+  function addDraftMaterial() {
+    setDraftMaterials((prev) => [...prev, { ...blankMaterial }]);
+  }
+
+  function resubmit(id: string) {
+    const item = items.find((entry) => entry.id === id);
+    if (!item) return;
+
+    console.log("Resubmitting:", item); // TODO: send the corrected MO to your API
+    setItems((prev) => prev.filter((entry) => entry.id !== id));
+    setExpandedId(null);
+    setEditingId(null);
+    setDraftMaterials([]);
   }
 
   return (
@@ -199,31 +237,32 @@ export function RevisionNotice() {
       <CardContent className="flex items-center justify-between gap-4 px-4 py-3">
         <div className="flex min-w-0 items-center gap-3">
           <Info className="h-4 w-4 shrink-0 text-red-500" />
-
           <div className="min-w-0">
             <h2 className="text-sm font-semibold text-red-500">
-              Revision Required
+              {t("dashboard.revision.title")}
             </h2>
             <p className="text-xs text-slate-500">
-              These MOs were reflowed by Admin and require data correction
-              before the process can continue.
+              {t("dashboard.revision.description")}
             </p>
           </div>
         </div>
 
         <div className="flex shrink-0 items-center gap-5">
           <Badge className="rounded bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-500 hover:bg-red-50">
-            {items.length} Item
-            {items.length === 1 ? "" : "s"}
+            {t(
+              items.length === 1
+                ? "dashboard.revision.itemSingular"
+                : "dashboard.revision.itemPlural",
+              { count: items.length },
+            )}
           </Badge>
-
           <Button
             variant="ghost"
             type="button"
             onClick={toggleShowAll}
             className="h-auto gap-1.5 p-0 text-xs font-semibold text-slate-700 hover:bg-transparent hover:text-slate-900"
           >
-            {showAll ? "Hide All" : "View All"}
+            {showAll ? t("common.hideAll") : t("common.viewAll")}
             <ChevronDown
               className={cn(
                 "h-3.5 w-3.5 transition-transform duration-200",
@@ -248,11 +287,11 @@ export function RevisionNotice() {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-12 px-3" />
-                    <TableHead className="px-3">MO Code</TableHead>
-                    <TableHead className="px-3">Reflow From</TableHead>
-                    <TableHead className="px-3">Reason</TableHead>
+                    <TableHead className="px-3">{t("common.moCode")}</TableHead>
+                    <TableHead className="px-3">{t("dashboard.revision.reflowFrom")}</TableHead>
+                    <TableHead className="px-3">{t("dashboard.revision.reason")}</TableHead>
                     <TableHead className="w-24 px-3 text-right">
-                      Action
+                      {t("common.action")}
                     </TableHead>
                   </TableRow>
                 </TableHeader>
@@ -260,6 +299,8 @@ export function RevisionNotice() {
                 <TableBody>
                   {items.map((item) => {
                     const isExpanded = expandedId === item.id;
+                    const isEditing = editingId === item.id;
+                    const displayedMaterials = isEditing ? draftMaterials : item.materials;
 
                     return (
                       <React.Fragment key={item.id}>
@@ -276,9 +317,7 @@ export function RevisionNotice() {
                                 event.stopPropagation();
                                 toggleRow(item.id);
                               }}
-                              aria-label={
-                                isExpanded ? "Collapse row" : "Expand row"
-                              }
+                              aria-label={isExpanded ? t("common.collapseRow") : t("common.expandRow")}
                             >
                               <Plus
                                 className={cn(
@@ -288,30 +327,22 @@ export function RevisionNotice() {
                               />
                             </Button>
                           </TableCell>
-
-                          <TableCell className="px-3 text-xs">
-                            {item.code}
-                          </TableCell>
-                          <TableCell className="px-3 text-xs">
-                            {item.reflowFrom}
-                          </TableCell>
-                          <TableCell className="px-3 text-xs">
-                            {item.reason}
-                          </TableCell>
-
-                          {/* Resubmit moved to the bottom of the expanded section */}
+                          <TableCell className="px-3 text-xs">{item.code}</TableCell>
+                          <TableCell className="px-3 text-xs">{item.reflowFrom}</TableCell>
+                          <TableCell className="px-3 text-xs">{item.reason}</TableCell>
                           <TableCell className="px-3 text-right">
-                            {!isExpanded && (
-                              <button
+                            {!isEditing && (
+                              <Button
                                 type="button"
-                                className="text-xs font-medium text-blue-600 hover:underline"
+                                variant="ghost"
+                                className="h-7 px-2 text-xs font-medium text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800"
                                 onClick={(event) => {
                                   event.stopPropagation();
-                                  toggleRow(item.id);
+                                  startEdit(item);
                                 }}
                               >
-                                Edit
-                              </button>
+                                {t("common.edit")}
+                              </Button>
                             )}
                           </TableCell>
                         </TableRow>
@@ -319,100 +350,133 @@ export function RevisionNotice() {
                         {isExpanded && (
                           <>
                             <TableRow className="hover:bg-slate-100">
-                              <TableHead
-                                className={cn(nestedHeadClass, "w-12")}
-                              />
-                              <TableHead className={nestedHeadClass}>
-                                Material Code
-                              </TableHead>
-                              <TableHead className={nestedHeadClass}>
-                                English Name
-                              </TableHead>
-                              <TableHead className={nestedHeadClass}>
-                                China Name
-                              </TableHead>
-                              <TableHead className={nestedHeadClass} />
+                              <TableHead className={cn(nestedHeadClass, "w-12")} />
+                              <TableHead className={nestedHeadClass}>{t("common.materialCode")}</TableHead>
+                              <TableHead className={nestedHeadClass}>{t("common.englishName")}</TableHead>
+                              <TableHead className={nestedHeadClass}>{t("common.chinaName")}</TableHead>
+                              <TableHead className={nestedHeadClass}>{isEditing ? "Status" : ""}</TableHead>
                             </TableRow>
 
-                            {item.materials.map((material, index) => (
-                              <TableRow key={index}>
+                            {displayedMaterials.map((material, index) => (
+                              <TableRow
+                                key={`${item.id}-${index}`}
+                                className={cn(
+                                  material.isRejected && "bg-red-50/50 hover:bg-red-50/70",
+                                )}
+                              >
                                 <TableCell />
-
                                 <TableCell className="px-3 py-2">
-                                  <input
-                                    type="text"
-                                    className={inputClass}
-                                    value={material.code}
-                                    onChange={(e) =>
-                                      updateMaterial(
-                                        item.id,
-                                        index,
-                                        "code",
-                                        e.target.value,
-                                      )
-                                    }
-                                  />
+                                  {isEditing ? (
+                                    <input
+                                      type="text"
+                                      className={cn(
+                                        inputClass,
+                                        material.isRejected && "border-red-400 focus:border-red-500",
+                                      )}
+                                      value={material.code}
+                                      onChange={(event) => updateDraftMaterial(index, "code", event.target.value)}
+                                    />
+                                  ) : (
+                                    <span className="inline-flex items-center gap-2 text-xs">
+                                      {material.code}
+                                      {material.isRejected && (
+                                        <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-1.5 py-0.5 text-[10px] font-medium text-red-700">
+                                          <AlertCircle className="h-3 w-3" />
+                                          Rejected
+                                        </span>
+                                      )}
+                                    </span>
+                                  )}
                                 </TableCell>
-
                                 <TableCell className="px-3 py-2">
-                                  <input
-                                    type="text"
-                                    className={inputClass}
-                                    value={material.englishName}
-                                    onChange={(e) =>
-                                      updateMaterial(
-                                        item.id,
-                                        index,
-                                        "englishName",
-                                        e.target.value,
-                                      )
-                                    }
-                                  />
+                                  {isEditing ? (
+                                    <input
+                                      type="text"
+                                      className={cn(
+                                        inputClass,
+                                        material.isRejected && "border-red-400 focus:border-red-500",
+                                      )}
+                                      value={material.englishName}
+                                      onChange={(event) => updateDraftMaterial(index, "englishName", event.target.value)}
+                                    />
+                                  ) : (
+                                    <span className="text-xs">{material.englishName}</span>
+                                  )}
                                 </TableCell>
-
                                 <TableCell className="px-3 py-2">
-                                  <input
-                                    type="text"
-                                    className={inputClass}
-                                    value={material.chinaName}
-                                    onChange={(e) =>
-                                      updateMaterial(
-                                        item.id,
-                                        index,
-                                        "chinaName",
-                                        e.target.value,
-                                      )
-                                    }
-                                  />
+                                  {isEditing ? (
+                                    <input
+                                      type="text"
+                                      className={cn(
+                                        inputClass,
+                                        material.isRejected && "border-red-400 focus:border-red-500",
+                                      )}
+                                      value={material.chinaName}
+                                      onChange={(event) => updateDraftMaterial(index, "chinaName", event.target.value)}
+                                    />
+                                  ) : (
+                                    <span className="text-xs">{material.chinaName}</span>
+                                  )}
                                 </TableCell>
-
-                                <TableCell />
+                                <TableCell className="px-3 py-2 text-right">
+                                  {isEditing && material.isRejected && (
+                                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-red-600">
+                                      <AlertCircle className="h-3.5 w-3.5" />
+                                      Rejected
+                                    </span>
+                                  )}
+                                </TableCell>
                               </TableRow>
                             ))}
 
-                            {/* Add Material (left) + Resubmit (bottom right) */}
                             <TableRow className="hover:bg-transparent">
                               <TableCell />
-
                               <TableCell colSpan={4} className="px-3 py-3">
-                                <div className="flex items-center justify-between">
-                                  <Button
-                                    type="button"
-                                    variant="outline"
-                                    className="h-7 rounded-md px-3 text-xs"
-                                    onClick={() => addMaterial(item.id)}
-                                  >
-                                    <Plus className="h-3.5 w-3.5" />
-                                    Add Material
-                                  </Button>
+                                <div className="flex items-center justify-between gap-3">
+                                  {isEditing ? (
+                                    <Button
+                                      type="button"
+                                      variant="outline"
+                                      className="h-7 rounded-md px-3 text-xs"
+                                      onClick={addDraftMaterial}
+                                    >
+                                      <Plus className="h-3.5 w-3.5" />
+                                      {t("dashboard.revision.addMaterial")}
+                                    </Button>
+                                  ) : (
+                                    <span className="text-xs text-slate-500">Read-only view</span>
+                                  )}
 
-                                  <Button
-                                    type="button"
-                                    className="h-7 rounded-md bg-gradient-to-b from-[#058346] to-[#0b5934] px-4 text-xs font-semibold text-white hover:opacity-90"
-                                    onClick={() => resubmit(item.id)}
-                                  >
-                                    Resubmit
-                                  </Button>
+                                  <div className="flex items-center gap-2">
+                                    {isEditing && (
+                                      <>
+                                        <Button
+                                          type="button"
+                                          variant="outline"
+                                          className="h-7 rounded-md px-3 text-xs"
+                                          onClick={cancelEdit}
+                                        >
+                                          {t("common.cancel")}
+                                        </Button>
+                                        <Button
+                                          type="button"
+                                          className="h-7 rounded-md bg-[#058346] px-3 text-xs font-semibold text-white hover:bg-[#0b5934]"
+                                          onClick={saveEdit}
+                                        >
+                                          Save Changes
+                                        </Button>
+                                      </>
+                                    )}
+                                    <Button
+                                      type="button"
+                                      className="h-7 rounded-md bg-gradient-to-b from-[#058346] to-[#0b5934] px-4 text-xs font-semibold text-white hover:opacity-90"
+                                      onClick={() => resubmit(item.id)}
+                                      disabled={isEditing}
+                                      title={isEditing ? "Save or cancel your changes before resubmitting" : undefined}
+                                    >
+                                      {t("dashboard.revision.resubmit")}
+                                    </Button>
+                                  </div>
                                 </div>
                               </TableCell>
                             </TableRow>
@@ -498,6 +562,7 @@ const initialOngoingMoRows: MoRow[] = [
 ];
 
 function OngoingMoTable() {
+  const { t } = useI18n();
   const [rows, setRows] = useState<MoRow[]>(initialOngoingMoRows);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -525,9 +590,7 @@ function OngoingMoTable() {
   }
 
   function deleteRow(id: string) {
-    const confirmed = window.confirm(
-      "Delete this MO's data? This can't be undone.",
-    );
+    const confirmed = window.confirm(t("dashboard.ongoingMo.deleteConfirm"));
 
     if (!confirmed) return;
 
@@ -574,7 +637,7 @@ function OngoingMoTable() {
   return (
     <Card className="overflow-hidden rounded-lg border-[var(--strokestroke-gray)]">
       <CardHeader className="px-4 py-3">
-        <CardTitle className="text-sm font-semibold">Ongoing MO</CardTitle>
+        <CardTitle className="text-sm font-semibold">{t("dashboard.ongoingMo.title")}</CardTitle>
       </CardHeader>
 
       <CardContent className="px-4 pb-4">
@@ -583,13 +646,13 @@ function OngoingMoTable() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-12 px-3" />
-                <TableHead className="px-3">MO Code</TableHead>
-                <TableHead className="px-3">Model</TableHead>
-                <TableHead className="px-3">Progress</TableHead>
-                <TableHead className="px-3">Current Step</TableHead>
-                <TableHead className="px-3">Last Updated</TableHead>
+                <TableHead className="px-3">{t("common.moCode")}</TableHead>
+                <TableHead className="px-3">{t("common.model")}</TableHead>
+                <TableHead className="px-3">{t("dashboard.ongoingMo.progress")}</TableHead>
+                <TableHead className="px-3">{t("dashboard.ongoingMo.currentStep")}</TableHead>
+                <TableHead className="px-3">{t("dashboard.ongoingMo.lastUpdated")}</TableHead>
                 <TableHead className="w-[120px] px-3 text-center">
-                  Action
+                  {t("common.action")}
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -614,7 +677,7 @@ function OngoingMoTable() {
                             event.stopPropagation();
                             setExpandedId(isExpanded ? null : row.id);
                           }}
-                          aria-label="Expand row"
+                          aria-label={t("common.expandRow")}
                         >
                           <Plus
                             className={cn(
@@ -658,7 +721,7 @@ function OngoingMoTable() {
                                 cancelEdit();
                               }}
                             >
-                              Cancel
+                              {t("common.cancel")}
                             </Button>
 
                             <Button
@@ -669,7 +732,7 @@ function OngoingMoTable() {
                                 submitEdit();
                               }}
                             >
-                              Submit
+                              {t("common.submit")}
                             </Button>
                           </div>
                         ) : (
@@ -679,7 +742,7 @@ function OngoingMoTable() {
                                 type="button"
                                 variant="outline"
                                 className="h-7 w-8 rounded-md p-0"
-                                aria-label="More actions"
+                                aria-label={t("common.moreActions")}
                                 onClick={(event) => event.stopPropagation()}
                               >
                                 <MoreHorizontal className="h-4 w-4" />
@@ -690,14 +753,14 @@ function OngoingMoTable() {
                               <DropdownMenuItem
                                 onClick={() => startEdit(row.id)}
                               >
-                                Edit Data
+                                {t("dashboard.ongoingMo.editData")}
                               </DropdownMenuItem>
 
                               <DropdownMenuItem
                                 destructive
                                 onClick={() => deleteRow(row.id)}
                               >
-                                Delete Data
+                                {t("dashboard.ongoingMo.deleteData")}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -710,13 +773,13 @@ function OngoingMoTable() {
                         <TableRow className="backgroundbg-gray-50 hover:bg-gray-50">
                           <TableHead className={cn(nestedHeadClass, "w-12")} />
                           <TableHead className={nestedHeadClass}>
-                            Material Code
+                            {t("common.materialCode")}
                           </TableHead>
                           <TableHead colSpan={2} className={nestedHeadClass}>
-                            English Name
+                            {t("common.englishName")}
                           </TableHead>
                           <TableHead colSpan={3} className={nestedHeadClass}>
-                            China Name
+                            {t("common.chinaName")}
                           </TableHead>
                         </TableRow>
 
@@ -794,7 +857,7 @@ function OngoingMoTable() {
                                 onClick={() => addMaterial(row.id)}
                               >
                                 <Plus className="h-3.5 w-3.5" />
-                                Add Material
+                                {t("dashboard.ongoingMo.addMaterial")}
                               </Button>
                             </TableCell>
                           </TableRow>
@@ -817,14 +880,16 @@ function OngoingMoTable() {
 ========================================================= */
 
 export default function DashboardContent(): JSX.Element {
+  const { t } = useI18n();
+
   return (
     <main>
       <div className="mx-auto flex w-full max-w-[1625px] flex-col gap-5">
         <nav aria-label="Breadcrumb" className="text-xs text-slate-500">
-          Dashboard
+          {t("dashboard.breadcrumb")}
         </nav>
 
-        <h1 className="text-lg font-semibold text-slate-950">Dashboard</h1>
+        <h1 className="text-lg font-semibold text-slate-950">{t("dashboard.title")}</h1>
 
         <section className="grid grid-cols-1 gap-5 xl:grid-cols-2">
           <TaskProgressCard />

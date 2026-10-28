@@ -21,6 +21,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/i18n";
+import type { TranslationKey } from "@/i18n";
 import type { EximRow } from "../_lib/data";
 
 type Props = {
@@ -28,11 +30,11 @@ type Props = {
   onChange: (id: string, field: "model" | "brand", value: string) => void;
 };
 
-const PHOTO_COLUMNS = [
-  { key: "frontPhoto", label: "Front Photo" },
-  { key: "backPhoto", label: "Back Photo" },
-  { key: "upnPhoto", label: "UPN Photo" },
-] as const;
+const PHOTO_COLUMNS: { key: "frontPhoto" | "backPhoto" | "upnPhoto"; labelKey: TranslationKey }[] = [
+  { key: "frontPhoto", labelKey: "common.frontPhoto" },
+  { key: "backPhoto", labelKey: "common.backPhoto" },
+  { key: "upnPhoto", labelKey: "common.upnPhoto" },
+];
 
 const headClass =
   "h-10 whitespace-nowrap bg-[#F8F8F8] px-3 text-xs font-medium text-slate-700";
@@ -45,6 +47,7 @@ function Unit({ children }: { children: React.ReactNode }) {
 }
 
 export default function EximMaterialTable({ rows, onChange }: Props) {
+  const { t } = useI18n();
   const [preview, setPreview] = useState<{
     title: string;
     code: string;
@@ -63,30 +66,30 @@ export default function EximMaterialTable({ rows, onChange }: Props) {
                   "sticky left-0 z-20 border-r border-strokestroke-gray",
                 )}
               >
-                Material Code
+                {t("common.materialCode")}
               </TableHead>
-              <TableHead className={headClass}>English Name</TableHead>
-              <TableHead className={headClass}>China Name</TableHead>
-              <TableHead className={headClass}>Model</TableHead>
-              <TableHead className={headClass}>Brand</TableHead>
+              <TableHead className={headClass}>{t("common.englishName")}</TableHead>
+              <TableHead className={headClass}>{t("common.chinaName")}</TableHead>
+              <TableHead className={headClass}>{t("exim.table.model")}</TableHead>
+              <TableHead className={headClass}>{t("exim.table.brand")}</TableHead>
               <TableHead className={headClass}>
-                Qty<Unit>(pcs)</Unit>
-              </TableHead>
-              <TableHead className={headClass}>
-                Single Net<Unit>(g)</Unit>
+                {t("exim.table.qty")}<Unit>{t("common.units.pcs")}</Unit>
               </TableHead>
               <TableHead className={headClass}>
-                Net Weight<Unit>(kg)</Unit>
+                {t("exim.table.singleNet")}<Unit>{t("common.units.g")}</Unit>
               </TableHead>
               <TableHead className={headClass}>
-                Gross Weight<Unit>(kg)</Unit>
+                {t("exim.table.netWeight")}<Unit>{t("common.units.kg")}</Unit>
               </TableHead>
               <TableHead className={headClass}>
-                Volume<Unit>(mm)</Unit>
+                {t("exim.table.grossWeight")}<Unit>{t("common.units.kg")}</Unit>
+              </TableHead>
+              <TableHead className={headClass}>
+                {t("exim.table.volume")}<Unit>{t("common.units.mm")}</Unit>
               </TableHead>
               {PHOTO_COLUMNS.map((col) => (
                 <TableHead key={col.key} className={headClass}>
-                  {col.label}
+                  {t(col.labelKey)}
                 </TableHead>
               ))}
             </TableRow>
@@ -114,8 +117,8 @@ export default function EximMaterialTable({ rows, onChange }: Props) {
                 <TableCell className="px-3 py-2">
                   <Input
                     value={row.model}
-                    placeholder="Input model..."
-                    aria-label={`Model, row ${index + 1}`}
+                    placeholder={t("exim.table.inputModel")}
+                    aria-label={t("exim.table.modelRowLabel", { row: index + 1 })}
                     onChange={(e) => onChange(row.id, "model", e.target.value)}
                     className={inputClass}
                   />
@@ -124,8 +127,8 @@ export default function EximMaterialTable({ rows, onChange }: Props) {
                 <TableCell className="px-3 py-2">
                   <Input
                     value={row.brand}
-                    placeholder="Input brand..."
-                    aria-label={`Brand, row ${index + 1}`}
+                    placeholder={t("exim.table.inputBrand")}
+                    aria-label={t("exim.table.brandRowLabel", { row: index + 1 })}
                     onChange={(e) => onChange(row.id, "brand", e.target.value)}
                     className={inputClass}
                   />
@@ -154,13 +157,13 @@ export default function EximMaterialTable({ rows, onChange }: Props) {
                       className="text-xs font-medium text-blue-600 hover:underline"
                       onClick={() =>
                         setPreview({
-                          title: col.label,
+                          title: t(col.labelKey),
                           code: row.code,
                           src: row[col.key],
                         })
                       }
                     >
-                      See image
+                      {t("common.seeImage")}
                     </button>
                   </TableCell>
                 ))}
@@ -186,7 +189,7 @@ export default function EximMaterialTable({ rows, onChange }: Props) {
             {preview?.src ? (
               <img
                 src={preview.src}
-                alt={`${preview.title} for ${preview.code}`}
+                alt={t("exim.table.photoAlt", { title: preview.title, code: preview.code })}
                 className="max-h-[60vh] w-full object-contain"
               />
             ) : (

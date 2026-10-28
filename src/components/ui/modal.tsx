@@ -4,6 +4,7 @@ import * as React from "react";
 import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/i18n";
 
 type ModalProps = {
   open: boolean;
@@ -18,6 +19,8 @@ export function Modal({
   children,
   className,
 }: ModalProps) {
+  const { t } = useI18n();
+
   if (!open) return null;
 
   return (
@@ -67,7 +70,7 @@ export function Modal({
             hover:bg-[#F5F5F5]
             hover:text-[#666666]
           "
-          aria-label="Close"
+          aria-label={t("common.close")}
         >
           <X className="h-4 w-4" />
         </button>

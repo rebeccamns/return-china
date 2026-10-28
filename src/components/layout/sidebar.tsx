@@ -14,40 +14,76 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/i18n";
+import type { TranslationKey } from "@/i18n";
 
-type NavLink = { label: string; href: string; icon: LucideIcon };
-type NavGroup = {
-  label: string;
+type NavLink = {
+  labelKey: TranslationKey;
+  href: string;
   icon: LucideIcon;
-  children: { label: string; href: string }[];
 };
+
+type NavGroup = {
+  labelKey: TranslationKey;
+  icon: LucideIcon;
+  children: { labelKey: TranslationKey; href: string }[];
+};
+
 type NavItem = NavLink | NavGroup;
 
 export type SidebarVariant = "pmc" | "exim" | "superadmin";
 
 const NAV: Record<SidebarVariant, NavItem[]> = {
   pmc: [
-    { label: "Dashboard", href: "/operational", icon: LayoutDashboard },
     {
-      label: "Entry",
+      labelKey: "navigation.dashboard",
+      href: "/operational",
+      icon: LayoutDashboard,
+    },
+    {
+      labelKey: "navigation.entry",
       icon: Table2,
       children: [
-        { label: "MO Entry", href: "/operational/mo-entry" },
-        { label: "WO Entry", href: "/operational/wo-entry" },
+        { labelKey: "navigation.moEntry", href: "/operational/mo-entry" },
+        { labelKey: "navigation.woEntry", href: "/operational/wo-entry" },
       ],
     },
-    { label: "History", href: "/operational/history", icon: History },
+    {
+      labelKey: "navigation.history",
+      href: "/operational/history",
+      icon: History,
+    },
   ],
   exim: [
-    { label: "Exim", href: "/exim", icon: ArrowRightLeft },
-    { label: "History", href: "/exim/history", icon: History },
+    {
+      labelKey: "navigation.exim",
+      href: "/exim",
+      icon: ArrowRightLeft,
+    },
+    {
+      labelKey: "navigation.history",
+      href: "/exim/history",
+      icon: History,
+    },
   ],
-    superadmin: [
-    { label: "Dashboard", href: "/superadmin", icon: LayoutDashboard },
-    { label: "MO Monitoring", href: "/superadmin/mo-monitoring", icon: FileText },
-    { label: "History", href: "/superadmin/history", icon: History },
+  superadmin: [
+    {
+      labelKey: "navigation.dashboard",
+      href: "/superadmin",
+      icon: LayoutDashboard,
+    },
+    {
+      labelKey: "navigation.moMonitoring",
+      href: "/superadmin/mo-monitoring",
+      icon: FileText,
+    },
+    {
+      labelKey: "navigation.history",
+      href: "/superadmin/history",
+      icon: History,
+    },
   ],
 };
 
@@ -57,13 +93,15 @@ export default function Sidebar({
   variant?: SidebarVariant;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { t } = useI18n();
   const items = NAV[variant];
 
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(
     Object.fromEntries(
       items
         .filter((item): item is NavGroup => "children" in item)
-        .map((group) => [group.label, true]),
+        .map((group) => [group.labelKey, true]),
     ),
   );
 
@@ -74,8 +112,18 @@ export default function Sidebar({
         : "text-mode-sidebar-foreground hover:bg-slate-50"
     }`;
 
+  const handleLogout = () => {
+    if (typeof window !== "undefined") {
+      sessionStorage.clear();
+    }
+
+    router.replace("/");
+    router.refresh();
+  };
+
   return (
     <aside className="fixed inset-y-0 left-0 z-[3] flex w-full max-w-[255px] flex-col overflow-hidden border-r border-strokestroke-gray bg-white">
+      {/* Decorative background */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-96 overflow-hidden">
         <img
           className="absolute left-0 top-0 h-[317px] w-full object-cover"
@@ -91,6 +139,7 @@ export default function Sidebar({
         />
       </div>
 
+      {/* Header */}
       <header className="relative flex h-[52px] shrink-0 items-start bg-white p-2">
         <div className="flex min-w-0 flex-1 items-center gap-3 p-2">
           <div className="flex w-[59px] shrink-0 flex-col justify-center">
@@ -118,13 +167,14 @@ export default function Sidebar({
         />
       </header>
 
+      {/* Navigation */}
       <nav
         className="relative flex flex-col gap-1 px-4 py-2"
-        aria-label="Main navigation"
+        aria-label={t("navigation.mainNavigation")}
       >
         <div className="flex h-8 items-center opacity-70">
           <span className="font-inter-xs-medium-xs text-xs font-medium leading-4 text-text-colortext-dark">
-            MENU
+            {t("navigation.menu")}
           </span>
         </div>
 
@@ -133,10 +183,10 @@ export default function Sidebar({
             const Icon = item.icon;
 
             if ("children" in item) {
-              const open = openGroups[item.label];
+              const open = openGroups[item.labelKey];
 
               return (
-                <section key={item.label} className="flex flex-col gap-2">
+                <section key={item.labelKey} className="flex flex-col gap-2">
                   <Button
                     type="button"
                     variant="ghost"
@@ -145,14 +195,17 @@ export default function Sidebar({
                     onClick={() =>
                       setOpenGroups((prev) => ({
                         ...prev,
-                        [item.label]: !prev[item.label],
+                        [item.labelKey]: !prev[item.labelKey],
                       }))
                     }
                   >
-                    <Icon className="mr-2 h-6 w-6 shrink-0" strokeWidth={1.5} />
+                    <Icon
+                      className="mr-2 h-6 w-6 shrink-0"
+                      strokeWidth={1.5}
+                    />
 
                     <span className="flex-1 truncate font-inter-sm-medium-sm text-sm font-medium leading-5">
-                      {item.label}
+                      {t(item.labelKey)}
                     </span>
 
                     <ChevronDown
@@ -173,7 +226,7 @@ export default function Sidebar({
                             href={child.href}
                           >
                             <span className="truncate font-inter-sm-medium-sm text-sm font-medium leading-5">
-                              {child.label}
+                              {t(child.labelKey)}
                             </span>
                           </Link>
                         ))}
@@ -190,10 +243,13 @@ export default function Sidebar({
                 className={linkClass(item.href)}
                 href={item.href}
               >
-                <Icon className="mr-2 h-6 w-6 shrink-0" strokeWidth={1.5} />
+                <Icon
+                  className="mr-2 h-6 w-6 shrink-0"
+                  strokeWidth={1.5}
+                />
 
                 <span className="truncate font-inter-sm-medium-sm text-sm font-medium leading-5">
-                  {item.label}
+                  {t(item.labelKey)}
                 </span>
               </Link>
             );
@@ -201,6 +257,7 @@ export default function Sidebar({
         </div>
       </nav>
 
+      {/* User and Logout */}
       <footer className="relative mt-auto flex shrink-0 flex-col">
         <Button
           type="button"
@@ -220,18 +277,22 @@ export default function Sidebar({
             </span>
           </span>
 
-          <ChevronsUpDown className="h-4 w-4 shrink-0" strokeWidth={1.5} />
+          <ChevronsUpDown
+            className="h-4 w-4 shrink-0"
+            strokeWidth={1.5}
+          />
         </Button>
 
         <Button
           type="button"
           variant="ghost"
+          onClick={handleLogout}
           className="h-auto w-full justify-start gap-2 rounded-none px-4 py-3 text-text-colortext-red hover:bg-red-50 hover:text-text-colortext-red"
         >
           <LogOut className="h-6 w-6 shrink-0" strokeWidth={1.5} />
 
           <span className="font-inter-sm-medium-sm text-sm font-medium leading-5">
-            Logout
+            {t("navigation.logout")}
           </span>
         </Button>
       </footer>

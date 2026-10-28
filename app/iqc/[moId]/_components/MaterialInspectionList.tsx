@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, ChevronRight, Clock3 } from "lucide-react";
+import { useI18n } from "@/i18n";
 import type { IQCMaterial } from "./iqc-types";
 
 type Props = {
@@ -16,6 +17,7 @@ export default function MaterialInspectionList({
   onSubmit,
   submitted,
 }: Props) {
+  const { t } = useI18n();
   const inspectedCount = materials.filter((item) => item.status !== null).length;
   const total = materials.length;
   const progress = total ? Math.round((inspectedCount / total) * 100) : 0;
@@ -25,7 +27,7 @@ export default function MaterialInspectionList({
     <section className="w-full rounded-xl border border-strokestroke-gray bg-backgroundbg-white p-4">
       <div className="mb-5 flex items-center justify-between gap-3">
         <p className="text-[14px] text-text-colortext-gray">
-          {inspectedCount}/{total} Material inspected
+          {t("iqc.materialInspected", { inspected: inspectedCount, total })}
         </p>
         <p className="text-[14px] text-text-colortext-gray">{progress}%</p>
       </div>
@@ -39,10 +41,10 @@ export default function MaterialInspectionList({
 
       <div className="mb-3 mt-6 flex items-center justify-between gap-2">
         <h2 className="text-[16px] font-semibold leading-[150%] text-text-colortext-black">
-          Material List
+          {t("common.materialList")}
         </h2>
         <span className="text-[12px] text-text-colortext-gray">
-          {total} materials
+          {t(total === 1 ? "common.materialSingular" : "common.materialPlural", { count: total })}
         </span>
       </div>
 
@@ -79,7 +81,7 @@ export default function MaterialInspectionList({
                     : "bg-red-50 text-red-600"
                 }`}
               >
-                {material.status}
+                {material.status === "PASS" ? t("status.pass") : t("status.reject")}
               </span>
             ) : (
               <Clock3 className="h-5 w-5 shrink-0 text-[#b08b00]" />
@@ -92,7 +94,7 @@ export default function MaterialInspectionList({
 
       {allInspected && (
         <p className="mt-4 rounded-md bg-[#E7F5EC] p-3 text-[13px] leading-5 text-[#006B3C]">
-          All materials have been inspected. Review the results before submitting.
+          {t("iqc.allInspected")}
         </p>
       )}
 
@@ -102,7 +104,7 @@ export default function MaterialInspectionList({
         onClick={onSubmit}
         className="mt-6 h-11 w-full rounded-md bg-[linear-gradient(0deg,rgba(11,89,52,1)_0%,rgba(5,131,70,1)_100%)] text-[14px] font-semibold text-white transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:bg-none"
       >
-        {submitted ? "Inspection Submitted" : "Submit"}
+        {submitted ? t("iqc.inspectionSubmitted") : t("common.submit")}
       </button>
     </section>
   );

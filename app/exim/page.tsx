@@ -22,6 +22,7 @@ import {
 import Sidebar from "@/components/layout/sidebar";
 import TopBar from "@/components/layout/topbar";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/i18n";
 
 import EximMaterialTable from "./_components/EximMaterialTable";
 import { pendingMos, type EximMo, type EximRow } from "./_lib/data";
@@ -29,6 +30,7 @@ import { pendingMos, type EximMo, type EximRow } from "./_lib/data";
 type Notice = { type: "success" | "reject"; message: string };
 
 export default function EximPage() {
+  const { t } = useI18n();
   const [mos, setMos] = useState<EximMo[]>(pendingMos);
   const [selectedCode, setSelectedCode] = useState("");
   const [loaded, setLoaded] = useState<{ code: string; rows: EximRow[] } | null>(
@@ -79,22 +81,14 @@ export default function EximPage() {
     if (!loaded || !canSubmit) return;
 
     // TODO: POST { moCode: loaded.code, materials: loaded.rows.map(r => ({ id: r.id, model: r.model, brand: r.brand })) }
-    finish(
-      loaded.code,
-      "success",
-      `MO ${loaded.code} submitted. It moves on to Staff Return (sticker scan).`,
-    );
+    finish(loaded.code, "success", t("exim.submitSuccess", { code: loaded.code }));
   }
 
   function handleReject() {
     if (!loaded || !rejectReason.trim()) return;
 
     // TODO: POST { moCode: loaded.code, reason: rejectReason }
-    finish(
-      loaded.code,
-      "reject",
-      `MO ${loaded.code} rejected and sent back to Staff Return.`,
-    );
+    finish(loaded.code, "reject", t("exim.rejectSuccess", { code: loaded.code }));
     setRejectOpen(false);
     setRejectReason("");
   }
@@ -107,9 +101,9 @@ export default function EximPage() {
         <TopBar />
 
         <div className="mt-[52px] w-full px-[18px] py-5">
-          <nav className="mb-4 text-xs text-text-colortext-gray">Exim</nav>
+          <nav className="mb-4 text-xs text-text-colortext-gray">{t("exim.title")}</nav>
 
-          <h1 className="mb-4 text-lg font-semibold text-[#111111]">Exim</h1>
+          <h1 className="mb-4 text-lg font-semibold text-[#111111]">{t("exim.title")}</h1>
 
           {notice && (
             <div
@@ -129,7 +123,7 @@ export default function EximPage() {
               <span className="flex-1">{notice.message}</span>
               <button
                 type="button"
-                aria-label="Dismiss"
+                aria-label={t("common.dismiss")}
                 onClick={() => setNotice(null)}
               >
                 <X className="h-4 w-4" />
@@ -140,7 +134,7 @@ export default function EximPage() {
           <div className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
             {/* MO picker */}
             <div className="flex items-center gap-3 px-[18px] py-[18px]">
-              <span className="text-sm text-[#111111]">MO</span>
+              <span className="text-sm text-[#111111]">{t("common.mo")}</span>
 
               <Select
                 value={selectedCode}
@@ -148,7 +142,7 @@ export default function EximPage() {
                 disabled={mos.length === 0}
               >
                 <SelectTrigger className="h-10 w-[340px] rounded-md border-strokestroke-gray text-sm">
-                  <SelectValue placeholder="Select MO" />
+                  <SelectValue placeholder={t("exim.selectMo")} />
                 </SelectTrigger>
                 <SelectContent>
                   {mos.map((mo) => (
@@ -165,7 +159,7 @@ export default function EximPage() {
                 onClick={handleSearch}
                 className="h-10 rounded-md bg-gradient-to-b from-[#058346] to-[#0B5934] px-4 text-sm font-semibold text-white hover:opacity-90 disabled:cursor-not-allowed disabled:from-slate-300 disabled:to-slate-300"
               >
-                Search MO
+                {t("exim.searchMo")}
               </Button>
             </div>
 
@@ -174,13 +168,13 @@ export default function EximPage() {
             {/* Material list */}
             <div className="px-[18px] pb-[18px] pt-4">
               <h2 className="mb-3 text-sm font-semibold text-[#111111]">
-                Material List
+                {t("common.materialList")}
               </h2>
 
               {loaded ? (
                 <>
                   <div className="mb-4 inline-flex h-8 items-center rounded-full bg-[#F4F4F4] px-4 text-xs">
-                    <span className="text-[#8F8F8E]">MO</span>
+                    <span className="text-[#8F8F8E]">{t("common.mo")}</span>
                     <span className="ml-5 font-medium text-[#111111]">
                       {loaded.code}
                     </span>
@@ -195,12 +189,12 @@ export default function EximPage() {
                   </div>
 
                   <p className="text-base font-medium text-[#111111]">
-                    {mos.length === 0 ? "No MO waiting" : "No MO Selected"}
+                    {mos.length === 0 ? t("exim.noMoWaiting") : t("exim.noMoSelected")}
                   </p>
                   <p className="mt-1 text-sm text-[#8F8F8E]">
                     {mos.length === 0
-                      ? "New MOs appear here after Staff Return submits them."
-                      : "Select an MO and click search to view its material list."}
+                      ? t("exim.noMoWaitingHint")
+                      : t("exim.noMoSelectedHint")}
                   </p>
                 </div>
               )}
@@ -211,7 +205,7 @@ export default function EximPage() {
           {loaded && (
             <div className="mt-4 flex items-center justify-end gap-3">
               <span className="mr-auto text-xs text-[#5F5F5E]">
-                {filled} of {total} materials complete
+                {t("exim.materialsComplete", { filled, total })}
               </span>
 
               <Button
@@ -221,7 +215,7 @@ export default function EximPage() {
                 className="h-10 w-36 gap-2 rounded-md border-strokestroke-gray bg-white text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-600"
               >
                 <X className="h-4 w-4" />
-                Reject
+                {t("exim.reject")}
               </Button>
 
               <Button
@@ -236,7 +230,7 @@ export default function EximPage() {
                 )}
               >
                 <Send className="h-4 w-4" />
-                Submit
+                {t("common.submit")}
               </Button>
             </div>
           )}
@@ -253,22 +247,21 @@ export default function EximPage() {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Reject this MO?</DialogTitle>
+            <DialogTitle>{t("exim.rejectDialog.title")}</DialogTitle>
             <DialogDescription>
-              {loaded?.code} goes back to Staff Return so the carton data can be
-              revised. Your reason is shown to the operator.
+              {t("exim.rejectDialog.description", { code: loaded?.code ?? "" })}
             </DialogDescription>
           </DialogHeader>
 
           <div>
             <label className="mb-1.5 block text-xs font-medium text-[#111111]">
-              Reason <span className="text-red-500">*</span>
+              {t("exim.rejectDialog.reasonLabel")} <span className="text-red-500">*</span>
             </label>
             <textarea
               rows={4}
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
-              placeholder="Explain why this MO is rejected..."
+              placeholder={t("exim.rejectDialog.reasonPlaceholder")}
               className="w-full resize-none rounded-md border border-strokestroke-gray px-3 py-2 text-xs outline-none placeholder:text-[#A3A3A1] focus:border-primaryprimary-green"
             />
           </div>
@@ -279,7 +272,7 @@ export default function EximPage() {
               variant="outline"
               onClick={() => setRejectOpen(false)}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               type="button"
@@ -287,7 +280,7 @@ export default function EximPage() {
               onClick={handleReject}
               className="bg-red-600 text-white hover:bg-red-700 disabled:bg-slate-300"
             >
-              Reject MO
+              {t("exim.rejectDialog.confirm")}
             </Button>
           </DialogFooter>
         </DialogContent>

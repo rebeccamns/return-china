@@ -11,10 +11,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useMemo } from "react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/i18n";
+import type { TranslationKey } from "@/i18n";
 
-import { MODES, PERIOD_OPTIONS } from "../_lib/data";
+import { MODES, getPeriodOptions, type PeriodOptionTexts } from "../_lib/data";
 import type { Mode } from "../_lib/types";
+
+const MODE_LABEL_KEYS: Record<Mode, TranslationKey> = {
+  year: "superadmin.modes.year",
+  month: "superadmin.modes.month",
+  date: "superadmin.modes.date",
+  day: "superadmin.modes.day",
+};
 
 type Props = {
   mode: Mode;
@@ -31,12 +41,29 @@ export default function DashboardHeader({
   onPeriodChange,
   onExport,
 }: Props) {
+  const { t, dictionary } = useI18n();
+
+  const periodTexts = useMemo<PeriodOptionTexts>(
+    () => ({
+      monthsShort: dictionary.dates.monthsShort,
+      weekdaysShort: dictionary.dates.weekdaysShort,
+      today: t("dates.today"),
+      yesterday: t("dates.yesterday"),
+      lastNDays: (days) => t("dates.lastNDays", { days }),
+      formatShortDate: (day, monthIndex) =>
+        `${day} ${dictionary.dates.monthsShort[monthIndex]}`,
+    }),
+    [dictionary, t],
+  );
+
+  const periodOptions = getPeriodOptions(mode, periodTexts);
+
   return (
     <div className="flex w-full flex-col gap-4">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         {/* Page title */}
         <h1 className="shrink-0 text-lg font-semibold text-[#111111]">
-          Dashboard
+          {t("superadmin.dashboard")}
         </h1>
 
         {/* Controls aligned to the right */}
@@ -44,7 +71,7 @@ export default function DashboardHeader({
           {/* Time granularity */}
           <div
             role="tablist"
-            aria-label="Time granularity"
+            aria-label={t("superadmin.timeGranularity")}
             className="flex h-[38px] items-center rounded-md border border-strokestroke-gray bg-white p-1"
           >
             {MODES.map((item) => {
@@ -64,7 +91,7 @@ export default function DashboardHeader({
                       : "font-medium text-[#444444] hover:bg-slate-50",
                   )}
                 >
-                  {item.label}
+                  {t(MODE_LABEL_KEYS[item.value])}
                 </button>
               );
             })}
@@ -73,7 +100,7 @@ export default function DashboardHeader({
           {/* Period selector */}
           <Select value={period} onValueChange={onPeriodChange}>
   <SelectTrigger
-    aria-label="Period"
+    aria-label={t("superadmin.period")}
     className="h-[40px] w-auto min-w-[134px] gap-2 rounded-md border-strokestroke-gray bg-white px-3 text-sm font-medium text-[#111111]"
   >
     <div className="flex items-center gap-2">
@@ -86,7 +113,7 @@ export default function DashboardHeader({
   </SelectTrigger>
 
   <SelectContent className="w-auto min-w-[var(--radix-select-trigger-width)]">
-    {PERIOD_OPTIONS[mode].map((option) => (
+    {periodOptions.map((option) => (
       <SelectItem
         key={option.value}
         value={option.value}
@@ -106,7 +133,7 @@ export default function DashboardHeader({
             className="h-[38px] w-full gap-2 rounded-md border-[#058346] bg-white px-3 text-[13px] font-semibold text-[#0b5934] hover:bg-[#EAF6EE] hover:text-[#0b5934] sm:w-auto"
           >
             <Download className="h-4 w-4" strokeWidth={1.75} />
-            Export
+            {t("superadmin.export")}
           </Button>
         </div>
       </div>

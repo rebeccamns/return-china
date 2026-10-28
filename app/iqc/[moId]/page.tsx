@@ -4,12 +4,17 @@ import { use, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 
 import MobileHeader from "@/components/layout/mobile-header";
+import { useI18n } from "@/i18n";
 
 import InspectionModal from "./_components/InspectionModal";
 import MaterialInspectionForm from "./_components/MaterialInspectionForm";
 import MaterialInspectionList from "./_components/MaterialInspectionList";
 import type { IQCMaterial } from "./_components/iqc-types";
 import MoInspectionCard from "./_components/MoInspectionCard";
+
+import MobileBottomNav, {
+  type MobileNavItem,
+} from "@/components/layout/mobile-bottom-nav";
 
 type Step = "overview" | "material-list" | "material-detail";
 
@@ -88,7 +93,10 @@ export default function IQCPage({
   params: Promise<{ moId: string }>;
 }) {
 const { moId } = use(params);
+  const { t } = useI18n();
   const [step, setStep] = useState<Step>("overview");
+  const [activeNav, setActiveNav] =
+  useState<MobileNavItem>("verification");
   const [materials, setMaterials] = useState<IQCMaterial[]>(INITIAL_MATERIALS);
   const [selectedMaterialId, setSelectedMaterialId] = useState<string | null>(null);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
@@ -142,7 +150,7 @@ const { moId } = use(params);
       {/* Original IQC / Staff Return decorative background */}
       <section
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-[149px] h-[255px] overflow-hidden"
+        className="pointer-events-none absolute inset-x-0 top-[58px] h-[255px] overflow-hidden"
       >
         <div className="absolute -left-[90px] -top-[80px] h-[270px] w-[620px] rounded-[50%] bg-[#d8f4e2]" />
         <div className="absolute -left-[100px] top-[80px] h-[190px] w-[620px] rounded-[50%] bg-[#effbf3]" />
@@ -150,11 +158,11 @@ const { moId } = use(params);
 
       <MobileHeader />
 
-      <section className="relative z-10 mx-auto w-full max-w-[412px] px-4 pb-8 pt-[170px]">
+      <section className="relative z-10 mx-auto w-full max-w-[412px] px-4 pb-8 pt-[78px]">
         {step === "overview" && (
           <>
             <h1 className="mb-5 text-[20px] font-semibold leading-[150%] text-text-colortext-black">
-              IQC Inspect
+              {t("iqc.title")}
             </h1>
             <MoInspectionCard
               moNumber={moData.moNumber}
@@ -172,7 +180,7 @@ const { moId } = use(params);
           <>
             <div className="mb-3 flex items-center justify-between gap-3">
               <h1 className="text-[20px] font-semibold leading-[150%] text-text-colortext-black">
-                IQC Inspect
+                {t("iqc.title")}
               </h1>
               <button
                 type="button"
@@ -180,7 +188,7 @@ const { moId } = use(params);
                 className="flex h-9 items-center gap-1.5 rounded-md bg-backgroundbg-white px-3 text-sm font-medium text-slate-700 transition-colors hover:bg-backgroundbg-gray"
               >
                 <ArrowLeft className="h-4 w-4" />
-                Back
+                {t("common.back")}
               </button>
             </div>
 
@@ -228,21 +236,42 @@ const { moId } = use(params);
 
       <InspectionModal
         open={showSubmitModal}
-        title="Submit Inspection?"
-        description={`All ${materials.length} materials have been inspected. Submit the inspection results for ${moData.moNumber}?`}
-        confirmLabel="Submit"
+        title={t("iqc.modal.submitTitle")}
+        description={t("iqc.modal.submitDescription", { count: materials.length, mo: moData.moNumber })}
+        confirmLabel={t("common.submit")}
         onCancel={() => setShowSubmitModal(false)}
         onConfirm={handleConfirmSubmit}
       />
 
       <InspectionModal
         open={showSuccessModal}
-        title="Inspection Submitted Successfully"
-        description="The inspection results have been submitted."
+        title={t("iqc.modal.successTitle")}
+        description={t("iqc.modal.successDescription")}
         onCancel={() => setShowSuccessModal(false)}
         onConfirm={() => setShowSuccessModal(false)}
         success
       />
+
+      <MobileBottomNav
+  activeItem={activeNav}
+  onNavigate={(item) => {
+    setActiveNav(item);
+
+    switch (item) {
+      case "identity":
+        setStep("overview");
+        break;
+
+      case "verification":
+        setStep("material-list");
+        break;
+
+      case "history":
+        // History screen will be connected here.
+        break;
+    }
+  }}
+/>
     </main>
   );
 }
@@ -262,6 +291,7 @@ function MoSummaryCardFallback({
   inspectedCount: number;
   totalMaterials: number;
 }) {
+  const { t } = useI18n();
   const progress = Math.round((inspectedCount / totalMaterials) * 100);
 
   return (
@@ -273,7 +303,7 @@ function MoSummaryCardFallback({
               {moNumber}
             </h2>
             <p className="mt-1 text-[14px] font-medium leading-[125%] text-text-colortext-gray">
-              Submitted at {submittedAt}
+              {t("common.submittedAt", { date: submittedAt })}
             </p>
           </div>
           <span className="text-[14px] font-medium text-text-colortext-gray">
@@ -282,11 +312,11 @@ function MoSummaryCardFallback({
         </div>
         <dl className="mt-4 grid grid-cols-2 gap-4 border-b border-strokestroke-gray pb-4">
           <div>
-            <dt className="text-[14px] text-text-colortext-dark">Return ID</dt>
+            <dt className="text-[14px] text-text-colortext-dark">{t("common.returnId")}</dt>
             <dd className="mt-1 break-words text-[16px] font-medium text-text-colortext-black">{returnId}</dd>
           </div>
           <div>
-            <dt className="text-[14px] text-text-colortext-dark">Model</dt>
+            <dt className="text-[14px] text-text-colortext-dark">{t("common.model")}</dt>
             <dd className="mt-1 text-[16px] font-medium text-text-colortext-black">{model}</dd>
           </div>
         </dl>

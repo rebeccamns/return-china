@@ -2,6 +2,8 @@
 
 import { Check, ChevronRight, Package, ScanLine } from "lucide-react";
 
+import { useI18n } from "@/i18n";
+
 export type StickerCarton = {
   id: string;
   code: string;
@@ -17,6 +19,8 @@ export default function StickerCartonList({
   cartons,
   onSelect,
 }: StickerCartonListProps) {
+  const { t } = useI18n();
+
   return (
     <div className="space-y-3">
       {cartons.map((carton) => (
@@ -39,20 +43,20 @@ export default function StickerCartonList({
                 carton.scanned ? "text-[#0B5934]" : "text-[#8F8F8E]"
               }`}
             >
-              {carton.scanned ? "Sticker scanned" : "Sticker not scanned"}
+              {carton.scanned ? t("staffReturnSticker.stickerScanned") : t("staffReturnSticker.stickerNotScanned")}
             </span>
           </span>
 
           {carton.scanned ? (
             <span
-              aria-label="Sticker scanned"
+              aria-label={t("staffReturnSticker.stickerScanned")}
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#E4F1EA]"
             >
               <Check className="h-5 w-5 text-[#075D32]" />
             </span>
           ) : (
             <span
-              aria-label="Scan sticker"
+              aria-label={t("staffReturnSticker.scanSticker")}
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#777777]"
             >
               <ScanLine className="h-5 w-5" />

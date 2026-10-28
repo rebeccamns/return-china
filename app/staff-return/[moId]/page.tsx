@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 
 import MobileHeader from "@/components/layout/mobile-header";
+import { useI18n } from "@/i18n";
 
 import CartonList, { type Carton } from "./_components/CartonList";
 
@@ -12,6 +13,11 @@ import MaterialDetailForm from "./_components/MaterialDetailForm";
 import MaterialList, { type Material } from "./_components/MaterialList";
 
 import MoSummaryCard from "./_components/MoSummaryCard";
+
+import MobileBottomNav, {
+  STAFF_RETURN_ITEMS,
+  type MobileNavItem,
+} from "@/components/layout/mobile-bottom-nav";
 
 type Step = "landing" | "carton-list" | "material-list" | "material-detail";
 
@@ -41,7 +47,10 @@ export default function StaffReturnPage({
 }: {
   params: { moId: string };
 }) {
+  const { t } = useI18n();
   const [step, setStep] = useState<Step>("landing");
+const [activeNav, setActiveNav] =
+  useState<MobileNavItem>("packing-list");
 
   const [cartons, setCartons] = useState<Carton[]>([
     {
@@ -174,7 +183,7 @@ export default function StaffReturnPage({
       {/* Green decorative background */}
       <section
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-[149px] h-[255px] overflow-hidden"
+        className="pointer-events-none absolute inset-x-0 top-[58px] h-[255px] overflow-hidden"
       >
         <div className="absolute -left-[90px] -top-[80px] h-[270px] w-[620px] rounded-[50%] bg-[#d8f4e2]" />
 
@@ -182,12 +191,12 @@ export default function StaffReturnPage({
       </section>
 
       <MobileHeader />
-      <section className="relative z-10 mx-auto w-full max-w-[412px] px-4 pb-8 pt-[170px]">
+      <section className="relative z-10 mx-auto w-full max-w-[412px] px-4 pb-8 pt-[78px]">
         {/* Landing */}
         {step === "landing" && (
           <>
             <h1 className="mb-4 text-[20px] font-semibold leading-[150%] text-text-colortext-black">
-              Staff Return
+              {t("staffReturn.title")}
             </h1>
 
             <MoSummaryCard
@@ -202,7 +211,7 @@ export default function StaffReturnPage({
           <>
             <div className="mb-3 flex items-center justify-between">
               <h1 className="text-[20px] font-semibold leading-[150%] text-text-colortext-black">
-                Staff Return
+                {t("staffReturn.title")}
               </h1>
 
               <button
@@ -211,7 +220,7 @@ export default function StaffReturnPage({
                 className="flex h-9 items-center gap-1.5 rounded-md bg-backgroundbg-white px-3 text-sm font-medium text-slate-700 transition-colors hover:bg-backgroundbg-gray"
               >
                 <ArrowLeft className="h-4 w-4" />
-                Back
+                {t("common.back")}
               </button>
             </div>
 
@@ -231,7 +240,7 @@ export default function StaffReturnPage({
                   onClick={handleRejectWO}
                   className="h-12 flex-1 rounded-md border border-strokestroke-gray bg-backgroundbg-white px-4 text-sm font-semibold --text-colortext-red transition-colors hover:bg-backgroundbg-gray"
                 >
-                  Reject WO
+                  {t("staffReturn.rejectWo")}
                 </button>
 
                 <button
@@ -240,7 +249,7 @@ export default function StaffReturnPage({
                   disabled={!allCartonsCompleted}
                   className="h-12 flex-1 rounded-md bg-primaryprimary-green px-4 text-sm font-semibold text-white transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-white"
                 >
-                  Submit
+                  {t("common.submit")}
                 </button>
               </div>
             </div>
@@ -285,6 +294,26 @@ export default function StaffReturnPage({
           </>
         )}
       </section>
+<MobileBottomNav
+  items={STAFF_RETURN_ITEMS}
+  activeItem={activeNav}
+  onNavigate={(item) => {
+    switch (item) {
+      case "packing-list":
+        setActiveNav(item);
+        setStep("landing");
+        break;
+
+      case "carton-sticker":
+        window.location.href = "/staff-return-sticker/M01234";
+        break;
+
+      case "history":
+        // Connect this to the History screen when available.
+        break;
+    }
+  }}
+/>
     </main>
   );
 }

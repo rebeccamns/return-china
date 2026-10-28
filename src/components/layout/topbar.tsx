@@ -1,9 +1,12 @@
+import LanguageSwitcher from "./language-switcher";
+
 const topBarDetails = ["Mon, 22 Sep 2026", "10:24"];
 
 const TopBarSection = (): JSX.Element => {
   return (
     <header className="fixed top-0 left-[255px] right-0 z-[2] flex h-[52px] items-center border-b border-mode-app-border bg-white pl-0 pr-6">
       <div className="flex flex-1 self-stretch items-center justify-end gap-6 px-5">
+        <LanguageSwitcher />
         <div className="inline-flex flex-[0_0_auto] items-center gap-6">
           {topBarDetails.map((detail) => (
             <span

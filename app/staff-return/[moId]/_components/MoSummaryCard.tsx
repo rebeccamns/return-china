@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/i18n";
 
 type MoSummaryCardProps = {
   onCreatePackingList?: () => void;
@@ -17,6 +18,8 @@ export default function MoSummaryCard({
   onCreatePackingList,
   showCreateButton = false,
 }: MoSummaryCardProps) {
+  const { t } = useI18n();
+
   return (
     <section className="w-full rounded-lg border border-strokestroke-gray bg-backgroundbg-white shadow-none">
       <div className="p-4">
@@ -28,7 +31,7 @@ export default function MoSummaryCard({
             </h2>
 
             <p className="mt-1 text-[14px] font-medium leading-[125%] text-text-colortext-gray">
-              Submitted at {mo.submittedAt}
+              {t("common.submittedAt", { date: mo.submittedAt })}
             </p>
           </div>
 
@@ -36,7 +39,7 @@ export default function MoSummaryCard({
           <dl className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1">
               <dt className="text-[14px] font-medium leading-[125%] text-text-colortext-dark">
-                Return ID
+                {t("common.returnId")}
               </dt>
 
               <dd className="text-[16px] font-medium leading-[125%] text-text-colortext-black">
@@ -46,7 +49,7 @@ export default function MoSummaryCard({
 
             <div className="flex flex-col gap-1">
               <dt className="text-[14px] font-medium leading-[125%] text-text-colortext-dark">
-                Model
+                {t("common.model")}
               </dt>
 
               <dd className="text-[16px] font-medium leading-[125%] text-text-colortext-black">
@@ -58,7 +61,7 @@ export default function MoSummaryCard({
           {/* WO */}
           <div className="flex items-center gap-4 rounded-md border border-strokestroke-gray bg-backgroundbg-white px-4 py-3">
             <span className="text-[14px] font-medium leading-[125%] text-text-colortext-dark">
-              WO
+              {t("common.wo")}
             </span>
 
             <span className="text-[16px] font-semibold leading-[125%] text-text-colortext-black">
@@ -74,7 +77,7 @@ export default function MoSummaryCard({
               onClick={onCreatePackingList}
               className="h-10 w-full rounded-md bg-[linear-gradient(0deg,rgba(11,89,52,1)_0%,rgba(5,131,70,1)_100%)] px-3 text-[12px] font-semibold leading-[125%] text-white shadow-none hover:opacity-90"
             >
-              Create Packing List
+              {t("staffReturn.createPackingList")}
             </Button>
           )}
         </div>

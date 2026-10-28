@@ -2,6 +2,8 @@
 
 import { ChevronRight } from "lucide-react";
 
+import { useI18n } from "@/i18n";
+
 type MoInspectionCardProps = {
   moNumber: string;
   submittedAt: string;
@@ -21,6 +23,7 @@ export default function MoInspectionCard({
   totalMaterials,
   onClick,
 }: MoInspectionCardProps) {
+  const { t } = useI18n();
   const progress =
     totalMaterials > 0
       ? Math.round((inspectedCount / totalMaterials) * 100)
@@ -40,7 +43,7 @@ export default function MoInspectionCard({
           </h2>
 
           <p className="mt-1 text-[14px] font-medium leading-[125%] text-text-colortext-gray">
-            Submitted at {submittedAt}
+            {t("common.submittedAt", { date: submittedAt })}
           </p>
         </div>
 
@@ -54,7 +57,7 @@ export default function MoInspectionCard({
       <div className="mt-4 grid grid-cols-2 gap-3">
         <div>
           <p className="text-[14px] font-medium leading-[125%] text-text-colortext-dark">
-            Return ID
+            {t("common.returnId")}
           </p>
 
           <p className="text-[16px] font-medium leading-[125%] text-text-colortext-black">
@@ -64,7 +67,7 @@ export default function MoInspectionCard({
 
         <div>
           <p className="text-[14px] font-medium leading-[125%] text-text-colortext-dark">
-            Model
+            {t("common.model")}
           </p>
 
           <p className="mt-1 text-[16px] font-medium leading-[125%] text-text-colortext-black">
@@ -79,7 +82,7 @@ export default function MoInspectionCard({
       {/* Progress */}
       <div className="flex items-center justify-between">
         <p className="text-[14px] font-medium leading-[150%] text-text-colortext-gray">
-          {inspectedCount}/{totalMaterials} Material inspected
+          {t("iqc.materialInspected", { inspected: inspectedCount, total: totalMaterials })}
         </p>
 
         <p className="text-[14px] font-medium leading-[150%] text-text-colortext-gray">

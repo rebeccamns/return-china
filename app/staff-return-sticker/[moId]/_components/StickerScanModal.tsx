@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Check, ScanLine, X } from "lucide-react";
 
+import { useI18n } from "@/i18n";
+
 import type { StickerCarton } from "./StickerCartonList";
 
 type StickerScanModalProps = {
@@ -16,6 +18,7 @@ export default function StickerScanModal({
   onClose,
   onConfirm,
 }: StickerScanModalProps) {
+  const { t } = useI18n();
   const [stickerCode, setStickerCode] = useState("");
   const [error, setError] = useState("");
 
@@ -26,12 +29,12 @@ export default function StickerScanModal({
 
   function verifySticker() {
     if (!stickerCode.trim()) {
-      setError("Scan or enter the carton sticker code.");
+      setError(t("staffReturnSticker.scanModal.errorCodeRequired"));
       return;
     }
 
     if (stickerCode.trim().toUpperCase() !== carton.code.toUpperCase()) {
-      setError("The scanned code does not match this carton. Please try again.");
+      setError(t("staffReturnSticker.scanModal.errorCodeMismatch"));
       return;
     }
 
@@ -52,16 +55,16 @@ export default function StickerScanModal({
               <ScanLine className="h-5 w-5 text-[#075D32]" />
             </div>
             <h2 id="sticker-scan-title" className="text-lg font-semibold">
-              Scan Carton Sticker
+              {t("staffReturnSticker.scanModal.title")}
             </h2>
             <p className="mt-1 text-sm text-[#777777]">
-              Carton {carton.code}
+              {t("staffReturnSticker.scanModal.cartonLabel", { code: carton.code })}
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close scan dialog"
+            aria-label={t("staffReturnSticker.scanModal.closeDialog")}
             className="rounded-md p-1 text-[#8F8F8E] hover:bg-[#F5F5F5]"
           >
             <X className="h-5 w-5" />
@@ -69,15 +72,14 @@ export default function StickerScanModal({
         </div>
 
         <p className="text-sm leading-6 text-[#666666]">
-          Scan the sticker attached to this carton. The code must match the
-          carton selected below.
+          {t("staffReturnSticker.scanModal.description")}
         </p>
 
         <label
           htmlFor="carton-sticker-code"
           className="mb-1.5 mt-5 block text-sm font-medium text-[#444444]"
         >
-          Carton Sticker Code
+          {t("staffReturnSticker.scanModal.codeLabel")}
         </label>
         <input
           id="carton-sticker-code"
@@ -90,7 +92,7 @@ export default function StickerScanModal({
           onKeyDown={(event) => {
             if (event.key === "Enter") verifySticker();
           }}
-          placeholder="Scan or enter sticker code"
+          placeholder={t("staffReturnSticker.scanModal.codePlaceholder")}
           className="h-11 w-full rounded-lg border border-[#D5D5D3] bg-white px-3 text-sm outline-none focus:border-[#007A3D] focus:ring-2 focus:ring-[#007A3D]/15"
         />
 
@@ -103,8 +105,7 @@ export default function StickerScanModal({
         <div className="mt-4 flex items-start gap-2 rounded-lg bg-[#F6F8F6] p-3">
           <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#007A3D]" />
           <p className="text-xs leading-5 text-[#666666]">
-            For this prototype, the code is entered into the field. Connect
-            your barcode scanner or scanning library here when available.
+            {t("staffReturnSticker.scanModal.prototypeNote")}
           </p>
         </div>
 
@@ -114,14 +115,14 @@ export default function StickerScanModal({
             onClick={onClose}
             className="h-11 rounded-lg border border-[#DDDDDD] text-sm font-medium text-[#444444] hover:bg-[#F8F8F8]"
           >
-            Cancel
+            {t("common.cancel")}
           </button>
           <button
             type="button"
             onClick={verifySticker}
             className="h-11 rounded-lg bg-[#007A3D] text-sm font-semibold text-white hover:bg-[#006532]"
           >
-            Verify Sticker
+            {t("staffReturnSticker.scanModal.verify")}
           </button>
         </div>
       </div>

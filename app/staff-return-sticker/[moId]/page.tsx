@@ -4,6 +4,7 @@
 import { use, useMemo, useState } from "react";
 import { Check } from "lucide-react";
 import MobileHeader from "@/components/layout/mobile-header";
+import { useI18n } from "@/i18n";
 import MoSummaryCard from "./_components/MoSummaryCard";
 
 import StickerCartonList, {
@@ -26,6 +27,7 @@ const INITIAL_CARTONS: StickerCarton[] = [
 
 export default function StaffReturnStickerPage({ params }: PageProps) {
   const { moId } = use(params);
+  const { t } = useI18n();
 
   const [cartons, setCartons] = useState(INITIAL_CARTONS);
   const [showCartonList, setShowCartonList] = useState(false);
@@ -80,7 +82,7 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
 
         <div className="relative mx-auto w-full">
           <h1 className="mb-4 text-[20px] font-semibold leading-[150%] text-text-colortext-black">
-            Staff Return
+            {t("staffReturn.title")}
           </h1>
 
           {/* Shared MO summary with sticker-scanning progress */}
@@ -98,11 +100,11 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
               <div className="px-4 pb-4">
                 <div className="mb-3 flex items-center justify-between">
                   <h2 className="text-[16px] font-semibold text-text-colortext-black">
-                    Carton List
+                    {t("staffReturn.cartonList")}
                   </h2>
 
                   <span className="text-xs text-text-colortext-gray">
-                    {cartons.length} cartons
+                    {t(cartons.length === 1 ? "common.cartonSingular" : "common.cartonPlural", { count: cartons.length })}
                   </span>
                 </div>
 
@@ -119,11 +121,10 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
 
                     <div>
                       <p className="text-sm font-semibold text-[#075D32]">
-                        All carton stickers scanned
+                        {t("staffReturnSticker.allScanned")}
                       </p>
                       <p className="mt-1 text-xs leading-5 text-[#47745A]">
-                        All cartons are verified. You can now submit this MO
-                        to the next process.
+                        {t("staffReturnSticker.allScannedDescription")}
                       </p>
                     </div>
                   </div>
@@ -135,7 +136,7 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
                   onClick={() => setShowSubmitConfirm(true)}
                   className="mt-5 flex h-12 w-full items-center justify-center rounded-lg bg-[linear-gradient(0deg,rgba(11,89,52,1)_0%,rgba(5,131,70,1)_100%)] px-4 text-base font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:bg-none disabled:bg-[#B8B8B8] disabled:text-white"
                 >
-                  {submitted ? "Submitted" : "Submit"}
+                  {submitted ? t("common.submitted") : t("common.submit")}
                 </button>
               </div>
             )}
@@ -143,8 +144,7 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
 
           {showCartonList && (
             <p className="mt-4 px-1 text-center text-xs leading-5 text-[#8F8F8E]">
-              Scan the sticker attached to each carton. Each sticker must
-              match its carton code before it can be marked complete.
+              {t("staffReturnSticker.scanInstructions")}
             </p>
           )}
         </div>
@@ -176,12 +176,11 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
               id="submit-sticker-title"
               className="text-lg font-semibold"
             >
-              Submit Carton Sticker Scan?
+              {t("staffReturnSticker.confirm.title")}
             </h2>
 
             <p className="mt-2 text-sm leading-6 text-[#666666]">
-              All {cartons.length} carton stickers have been scanned. Submit
-              these results and move this MO to IQC QA Pass?
+              {t("staffReturnSticker.confirm.description", { count: cartons.length })}
             </p>
 
             <div className="mt-5 grid grid-cols-2 gap-3">
@@ -190,7 +189,7 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
                 onClick={() => setShowSubmitConfirm(false)}
                 className="h-10 rounded-lg border border-[#DDDDDD] text-sm font-medium text-[#444444] hover:bg-[#F8F8F8]"
               >
-                Cancel
+                {t("common.cancel")}
               </button>
 
               <button
@@ -198,7 +197,7 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
                 onClick={submitStickerScan}
                 className="h-10 rounded-lg bg-[#007A3D] text-sm font-semibold text-white hover:bg-[#006532]"
               >
-                Submit
+                {t("common.submit")}
               </button>
             </div>
           </div>
@@ -222,12 +221,11 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
               id="sticker-success-title"
               className="text-lg font-semibold"
             >
-              Sticker Scan Submitted
+              {t("staffReturnSticker.success.title")}
             </h2>
 
             <p className="mt-2 text-sm leading-6 text-[#666666]">
-              All carton stickers for {moId || "MO-321654987"} have been
-              submitted. The MO is ready for IQC QA Pass.
+              {t("staffReturnSticker.success.description", { mo: moId || "MO-321654987" })}
             </p>
 
             <button
@@ -235,7 +233,7 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
               onClick={() => setShowSuccess(false)}
               className="mt-5 h-11 w-full rounded-lg bg-[#007A3D] text-sm font-semibold text-white hover:bg-[#006532]"
             >
-              Done
+              {t("common.done")}
             </button>
           </div>
         </div>

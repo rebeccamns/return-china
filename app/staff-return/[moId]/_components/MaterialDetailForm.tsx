@@ -10,6 +10,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useI18n } from "@/i18n";
 
 import type { Material } from "./MaterialList";
 
@@ -32,6 +33,7 @@ export default function MaterialDetailForm({
   onBack,
   onComplete,
 }: MaterialDetailFormProps) {
+  const { t } = useI18n();
   const [detailStep, setDetailStep] =
     useState<DetailStep>("carton-details");
 
@@ -73,7 +75,7 @@ export default function MaterialDetailForm({
                 : () => setDetailStep("carton-details")
             }
             className="flex h-7 w-7 items-center justify-center"
-            aria-label="Back"
+            aria-label={t("common.back")}
           >
             <ArrowLeft
               className="h-5 w-5 text-text-colortext-dark"
@@ -87,7 +89,7 @@ export default function MaterialDetailForm({
         </div>
 
         <span className="text-[14px] font-medium leading-[125%] text-text-colortext-gray">
-          {completedCount}/{totalMaterials} Material
+          {t("common.materialCount", { done: completedCount, total: totalMaterials })}
         </span>
       </div>
 
@@ -95,7 +97,7 @@ export default function MaterialDetailForm({
         {/* Material Code */}
         <div className="flex flex-col gap-2">
           <label className="text-[14px] font-medium leading-[125%] text-text-colortext-dark">
-            Material Code
+            {t("common.materialCode")}
           </label>
 
           <div className="relative">
@@ -200,28 +202,30 @@ function CartonDetailsStep({
   onVolumeHeightChange,
   onContinue,
 }: CartonDetailsStepProps) {
+  const { t } = useI18n();
+
   return (
     <div className="mt-6">
       {/* Step heading */}
       <div className="flex items-center gap-4">
         <span className="rounded-full bg-[#E7F5EC] px-4 py-2 text-[14px] font-semibold text-[#006B3C]">
-          Step 1
+          {t("staffReturn.step1")}
         </span>
 
         <h2 className="text-[20px] font-semibold text-text-colortext-black">
-          Carton Details
+          {t("staffReturn.cartonDetails")}
         </h2>
       </div>
 
       <p className="mt-2 text-[14px] leading-[125%] text-text-colortext-gray">
-        Fill the carton details based on the material details
+        {t("staffReturn.cartonDetailsHint")}
       </p>
 
       {/* Quantity + Single Net Weight */}
       <div className="mt-8 grid grid-cols-2 gap-4">
         <div>
           <label className="mb-2 block text-[14px] font-medium text-black">
-            Quantity of Carton
+            {t("staffReturn.quantityOfCarton")}
           </label>
 
           <Input
@@ -235,7 +239,7 @@ function CartonDetailsStep({
 
         <div>
           <label className="mb-2 block text-[14px] font-medium text-black">
-            Single Net Weight
+            {t("staffReturn.singleNetWeight")}
           </label>
 
           <div className="relative">
@@ -250,7 +254,7 @@ function CartonDetailsStep({
             />
 
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[14px] text-text-colortext-gray">
-              g/PCS
+              {t("common.units.gPerPcs")}
             </span>
           </div>
         </div>
@@ -259,12 +263,12 @@ function CartonDetailsStep({
       {/* Net Weight */}
       <div className="mt-6">
         <label className="mb-2 block text-[14px] font-medium text-black">
-          Net Weight
+          {t("staffReturn.netWeight")}
           <span className="mx-2 text-text-colortext-gray">
             •
           </span>
           <span className="text-text-colortext-gray">
-            Calculated
+            {t("common.calculated")}
           </span>
         </label>
 
@@ -276,7 +280,7 @@ function CartonDetailsStep({
           />
 
           <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[14px] text-text-colortext-gray">
-            kg
+            {t("common.units.kgBare")}
           </span>
         </div>
       </div>
@@ -284,7 +288,7 @@ function CartonDetailsStep({
       {/* Gross Weight */}
       <div className="mt-6">
         <label className="mb-2 block text-[14px] font-medium text-black">
-          Gross Weight
+          {t("staffReturn.grossWeight")}
         </label>
 
         <div className="relative">
@@ -297,7 +301,7 @@ function CartonDetailsStep({
           />
 
           <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[14px] text-text-colortext-gray">
-            kg
+            {t("common.units.kgBare")}
           </span>
         </div>
       </div>
@@ -306,11 +310,11 @@ function CartonDetailsStep({
       <div className="mt-6">
         <div className="mb-2 flex items-center justify-between">
           <label className="text-[14px] font-medium text-black">
-            Volume
+            {t("staffReturn.volume")}
           </label>
 
           <span className="text-[14px] text-text-colortext-gray">
-            mm
+            {t("common.units.mmBare")}
           </span>
         </div>
 
@@ -346,7 +350,7 @@ function CartonDetailsStep({
         onClick={onContinue}
         className="mt-8 h-11 w-full rounded-md bg-[linear-gradient(0deg,rgba(11,89,52,1)_0%,rgba(5,131,70,1)_100%)] text-[14px] font-semibold text-white shadow-none hover:opacity-90"
       >
-        Continue
+        {t("common.continue")}
       </Button>
     </div>
   );
@@ -377,39 +381,41 @@ function UploadPhotosStep({
   onUpnBarcodeChange,
   onComplete,
 }: UploadPhotosStepProps) {
+  const { t } = useI18n();
+
   return (
     <div className="mt-6">
       {/* Step heading */}
       <div className="flex items-center gap-4">
         <span className="rounded-full bg-[#E7F5EC] px-4 py-2 text-[14px] font-semibold text-[#006B3C]">
-          Step 2
+          {t("staffReturn.step2")}
         </span>
 
         <h2 className="text-[20px] font-semibold text-text-colortext-black">
-          Upload Photos
+          {t("staffReturn.uploadPhotos")}
         </h2>
       </div>
 
       <p className="mt-2 text-[14px] leading-[125%] text-text-colortext-gray">
-        Take photos for each required view.
+        {t("staffReturn.uploadPhotosHint")}
       </p>
 
       {/* Photos */}
       <div className="mt-8 flex flex-col gap-5">
         <PhotoUpload
-          label="Front Photo"
+          label={t("common.frontPhoto")}
           uploaded={frontPhoto}
           onUpload={onFrontPhoto}
         />
 
         <PhotoUpload
-          label="Back Photo"
+          label={t("common.backPhoto")}
           uploaded={backPhoto}
           onUpload={onBackPhoto}
         />
 
         <PhotoUpload
-          label="UPN Photo"
+          label={t("common.upnPhoto")}
           uploaded={upnPhoto}
           onUpload={onUpnPhoto}
         />
@@ -418,7 +424,7 @@ function UploadPhotosStep({
       {/* Barcode */}
       <div className="mt-8">
         <label className="mb-2 block text-[14px] font-medium text-black">
-          Scan UPN Barcode{" "}
+          {t("common.scanUpnBarcode")}{" "}
           <span className="text-red-500">*</span>
         </label>
 
@@ -427,7 +433,7 @@ function UploadPhotosStep({
           onChange={(event) =>
             onUpnBarcodeChange(event.target.value)
           }
-          placeholder="Scan or type manually..."
+          placeholder={t("common.scanOrTypePlaceholder")}
           className="h-[58px] rounded-md border-strokestroke-gray px-4 text-[16px]"
         />
       </div>
@@ -437,7 +443,7 @@ function UploadPhotosStep({
         onClick={onComplete}
         className="mt-8 h-11 w-full rounded-md bg-[linear-gradient(0deg,rgba(11,89,52,1)_0%,rgba(5,131,70,1)_100%)] text-[14px] font-semibold text-white shadow-none hover:opacity-90"
       >
-        Add Material
+        {t("staffReturn.addMaterial")}
       </Button>
     </div>
   );
@@ -452,12 +458,14 @@ function PhotoUpload({
   uploaded: boolean;
   onUpload: () => void;
 }) {
+  const { t } = useI18n();
+
   return (
     <div className="grid grid-cols-[150px_1fr] items-center gap-4">
       <div className="flex h-[132px] w-[132px] items-center justify-center rounded bg-slate-50">
         {uploaded ? (
           <div className="flex h-full w-full items-center justify-center rounded bg-[#E7F5EC] text-[12px] font-medium text-[#006B3C]">
-            Photo Added
+            {t("staffReturn.photoAdded")}
           </div>
         ) : (
           <Package
@@ -480,8 +488,8 @@ function PhotoUpload({
           <Camera className="h-5 w-5" strokeWidth={1.8} />
 
           {uploaded
-            ? "Photo Uploaded"
-            : "Take or Upload Photo"}
+            ? t("staffReturn.photoUploaded")
+            : t("common.takeOrUploadPhoto")}
         </button>
       </div>
     </div>

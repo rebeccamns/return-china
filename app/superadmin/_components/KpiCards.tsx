@@ -1,6 +1,7 @@
 import { Check, Clock, TrendingDown, TrendingUp, Truck, type LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/i18n";
 import type { Kpis } from "../_lib/types";
 
 type Tone = "inverse" | "good" | "bad";
@@ -88,13 +89,14 @@ export default function KpiCards({
   kpis: Kpis;
   compareLabel: string;
 }) {
+  const { t } = useI18n();
   const fmt = (n: number) => n.toLocaleString("en-US");
 
   return (
-    <section aria-label="Key figures" className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+    <section aria-label={t("superadmin.keyFigures")} className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
       <KpiCard
         hero
-        title="Total Shipments"
+        title={t("superadmin.kpi.totalShipments")}
         value={fmt(kpis.total)}
         delta={kpis.totalDelta}
         compareLabel={compareLabel}
@@ -103,7 +105,7 @@ export default function KpiCards({
       />
 
       <KpiCard
-        title="Completed Shipments"
+        title={t("superadmin.kpi.completedShipments")}
         value={fmt(kpis.completed)}
         delta={kpis.completedDelta}
         compareLabel={compareLabel}
@@ -115,7 +117,7 @@ export default function KpiCards({
 
       {/* Always red, as in the design (the card's own colour, not good/bad) */}
       <KpiCard
-        title="Rejected Shipments"
+        title={t("superadmin.kpi.rejectedShipments")}
         value={fmt(kpis.rejected)}
         delta={kpis.rejectedDelta}
         compareLabel={compareLabel}
@@ -126,8 +128,8 @@ export default function KpiCards({
       />
 
       <KpiCard
-        title="Avg Lead Time"
-        value={`${kpis.leadTimeDays.toFixed(1)} days`}
+        title={t("superadmin.kpi.avgLeadTime")}
+        value={t("superadmin.kpi.daysValue", { value: kpis.leadTimeDays.toFixed(1) })}
         delta={kpis.leadTimeDelta}
         compareLabel={compareLabel}
         tone={kpis.leadTimeDelta <= 0 ? "good" : "bad"}

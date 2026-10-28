@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useI18n } from "@/i18n";
 
 export type Material = {
   id: string;
@@ -37,6 +38,7 @@ export default function MaterialList({
   onSelectMaterial,
   onSaveCarton,
 }: MaterialListProps) {
+  const { t } = useI18n();
   const completedCodes = new Set(
     completedMaterials.map((m) => m.code)
   );
@@ -52,14 +54,14 @@ export default function MaterialList({
           type="button"
           onClick={onBack}
           className="flex items-center gap-3 text-base font-semibold text-slate-900"
-          aria-label="Back to cartons"
+          aria-label={t("common.back")}
         >
           <ArrowLeft className="h-4 w-4 text-slate-700" />
           {cartonCode}
         </button>
 
         <span className="text-sm text-slate-500">
-          {completedMaterials.length}/{totalMaterials} Material
+          {t("common.materialCount", { done: completedMaterials.length, total: totalMaterials })}
         </span>
       </div>
 
@@ -94,7 +96,7 @@ export default function MaterialList({
           <>
             <div className="space-y-2 pt-1">
               <label className="block text-sm text-slate-500">
-                Material Code
+                {t("common.materialCode")}
               </label>
 
               <Select
@@ -102,7 +104,7 @@ export default function MaterialList({
                 onValueChange={onSelectMaterial}
               >
                 <SelectTrigger className="h-12 w-full rounded-lg border-strokestroke-gray px-3 text-sm">
-                  <SelectValue placeholder="Choose material code" />
+                  <SelectValue placeholder={t("staffReturn.chooseMaterialCode")} />
                 </SelectTrigger>
 
                 <SelectContent>
@@ -130,8 +132,7 @@ export default function MaterialList({
 
             {!selectedMaterialCode && (
               <p className="py-5 text-center text-sm italic text-slate-400">
-                Choose material code to input material
-                details
+                {t("staffReturn.chooseMaterialHint")}
               </p>
             )}
           </>
@@ -145,7 +146,7 @@ export default function MaterialList({
               onClick={onSaveCarton}
               className="flex h-11 w-full items-center justify-center rounded-lg bg-primaryprimary-green px-4 text-sm font-semibold text-white transition-opacity hover:opacity-90"
             >
-              Save Carton Detail
+              {t("staffReturn.saveCartonDetail")}
             </button>
           </div>
         )}

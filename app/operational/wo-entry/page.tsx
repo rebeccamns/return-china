@@ -16,6 +16,7 @@ import {
 import Sidebar from "@/components/layout/sidebar";
 import TopBar from "@/components/layout/topbar";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/i18n";
 
 const nestedHeadClass =
   "bg-slate-100 px-3 text-xs font-semibold text-slate-700";
@@ -138,6 +139,7 @@ const initialRows: WoRow[] = [
 ];
 
 export default function WoEntryPage() {
+  const { t } = useI18n();
   const [rows] = useState<WoRow[]>(initialRows);
   const [woValues, setWoValues] = useState<Record<string, string>>({});
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -150,7 +152,7 @@ export default function WoEntryPage() {
     const wo = woValues[id];
     if (!wo?.trim()) return;
     // TODO: send { moId: id, wo } to your API here
-    alert(`WO "${wo}" submitted for ${id} (not yet connected to a backend).`);
+    alert(t("woEntry.woSubmitted", { wo, id }));
   }
 
   return (
@@ -161,20 +163,20 @@ export default function WoEntryPage() {
 
         <div className="mt-[52px] w-full px-[18px] py-5">
           <nav className="mb-4 flex items-center gap-2 text-xs">
-            <span className="text-text-colortext-gray">Entry</span>
+            <span className="text-text-colortext-gray">{t("woEntry.breadcrumbSection")}</span>
             <span className="text-[#B5B5B3]">›</span>
             <span className="font-medium text-text-colortext-dark">
-              WO Entry
+              {t("woEntry.title")}
             </span>
           </nav>
 
           <h1 className="mb-4 text-lg font-semibold text-[#111111]">
-            WO Entry
+            {t("woEntry.title")}
           </h1>
 
           <div className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
             <div className="px-[18px] py-[18px]">
-              <h2 className="text-sm font-semibold text-[#111111]">MO List</h2>
+              <h2 className="text-sm font-semibold text-[#111111]">{t("woEntry.moList")}</h2>
             </div>
 
             <div className="border-t border-strokestroke-gray" />
@@ -185,11 +187,11 @@ export default function WoEntryPage() {
                   <TableHeader className="bg-[#F8F8F8]">
                     <TableRow className="hover:bg-[#F8F8F8]">
                       <TableHead className="w-12 px-3 text-xs" />
-                      <TableHead className="px-3 text-xs">MO Code</TableHead>
-                      <TableHead className="px-3 text-xs">Model</TableHead>
-                      <TableHead className="px-3 text-xs">IQC Status</TableHead>
-                      <TableHead className="px-3 text-xs">Material</TableHead>
-                      <TableHead className="px-3 text-xs">WO</TableHead>
+                      <TableHead className="px-3 text-xs">{t("common.moCode")}</TableHead>
+                      <TableHead className="px-3 text-xs">{t("common.model")}</TableHead>
+                      <TableHead className="px-3 text-xs">{t("woEntry.iqcStatus")}</TableHead>
+                      <TableHead className="px-3 text-xs">{t("common.material")}</TableHead>
+                      <TableHead className="px-3 text-xs">{t("common.wo")}</TableHead>
                       <TableHead className="w-32 px-3 text-xs" />
                     </TableRow>
                   </TableHeader>
@@ -214,7 +216,7 @@ export default function WoEntryPage() {
                                 onClick={() =>
                                   setExpandedId(isExpanded ? null : row.id)
                                 }
-                                aria-label="Expand row"
+                                aria-label={t("common.expandRow")}
                               >
                                 <Plus
                                   className={`h-3.5 w-3.5 transition-transform ${
@@ -240,17 +242,19 @@ export default function WoEntryPage() {
                                     : "text-red-600"
                                 }
                               >
-                                {row.iqcStatus}
+                                {row.iqcStatus === "Passed"
+                                  ? t("status.passed")
+                                  : t("status.failed")}
                               </span>
                             </TableCell>
 
                             <TableCell className="px-3 py-2 text-xs text-[#111111]">
-                              {row.materials.length} items
+                              {t(row.materials.length === 1 ? "woEntry.itemSingular" : "woEntry.itemPlural", { count: row.materials.length })}
                             </TableCell>
 
                             <TableCell className="px-3 py-2">
                               <Input
-                                placeholder="Input WO"
+                                placeholder={t("woEntry.inputWo")}
                                 value={woValue}
                                 onChange={(e) =>
                                   updateWo(row.id, e.target.value)
@@ -271,7 +275,7 @@ export default function WoEntryPage() {
                                 }`}
                               >
                                 <Send className="h-3.5 w-3.5" />
-                                Submit WO
+                                {t("woEntry.submitWo")}
                               </Button>
                             </TableCell>
                           </TableRow>
@@ -286,19 +290,19 @@ export default function WoEntryPage() {
                                   className={cn(nestedHeadClass, "w-12")}
                                 />
                                 <TableHead className={nestedHeadClass}>
-                                  Material Code
+                                  {t("common.materialCode")}
                                 </TableHead>
                                 <TableHead
                                   colSpan={2}
                                   className={nestedHeadClass}
                                 >
-                                  English Name
+                                  {t("common.englishName")}
                                 </TableHead>
                                 <TableHead
                                   colSpan={3}
                                   className={nestedHeadClass}
                                 >
-                                  China Name
+                                  {t("common.chinaName")}
                                 </TableHead>
                               </TableRow>
                               {row.materials.map((material, i) => (
