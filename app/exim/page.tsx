@@ -1,7 +1,17 @@
+
 "use client";
 
 import { useState } from "react";
-import { CircleCheck, CircleX, Folder, Send, X } from "lucide-react";
+import {
+  CircleCheck,
+  CircleX,
+  ChevronDown,
+  ChevronRight,
+  ClipboardList,
+  Package,
+  Send,
+  X,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,13 +22,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import Sidebar from "@/components/layout/sidebar";
 import TopBar from "@/components/layout/topbar";
 import { cn } from "@/lib/utils";
@@ -27,68 +30,116 @@ import { useI18n } from "@/i18n";
 import EximMaterialTable from "./_components/EximMaterialTable";
 import { pendingMos, type EximMo, type EximRow } from "./_lib/data";
 
-type Notice = { type: "success" | "reject"; message: string };
+type Notice = {
+  type: "success" | "reject";
+  message: string;
+};
+
+type ExpandedMo = {
+  code: string;
+  rows: EximRow[];
+};
 
 export default function EximPage() {
   const { t } = useI18n();
+
   const [mos, setMos] = useState<EximMo[]>(pendingMos);
-  const [selectedCode, setSelectedCode] = useState("");
-  const [loaded, setLoaded] = useState<{ code: string; rows: EximRow[] } | null>(
-    null,
-  );
+  const [expanded, setExpanded] = useState<ExpandedMo | null>(null);
   const [notice, setNotice] = useState<Notice | null>(null);
   const [rejectOpen, setRejectOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
 
-  const total = loaded?.rows.length ?? 0;
+  const total = expanded?.rows.length ?? 0;
+
   const filled =
-    loaded?.rows.filter((r) => r.model.trim() && r.brand.trim()).length ?? 0;
+    expanded?.rows.filter(
+      (row) => row.model.trim() && row.brand.trim(),
+    ).length ?? 0;
+
   const canSubmit = total > 0 && filled === total;
 
-  function handleSearch() {
-    const mo = mos.find((m) => m.code === selectedCode);
-    if (!mo) return;
-
+  function toggleMo(mo: EximMo) {
     setNotice(null);
-    setLoaded({
+
+    if (expanded?.code === mo.code) {
+      setExpanded(null);
+      return;
+    }
+
+    setExpanded({
       code: mo.code,
-      rows: mo.materials.map((m) => ({ ...m, model: "", brand: "" })),
+      rows:
+        expanded?.code === mo.code
+          ? expanded.rows
+          : mo.materials.map((material) => ({
+              ...material,
+              model: "",
+              brand: "",
+            })),
     });
   }
 
-  function updateRow(id: string, field: "model" | "brand", value: string) {
-    setLoaded((prev) =>
+  function updateRow(
+    id: string,
+    field: "model" | "brand",
+    value: string,
+  ) {
+    setExpanded((prev) =>
       prev
         ? {
             ...prev,
-            rows: prev.rows.map((r) =>
-              r.id === id ? { ...r, [field]: value } : r,
+            rows: prev.rows.map((row) =>
+              row.id === id ? { ...row, [field]: value } : row,
             ),
           }
         : prev,
     );
   }
 
-  // Remove the MO from this queue and show the result
-  function finish(code: string, type: Notice["type"], message: string) {
-    setMos((prev) => prev.filter((m) => m.code !== code));
-    setLoaded(null);
-    setSelectedCode("");
+  function finish(
+    code: string,
+    type: Notice["type"],
+    message: string,
+  ) {
+    setMos((prev) => prev.filter((mo) => mo.code !== code));
+    setExpanded(null);
     setNotice({ type, message });
   }
 
   function handleSubmit() {
-    if (!loaded || !canSubmit) return;
+    if (!expanded || !canSubmit) return;
 
-    // TODO: POST { moCode: loaded.code, materials: loaded.rows.map(r => ({ id: r.id, model: r.model, brand: r.brand })) }
-    finish(loaded.code, "success", t("exim.submitSuccess", { code: loaded.code }));
+    // TODO: Connect to the backend.
+    // POST {
+    //   moCode: expanded.code,
+    //   materials: expanded.rows.map((row) => ({
+    //     id: row.id,
+    //     model: row.model,
+    //     brand: row.brand,
+    //   })),
+    // }
+
+    finish(
+      expanded.code,
+      "success",
+      t("exim.submitSuccess", { code: expanded.code }),
+    );
   }
 
   function handleReject() {
-    if (!loaded || !rejectReason.trim()) return;
+    if (!expanded || !rejectReason.trim()) return;
 
-    // TODO: POST { moCode: loaded.code, reason: rejectReason }
-    finish(loaded.code, "reject", t("exim.rejectSuccess", { code: loaded.code }));
+    const code = expanded.code;
+
+    // TODO: Connect to the backend.
+    // POST { moCode: code, reason: rejectReason }
+
+    finish(
+      code,
+      "reject",
+      t("exim.rejectSuccess", { code }),
+    );
+
     setRejectOpen(false);
     setRejectReason("");
   }
@@ -101,9 +152,31 @@ export default function EximPage() {
         <TopBar />
 
         <div className="mt-[52px] w-full px-[18px] py-5">
-          <nav className="mb-4 text-xs text-text-colortext-gray">{t("exim.title")}</nav>
+          <nav className="mb-4 text-xs text-text-colortext-gray">
+            {t("exim.title")}
+          </nav>
 
-          <h1 className="mb-4 text-lg font-semibold text-[#111111]">{t("exim.title")}</h1>
+          <div className="mb-5 flex items-start justify-between gap-4">
+            <div>
+              <h1 className="text-lg font-semibold text-[#111111]">
+                {t("exim.title")}
+              </h1>
+              <p className="mt-1 text-sm text-[#8F8F8E]">
+                Review pending MOs and complete their brand and model
+                information.
+              </p>
+            </div>
+
+            <div className="flex shrink-0 items-center gap-2 rounded-lg border border-strokestroke-gray bg-white px-3 py-2">
+              <ClipboardList className="h-4 w-4 text-[#0B5934]" />
+              <span className="text-sm text-[#5F5F5E]">
+                Pending MOs
+              </span>
+              <span className="text-sm font-semibold text-[#111111]">
+                {mos.length}
+              </span>
+            </div>
+          </div>
 
           {notice && (
             <div
@@ -120,7 +193,9 @@ export default function EximPage() {
               ) : (
                 <CircleX className="mt-px h-4 w-4 shrink-0" />
               )}
+
               <span className="flex-1">{notice.message}</span>
+
               <button
                 type="button"
                 aria-label={t("common.dismiss")}
@@ -131,113 +206,189 @@ export default function EximPage() {
             </div>
           )}
 
-          <div className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
-            {/* MO picker */}
-            <div className="flex items-center gap-3 px-[18px] py-[18px]">
-              <span className="text-sm text-[#111111]">{t("common.mo")}</span>
-
-              <Select
-                value={selectedCode}
-                onValueChange={setSelectedCode}
-                disabled={mos.length === 0}
-              >
-                <SelectTrigger className="h-10 w-[340px] rounded-md border-strokestroke-gray text-sm">
-                  <SelectValue placeholder={t("exim.selectMo")} />
-                </SelectTrigger>
-                <SelectContent>
-                  {mos.map((mo) => (
-                    <SelectItem key={mo.code} value={mo.code} className="text-sm">
-                      {mo.code}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Button
-                type="button"
-                disabled={!selectedCode}
-                onClick={handleSearch}
-                className="h-10 rounded-md bg-gradient-to-b from-[#058346] to-[#0B5934] px-4 text-sm font-semibold text-white hover:opacity-90 disabled:cursor-not-allowed disabled:from-slate-300 disabled:to-slate-300"
-              >
-                {t("exim.searchMo")}
-              </Button>
+          <section className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
+            <div className="flex items-center justify-between border-b border-strokestroke-gray px-[18px] py-4">
+              <div>
+                <h2 className="text-sm font-semibold text-[#111111]">
+                  Task / MO List
+                </h2>
+                <p className="mt-1 text-xs text-[#8F8F8E]">
+                  Select an MO to view and complete its material details.
+                </p>
+              </div>
             </div>
 
-            <div className="border-t border-strokestroke-gray" />
-
-            {/* Material list */}
-            <div className="px-[18px] pb-[18px] pt-4">
-              <h2 className="mb-3 text-sm font-semibold text-[#111111]">
-                {t("common.materialList")}
-              </h2>
-
-              {loaded ? (
-                <>
-                  <div className="mb-4 inline-flex h-8 items-center rounded-full bg-[#F4F4F4] px-4 text-xs">
-                    <span className="text-[#8F8F8E]">{t("common.mo")}</span>
-                    <span className="ml-5 font-medium text-[#111111]">
-                      {loaded.code}
-                    </span>
-                  </div>
-
-                  <EximMaterialTable rows={loaded.rows} onChange={updateRow} />
-                </>
-              ) : (
-                <div className="flex flex-col items-center justify-center py-16 text-center">
-                  <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-slate-50">
-                    <Folder className="h-6 w-6 text-slate-700" strokeWidth={1.5} />
-                  </div>
-
-                  <p className="text-base font-medium text-[#111111]">
-                    {mos.length === 0 ? t("exim.noMoWaiting") : t("exim.noMoSelected")}
-                  </p>
-                  <p className="mt-1 text-sm text-[#8F8F8E]">
-                    {mos.length === 0
-                      ? t("exim.noMoWaitingHint")
-                      : t("exim.noMoSelectedHint")}
-                  </p>
+            {mos.length === 0 ? (
+              <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-[#EAF6EE]">
+                  <Package
+                    className="h-6 w-6 text-[#0B5934]"
+                    strokeWidth={1.5}
+                  />
                 </div>
-              )}
-            </div>
-          </div>
 
-          {/* Actions */}
-          {loaded && (
-            <div className="mt-4 flex items-center justify-end gap-3">
-              <span className="mr-auto text-xs text-[#5F5F5E]">
-                {t("exim.materialsComplete", { filled, total })}
-              </span>
+                <p className="text-sm font-medium text-[#111111]">
+                  {t("exim.noMoWaiting")}
+                </p>
 
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setRejectOpen(true)}
-                className="h-10 w-36 gap-2 rounded-md border-strokestroke-gray bg-white text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-600"
-              >
-                <X className="h-4 w-4" />
-                {t("exim.reject")}
-              </Button>
+                <p className="mt-1 max-w-sm text-xs text-[#8F8F8E]">
+                  {t("exim.noMoWaitingHint")}
+                </p>
+              </div>
+            ) : (
+              <div className="divide-y divide-strokestroke-gray">
+                {mos.map((mo) => {
+                  const isExpanded = expanded?.code === mo.code;
+                  const rowCount = mo.materials.length;
 
-              <Button
-                type="button"
-                disabled={!canSubmit}
-                onClick={handleSubmit}
-                className={cn(
-                  "h-10 w-36 gap-2 rounded-md text-sm font-semibold text-white",
-                  canSubmit
-                    ? "bg-gradient-to-b from-[#058346] to-[#0B5934] hover:opacity-90"
-                    : "cursor-not-allowed bg-slate-300 hover:bg-slate-300",
-                )}
-              >
-                <Send className="h-4 w-4" />
-                {t("common.submit")}
-              </Button>
-            </div>
-          )}
+                  const completedCount = isExpanded
+                    ? expanded.rows.filter(
+                        (row) =>
+                          row.model.trim() && row.brand.trim(),
+                      ).length
+                    : 0;
+
+                  return (
+                    <div key={mo.code}>
+                      <button
+                        type="button"
+                        aria-expanded={isExpanded}
+                        onClick={() => toggleMo(mo)}
+                        className={cn(
+                          "flex w-full items-center gap-4 px-[18px] py-4 text-left transition-colors",
+                          isExpanded
+                            ? "bg-[#F7FBF8]"
+                            : "bg-white hover:bg-slate-50",
+                        )}
+                      >
+                        <div
+                          className={cn(
+                            "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg",
+                            isExpanded
+                              ? "bg-[#EAF6EE]"
+                              : "bg-[#F4F4F4]",
+                          )}
+                        >
+                          <Package
+                            className={cn(
+                              "h-5 w-5",
+                              isExpanded
+                                ? "text-[#0B5934]"
+                                : "text-[#737373]",
+                            )}
+                            strokeWidth={1.7}
+                          />
+                        </div>
+
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-semibold text-[#111111]">
+                            {mo.code}
+                          </p>
+
+                          <p className="mt-1 text-xs text-[#8F8F8E]">
+                            {rowCount}{" "}
+                            {rowCount === 1 ? "material" : "materials"}
+                          </p>
+                        </div>
+
+                        {isExpanded ? (
+                          <span className="hidden text-xs text-[#0B5934] sm:block">
+                            {completedCount} / {rowCount} completed
+                          </span>
+                        ) : (
+                          <span className="hidden text-xs text-[#8F8F8E] sm:block">
+                            View materials
+                          </span>
+                        )}
+
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md">
+                          {isExpanded ? (
+                            <ChevronDown className="h-4 w-4 text-[#0B5934]" />
+                          ) : (
+                            <ChevronRight className="h-4 w-4 text-[#737373]" />
+                          )}
+                        </div>
+                      </button>
+
+                      {isExpanded && expanded && (
+                        <div className="border-t border-strokestroke-gray bg-[#FAFBFA] px-[18px] py-5">
+                          <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+                            <div>
+                              <p className="text-sm font-semibold text-[#111111]">
+                                Material Details
+                              </p>
+                              <p className="mt-1 text-xs text-[#8F8F8E]">
+                                Enter the brand and model for every
+                                material before submitting this MO.
+                              </p>
+                            </div>
+
+                            <div className="inline-flex h-8 items-center gap-3 rounded-full bg-white px-4 text-xs">
+                              <span className="text-[#8F8F8E]">
+                                {t("common.mo")}
+                              </span>
+                              <span className="font-medium text-[#111111]">
+                                {expanded.code}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="overflow-x-auto rounded-lg border border-strokestroke-gray bg-white">
+                            <EximMaterialTable
+                              rows={expanded.rows}
+                              onChange={updateRow}
+                            />
+                          </div>
+
+                          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                            <span className="text-xs text-[#5F5F5E]">
+                              {t("exim.materialsComplete", {
+                                filled,
+                                total,
+                              })}
+                            </span>
+
+                            <div className="flex items-center gap-3">
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => {
+                                  setRejectReason("");
+                                  setRejectOpen(true);
+                                }}
+                                className="h-10 gap-2 rounded-md border-strokestroke-gray bg-white px-4 text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-600"
+                              >
+                                <X className="h-4 w-4" />
+                                {t("exim.reject")}
+                              </Button>
+
+                              <Button
+                                type="button"
+                                disabled={!canSubmit}
+                                onClick={handleSubmit}
+                                className={cn(
+                                  "h-10 gap-2 rounded-md px-5 text-sm font-semibold text-white",
+                                  canSubmit
+                                    ? "bg-gradient-to-b from-[#058346] to-[#0B5934] hover:opacity-90"
+                                    : "cursor-not-allowed bg-slate-300 hover:bg-slate-300",
+                                )}
+                              >
+                                <Send className="h-4 w-4" />
+                                {t("common.submit")}
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </section>
         </div>
       </div>
 
-      {/* Reject dialog */}
       <Dialog
         open={rejectOpen}
         onOpenChange={(open) => {
@@ -247,20 +398,26 @@ export default function EximPage() {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t("exim.rejectDialog.title")}</DialogTitle>
+            <DialogTitle>
+              {t("exim.rejectDialog.title")}
+            </DialogTitle>
             <DialogDescription>
-              {t("exim.rejectDialog.description", { code: loaded?.code ?? "" })}
+              {t("exim.rejectDialog.description", {
+                code: expanded?.code ?? "",
+              })}
             </DialogDescription>
           </DialogHeader>
 
           <div>
             <label className="mb-1.5 block text-xs font-medium text-[#111111]">
-              {t("exim.rejectDialog.reasonLabel")} <span className="text-red-500">*</span>
+              {t("exim.rejectDialog.reasonLabel")}{" "}
+              <span className="text-red-500">*</span>
             </label>
+
             <textarea
               rows={4}
               value={rejectReason}
-              onChange={(e) => setRejectReason(e.target.value)}
+              onChange={(event) => setRejectReason(event.target.value)}
               placeholder={t("exim.rejectDialog.reasonPlaceholder")}
               className="w-full resize-none rounded-md border border-strokestroke-gray px-3 py-2 text-xs outline-none placeholder:text-[#A3A3A1] focus:border-primaryprimary-green"
             />
@@ -274,6 +431,7 @@ export default function EximPage() {
             >
               {t("common.cancel")}
             </Button>
+
             <Button
               type="button"
               disabled={!rejectReason.trim()}

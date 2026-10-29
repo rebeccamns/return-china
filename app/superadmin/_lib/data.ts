@@ -410,4 +410,16 @@ export function getDashboardData(mode: Mode, period: string): DashboardData {
     trend,
     flows: isDesign ? DESIGN_FLOWS : flowsFor(mode, period),
   };
+  
+}
+
+
+/**
+ * Demo monthly SLT data.
+ * Uses the existing seeded flow generator so the result is deterministic.
+ * Replace this with real monthly data when the API is available.
+ */
+export function getFlowsForMonth(month: number): FlowRow[] {
+  const safeMonth = Math.min(11, Math.max(0, month));
+  return flowsFor("month", String(safeMonth));
 }

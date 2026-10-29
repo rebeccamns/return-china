@@ -7,8 +7,12 @@ const STAGE_LABEL_KEYS: Record<string, TranslationKey> = {
   "IQC Scan": "stages.iqcScan",
   "PMC Open WO": "stages.pmcOpenWo",
   "Staff Return": "stages.staffReturn",
+  "Exim": "stages.exim",
   "Staff Return 2": "stages.staffReturn2",
   "IQC QA Pass": "stages.iqcQaPass",
+  // MO monitoring step aliases (short names)
+  "PMC Entry": "stages.pmcMoEntry",
+  "IQC": "stages.iqcScan",
 };
 
 export function stageLabelKey(stage: string): TranslationKey | null {

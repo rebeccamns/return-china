@@ -1,4 +1,4 @@
-import type { DashboardData, Mode } from "./types";
+import type { DashboardData, Mode, MoRecord } from "./types";
 
 type Cell = string | number;
 
@@ -50,6 +50,40 @@ export function exportDashboardCsv(
   link.download = `dashboard-${meta.mode}-${meta.periodLabel
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+
+/**
+ * TODO(backend): replace with real API call when export should include server data.
+ * Generates a CSV of the supplied MO records and triggers a browser download.
+ */
+export function exportMoCsv(mos: MoRecord[], filename = "mo-monitoring.csv"): void {
+  const rows: Cell[][] = [
+    ["MO Monitoring Export"],
+    [],
+    ["MO Code", "Model", "Current Step", "Progress", "Status", "Last Updated", "Rejections"],
+    ...mos.map((m) => [
+      m.moCode,
+      m.model,
+      m.currentStep,
+      `${m.completedSteps}/7`,
+      m.status,
+      m.lastUpdated,
+      m.rejectionCount,
+    ]),
+  ];
+
+  const csv = rows.map((row) => row.map(escape).join(",")).join("\r\n");
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
   document.body.appendChild(link);
   link.click();
   link.remove();

@@ -1,10 +1,64 @@
+
 export type Mode = "year" | "month" | "date" | "day";
 
-export type PeriodOption = { value: string; label: string };
+/* ============================================================
+   MO Monitoring types
+============================================================ */
+
+export type MoStatus = "In Progress" | "Pending" | "Completed" | "Blocked";
+
+export type StepStatus = "completed" | "in_progress" | "not_started" | "reopened";
+
+export type StepName =
+  | "PMC Entry"
+  | "IQC"
+  | "PMC Open WO"
+  | "Staff Return"
+  | "Exim"
+  | "Staff Return 2"
+  | "IQC QA Pass";
+
+export type ActivityStatus = "Started" | "Completed" | "Rejected";
+
+export type TimelineStep = {
+  step: StepName;
+  status: StepStatus;
+  /** Display time string, e.g. "09:02". Null when not started. */
+  time: string | null;
+};
+
+export type ActivityLogEntry = {
+  /** Full display timestamp, e.g. "Sep 22, 12:16" */
+  time: string;
+  processStep: StepName;
+  activityStatus: ActivityStatus;
+  remarks: string;
+};
+
+export type MoRecord = {
+  moCode: string;
+  model: "Latte-M" | "Latte-S" | "Mocha-X";
+  currentStep: StepName;
+  /** Number of steps completed out of 7 */
+  completedSteps: number;
+  status: MoStatus;
+  /** Display string, e.g. "Sep 22, 08:15" */
+  lastUpdated: string;
+  /** Real Date object used for date-range filtering */
+  lastUpdatedDate: Date;
+  timeline: TimelineStep[];
+  activityLog: ActivityLogEntry[];
+  rejectionCount: number;
+};
+
+export type PeriodOption = {
+  value: string;
+  label: string;
+};
 
 export type Kpis = {
   total: number;
-  totalDelta: number; // % change vs the previous period (signed)
+  totalDelta: number;
   completed: number;
   completedDelta: number;
   rejected: number;
@@ -14,21 +68,27 @@ export type Kpis = {
 };
 
 export type TrendPoint = {
-  label: string; // x-axis label
-  tooltipLabel: string; // title shown in the hover tooltip
-  rate: number; // rejection rate, %
+  label: string;
+  tooltipLabel: string;
+  rate: number;
   rejected: number;
   shipments: number;
-  topStage: string; // stage with the most rejections ("" when none)
+  topStage: string;
   topStageCount: number;
 };
 
 export type FlowRow = {
   stage: string;
-  mos: number; // MOs counted in this stage for the period
-  overPct: number; // % of those MOs that exceeded the SLT
-  sltHours: number; // average time spent within the SLT (green part of the bar)
-  overHours: number; // average time beyond the SLT (red part, 0 = none)
+  mos: number;
+  overPct: number;
+  sltHours: number;
+  overHours: number;
+};
+
+export type AbnormalRateRow = {
+  stage: string;
+  shipments: number;
+  feedback: number;
 };
 
 export type DashboardData = {

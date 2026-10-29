@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useMemo, useState } from "react";
@@ -10,13 +11,16 @@ import type { TranslationKey } from "@/i18n";
 import DashboardHeader from "./_components/DashboardHeader";
 import KpiCards from "./_components/KpiCards";
 import RejectionRateChart from "./_components/RejectionRateChart";
+import ShipmentFeedbackComboChart from "./_components/ShipmentFeedbackComboChart";
 import SltPerformanceCard from "./_components/SltPerformanceCard";
+
 import {
   DEFAULT_PERIOD,
   getDashboardData,
   getPeriodOptions,
   type PeriodOptionTexts,
 } from "./_lib/data";
+
 import { exportDashboardCsv } from "./_lib/export";
 import type { Mode } from "./_lib/types";
 
@@ -29,11 +33,14 @@ const COMPARE_LABEL_KEYS: Record<Mode, TranslationKey> = {
 
 export default function SuperadminDashboardPage() {
   const { t, dictionary } = useI18n();
+
   const [mode, setMode] = useState<Mode>("year");
   const [period, setPeriod] = useState(DEFAULT_PERIOD.year);
 
-  // TODO: replace with a fetch keyed on [mode, period]
-  const data = useMemo(() => getDashboardData(mode, period), [mode, period]);
+  const data = useMemo(
+    () => getDashboardData(mode, period),
+    [mode, period],
+  );
 
   const periodTexts = useMemo<PeriodOptionTexts>(
     () => ({
@@ -49,18 +56,35 @@ export default function SuperadminDashboardPage() {
   );
 
   const periodLabel =
-    getPeriodOptions(mode, periodTexts).find((option) => option.value === period)?.label ?? period;
+    getPeriodOptions(mode, periodTexts).find(
+      (option) => option.value === period,
+    )?.label ?? period;
 
   const compareLabel = t(COMPARE_LABEL_KEYS[mode]);
 
   function handleModeChange(next: Mode) {
     setMode(next);
-    setPeriod(DEFAULT_PERIOD[next]); // each toggle resets the select to its default
+    setPeriod(DEFAULT_PERIOD[next]);
   }
 
   function handleExport() {
-    exportDashboardCsv(data, { mode, periodLabel, compareLabel });
+    exportDashboardCsv(data, {
+      mode,
+      periodLabel,
+      compareLabel,
+    });
   }
+
+  // Placeholder business rule: display 100% for every period.
+  // Replace this when the actual pass-rate calculation is defined.
+  const passRatePoints = useMemo(
+    () =>
+      data.trend.map((point) => ({
+        ...point,
+        rate: 100,
+      })),
+    [data.trend],
+  );
 
   return (
     <main className="min-h-screen w-full bg-backgroundbg-gray">
@@ -71,9 +95,15 @@ export default function SuperadminDashboardPage() {
 
         <div className="mt-[52px] w-full px-[18px] py-5">
           <nav className="mb-5 flex items-center gap-2 text-xs">
-            <span className="text-text-colortext-gray">{t("superadmin.dashboard")}</span>
+            <span className="text-text-colortext-gray">
+              {t("superadmin.dashboard")}
+            </span>
+
             <span className="text-[#B5B5B3]">›</span>
-            <span className="font-medium text-text-colortext-dark">{t("superadmin.dashboard")}</span>
+
+            <span className="font-medium text-text-colortext-dark">
+              {t("superadmin.dashboard")}
+            </span>
           </nav>
 
           <DashboardHeader
@@ -85,8 +115,23 @@ export default function SuperadminDashboardPage() {
           />
 
           <div className="mt-5 flex flex-col gap-5">
-            <KpiCards kpis={data.kpis} compareLabel={compareLabel} />
-            <RejectionRateChart points={data.trend} />
+            <KpiCards
+              kpis={data.kpis}
+              compareLabel={compareLabel}
+            />
+
+            {/* Pass Rate and shipment feedback trend */}
+            <div className="grid grid-cols-1 items-stretch gap-5 xl:grid-cols-2">
+              <RejectionRateChart
+                points={passRatePoints}
+                title="Pass Rate (%)"
+                metric="pass"
+              />
+
+              <ShipmentFeedbackComboChart points={data.trend} />
+            </div>
+
+            {/* Full-width section with its own month filter */}
             <SltPerformanceCard rows={data.flows} />
           </div>
         </div>

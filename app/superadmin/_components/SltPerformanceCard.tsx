@@ -1,48 +1,122 @@
+
+"use client";
+
+import { useMemo, useState } from "react";
+import { CalendarDays } from "lucide-react";
+
 import { useI18n } from "@/i18n";
 import { stageLabelKey } from "../_lib/stageLabel";
+import { getFlowsForMonth } from "../_lib/data";
 import type { FlowRow } from "../_lib/types";
 
-const ALERT_OVER_PCT = 25; // rows at or above this share are shown in red
-const SCALE_FLOOR_HOURS = 24; // the bar track represents at least 24 h
+const ALERT_OVER_PCT = 25;
+const SCALE_FLOOR_HOURS = 24;
 
-export default function SltPerformanceCard({ rows }: { rows: FlowRow[] }) {
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+export default function SltPerformanceCard({
+  rows,
+}: {
+  rows: FlowRow[];
+}) {
   const { t } = useI18n();
-  const longest = Math.max(...rows.map((r) => r.sltHours + r.overHours), 0);
-  const scale = Math.max(SCALE_FLOOR_HOURS, Math.ceil(longest * 1.5));
-  const pct = (hours: number) => `${Math.min(100, (hours / scale) * 100)}%`;
+  const [month, setMonth] = useState(9);
+
+  const filteredRows = useMemo(
+    () => getFlowsForMonth(month),
+    [month],
+  );
+
+  // Fallback to the supplied dashboard rows if no month rows are available.
+  const displayRows = filteredRows.length ? filteredRows : rows;
+
+  const longest = Math.max(
+    ...displayRows.map((row) => row.sltHours + row.overHours),
+    0,
+  );
+
+  const scale = Math.max(
+    SCALE_FLOOR_HOURS,
+    Math.ceil(longest * 1.5),
+  );
+
+  const pct = (hours: number) =>
+    `${Math.min(100, (hours / scale) * 100)}%`;
 
   return (
     <section className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
-      <header className="border-b border-strokestroke-gray px-6 pb-3.5 pt-4">
-        <h2 className="text-base font-semibold leading-6 text-[#111111]">{t("superadmin.slt.title")}</h2>
-        <p className="mt-1 text-xs leading-4 text-[#777775]">{t("superadmin.slt.subtitle")}</p>
+      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-strokestroke-gray px-6 pb-3.5 pt-4">
+        <div>
+          <h2 className="text-base font-semibold leading-6 text-[#111111]">
+            {t("superadmin.slt.title")}
+          </h2>
+          <p className="mt-1 text-xs leading-4 text-[#777775]">
+            {t("superadmin.slt.subtitle")}
+          </p>
+        </div>
+
+        <label className="flex h-9 items-center gap-2 rounded-md border border-strokestroke-gray bg-white px-3 text-sm">
+          <CalendarDays className="h-4 w-4 text-[#777775]" />
+          <span className="sr-only">Filter SLT by month</span>
+          <select
+            value={month}
+            onChange={(event) => setMonth(Number(event.target.value))}
+            className="bg-transparent outline-none"
+          >
+            {MONTHS.map((name, index) => (
+              <option key={name} value={index}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </label>
       </header>
 
       <div className="px-6 pb-3 pt-3">
         <ul>
-          {rows.map((row) => {
+          {displayRows.map((row) => {
             const alert = row.overPct >= ALERT_OVER_PCT;
 
             return (
               <li
                 key={row.stage}
-                className="grid h-10 grid-cols-[192px_minmax(0,1fr)_160px] items-center border-b border-dashed border-[#e4e4e2] px-2 transition-colors hover:bg-slate-50/70"
+                className="grid min-h-10 grid-cols-[192px_minmax(0,1fr)_160px] items-center border-b border-dashed border-[#e4e4e2] px-2 transition-colors hover:bg-slate-50/70"
               >
                 <span className="text-sm font-medium text-[#111111]">
-                  {stageLabelKey(row.stage) ? t(stageLabelKey(row.stage)!) : row.stage}
+                  {stageLabelKey(row.stage)
+                    ? t(stageLabelKey(row.stage)!)
+                    : row.stage}
                 </span>
 
                 <div className="flex items-center gap-1">
                   <div
                     className="h-5 rounded-md bg-gradient-to-r from-[#128d2a] to-[#3bb273]"
                     style={{ width: pct(row.sltHours) }}
-                    title={t("superadmin.slt.withinSltTitle", { hours: row.sltHours.toFixed(1) })}
+                    title={t("superadmin.slt.withinSltTitle", {
+                      hours: row.sltHours.toFixed(1),
+                    })}
                   />
+
                   {row.overHours > 0 && (
                     <div
                       className="h-5 rounded-md bg-gradient-to-r from-[#c92230] to-[#fb8a4c]"
                       style={{ width: pct(row.overHours) }}
-                      title={t("superadmin.slt.beyondSltTitle", { hours: row.overHours.toFixed(1) })}
+                      title={t("superadmin.slt.beyondSltTitle", {
+                        hours: row.overHours.toFixed(1),
+                      })}
                     />
                   )}
                 </div>
@@ -54,8 +128,19 @@ export default function SltPerformanceCard({ rows }: { rows: FlowRow[] }) {
                       : "flex justify-end gap-3 text-sm text-[#8a8a88]"
                   }
                 >
-                  <span>{t(row.mos === 1 ? "superadmin.slt.moSingular" : "superadmin.slt.moPlural", { count: row.mos })}</span>
-                  <span>{t("superadmin.slt.overSlt", { pct: row.overPct })}</span>
+                  <span>
+                    {t(
+                      row.mos === 1
+                        ? "superadmin.slt.moSingular"
+                        : "superadmin.slt.moPlural",
+                      { count: row.mos },
+                    )}
+                  </span>
+                  <span>
+                    {t("superadmin.slt.overSlt", {
+                      pct: row.overPct,
+                    })}
+                  </span>
                 </div>
               </li>
             );

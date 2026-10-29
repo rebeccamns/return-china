@@ -105,12 +105,17 @@ export default function Sidebar({
     ),
   );
 
-  const linkClass = (href: string) =>
-    `flex h-10 items-center rounded px-2 transition-colors ${
-      pathname === href
+  const linkClass = (href: string) => {
+    // Use exact match for root dashboard so sub-routes don't activate Dashboard.
+    // For all other nav items startsWith keeps them active on child routes.
+    const isActive =
+      href === "/superadmin" ? pathname === href : pathname.startsWith(href);
+    return `flex h-10 items-center rounded px-2 transition-colors ${
+      isActive
         ? "bg-backgroundbg-green text-text-colortext-green hover:bg-backgroundbg-green/80"
         : "text-mode-sidebar-foreground hover:bg-slate-50"
     }`;
+  };
 
   const handleLogout = () => {
     if (typeof window !== "undefined") {
