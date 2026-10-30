@@ -1,23 +1,32 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ChevronLeft } from "lucide-react";
 
 import MobileHeader from "@/components/layout/mobile-header";
-import { useI18n } from "@/i18n";
-
-import CartonList, { type Carton } from "./_components/CartonList";
-
-import MaterialDetailForm from "./_components/MaterialDetailForm";
-
-import MaterialList, { type Material } from "./_components/MaterialList";
-
-import MoSummaryCard from "./_components/MoSummaryCard";
-
 import MobileBottomNav, {
   STAFF_RETURN_ITEMS,
   type MobileNavItem,
 } from "@/components/layout/mobile-bottom-nav";
+import { useI18n } from "@/i18n";
+
+import CartonList from "./_components/CartonList";
+import MaterialDetailForm from "./_components/MaterialDetailForm";
+import MaterialList from "./_components/MaterialList";
+import MoSummaryCard from "./_components/MoSummaryCard";
+import StickyActionBar, {
+  primaryButton,
+  secondaryButton,
+} from "./_components/StickyActionBar";
+import {
+  type Carton,
+  type Material,
+  type MaterialEntry,
+  cartonPrefix,
+  cartonNumber,
+  computePacked,
+  formatCartonCode,
+} from "./_components/types";
 
 type Step = "landing" | "carton-list" | "material-list" | "material-detail";
 
@@ -48,33 +57,59 @@ export default function StaffReturnPage({
   params: { moId: string };
 }) {
   const { t } = useI18n();
+
   const [step, setStep] = useState<Step>("landing");
-const [activeNav, setActiveNav] =
-  useState<MobileNavItem>("packing-list");
+  const [activeNav, setActiveNav] = useState<MobileNavItem>("packing-list");
 
   const [cartons, setCartons] = useState<Carton[]>([
-    {
-      id: "carton-1",
-      code: "CT0001",
-      materialCount: 0,
-      totalMaterials: 3,
-    },
+    { id: "carton-CT1", codes: ["CT0001"], materials: [], saved: false },
   ]);
 
-  const [selectedCarton, setSelectedCarton] = useState<Carton | null>(null);
-
-  const [completedMaterials, setCompletedMaterials] = useState<Material[]>([]);
-
+  const [selectedCartonId, setSelectedCartonId] = useState<string | null>(null);
   const [selectedMaterialCode, setSelectedMaterialCode] = useState("");
+  const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
+
+  const selectedCarton =
+    cartons.find((carton) => carton.id === selectedCartonId) ?? null;
+
+  const editingEntry =
+    selectedCarton?.materials.find((entry) => entry.id === editingEntryId) ??
+    null;
 
   const selectedMaterial =
-    MATERIAL_OPTIONS.find(
-      (material) => material.code === selectedMaterialCode,
-    ) ?? null;
+    editingEntry?.material ??
+    MATERIAL_OPTIONS.find((m) => m.code === selectedMaterialCode) ??
+    null;
+
+  /** Current packed quantity per material, excluding the carton being edited. */
+  const packedElsewhere = useMemo(
+    () => computePacked(cartons, selectedCartonId),
+    [cartons, selectedCartonId],
+  );
 
   const allCartonsCompleted =
     cartons.length > 0 &&
-    cartons.every((carton) => carton.materialCount >= carton.totalMaterials);
+    cartons.every((carton) => carton.saved && carton.materials.length > 0);
+
+  const showBottomNav = step === "landing" || step === "carton-list";
+
+  /* ---------- helpers ---------- */
+
+  function clearSelection() {
+    setSelectedCartonId(null);
+    setSelectedMaterialCode("");
+    setEditingEntryId(null);
+  }
+
+  function updateSelectedCarton(updater: (carton: Carton) => Carton) {
+    setCartons((prev) =>
+      prev.map((carton) =>
+        carton.id === selectedCartonId ? updater(carton) : carton,
+      ),
+    );
+  }
+
+  /* ---------- WO ---------- */
 
   function handleSubmitWO() {
     if (!allCartonsCompleted) return;
@@ -88,114 +123,133 @@ const [activeNav, setActiveNav] =
     console.log("Reject WO");
   }
 
+  /* ---------- cartons ---------- */
+
   function handleCreatePackingList() {
     setStep("carton-list");
   }
 
   function handleBackToLanding() {
-    setSelectedCarton(null);
-    setCompletedMaterials([]);
-    setSelectedMaterialCode("");
+    clearSelection();
     setStep("landing");
   }
 
-  function handleAddCarton() {
-    const nextNumber = cartons.length + 1;
+  /** Create `count` identical cartons, starting at the selected carton number. */
+  function handleAddCartons(count: number, prefix: string, startNumber: number) {
+    const codes = Array.from({ length: count }, (_, i) =>
+      formatCartonCode(startNumber + i, prefix),
+    );
 
-    const newCarton: Carton = {
-      id: `carton-${nextNumber}`,
-      code: `CT${String(nextNumber).padStart(4, "0")}`,
-      materialCount: 0,
-      totalMaterials: 3,
-    };
-
-    setCartons((prev) => [...prev, newCarton]);
+    setCartons((prev) =>
+      [
+        ...prev,
+        {
+          id: `carton-${prefix}${startNumber}`,
+          codes,
+          materials: [],
+          saved: false,
+        },
+      ].sort(
+        (a, b) =>
+          cartonPrefix(a.codes[0]).localeCompare(cartonPrefix(b.codes[0])) ||
+          cartonNumber(a.codes[0]) - cartonNumber(b.codes[0]),
+      ),
+    );
   }
 
   function handleOpenCarton(carton: Carton) {
-    setSelectedCarton(carton);
-
-    setCompletedMaterials([]);
+    setSelectedCartonId(carton.id);
     setSelectedMaterialCode("");
-
-    setStep("material-list");
-  }
-
-  function handleSelectMaterial(code: string) {
-    setSelectedMaterialCode(code);
-
-    if (code) {
-      setStep("material-detail");
-    }
-  }
-
-  function handleMaterialComplete(material: Material) {
-    setCompletedMaterials((prev) => {
-      const exists = prev.some((item) => item.code === material.code);
-
-      if (exists) {
-        return prev;
-      }
-
-      return [...prev, material];
-    });
-
-    setCartons((prev) =>
-      prev.map((carton) =>
-        carton.id === selectedCarton?.id
-          ? {
-              ...carton,
-              materialCount: carton.materialCount + 1,
-            }
-          : carton,
-      ),
-    );
-
-    setSelectedMaterialCode("");
+    setEditingEntryId(null);
     setStep("material-list");
   }
 
   function handleBackToCartons() {
-    setSelectedCarton(null);
-    setCompletedMaterials([]);
-    setSelectedMaterialCode("");
+    clearSelection();
     setStep("carton-list");
   }
 
-  function handleSaveCartonDetail() {
-  if (!selectedCarton) return;
+  function handleSaveCarton() {
+    if (!selectedCarton || selectedCarton.materials.length === 0) return;
 
-  if (
-    completedMaterials.length !==
-    selectedCarton.totalMaterials
-  ) {
-    return;
+    updateSelectedCarton((carton) => ({ ...carton, saved: true }));
+    clearSelection();
+    setStep("carton-list");
   }
 
-  setSelectedCarton(null);
-  setCompletedMaterials([]);
-  setSelectedMaterialCode("");
-  setStep("carton-list");
-}
+  /* ---------- materials ---------- */
+
+  function handleSelectMaterial(code: string) {
+    setEditingEntryId(null);
+    setSelectedMaterialCode(code);
+
+    if (code) setStep("material-detail");
+  }
+
+  function handleEditMaterial(entry: MaterialEntry) {
+    setEditingEntryId(entry.id);
+    setSelectedMaterialCode(entry.material.code);
+    setStep("material-detail");
+  }
+
+  function handleBackToMaterialList() {
+    setSelectedMaterialCode("");
+    setEditingEntryId(null);
+    setStep("material-list");
+  }
+
+  function handleSaveMaterial(entry: MaterialEntry) {
+    updateSelectedCarton((carton) => {
+      const exists = carton.materials.some((m) => m.id === entry.id);
+
+      return {
+        ...carton,
+        saved: false, // changed → needs to be saved again
+        materials: exists
+          ? carton.materials.map((m) => (m.id === entry.id ? entry : m))
+          : [...carton.materials, entry],
+      };
+    });
+
+    handleBackToMaterialList();
+  }
+
+  function handleRemoveMaterial() {
+    if (!editingEntryId) return;
+
+    updateSelectedCarton((carton) => ({
+      ...carton,
+      saved: false,
+      materials: carton.materials.filter((m) => m.id !== editingEntryId),
+    }));
+
+    handleBackToMaterialList();
+  }
 
   return (
-    <main className="relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray">
+    <main className="relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray font-[family-name:-apple-system,BlinkMacSystemFont,system-ui,Inter,sans-serif] antialiased">
       {/* Green decorative background */}
       <section
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-[58px] h-[255px] overflow-hidden"
+        className="pointer-events-none absolute inset-x-0 top-[var(--mobile-header-h)] h-[255px] overflow-hidden"
       >
         <div className="absolute -left-[90px] -top-[80px] h-[270px] w-[620px] rounded-[50%] bg-[#d8f4e2]" />
-
         <div className="absolute -left-[100px] top-[80px] h-[190px] w-[620px] rounded-[50%] bg-[#effbf3]" />
       </section>
 
       <MobileHeader />
-      <section className="relative z-10 mx-auto w-full max-w-[412px] px-4 pb-8 pt-[78px]">
+
+      <section
+        className={`relative z-10 mx-auto w-full max-w-[412px] px-5 pt-[calc(var(--mobile-header-h)+1.25rem)] ${
+          showBottomNav
+            ? "pb-[calc(var(--bottom-nav-h)+88px)]"
+            : "pb-[calc(env(safe-area-inset-bottom,0px)+88px)]"
+        }`}
+      >
         {/* Landing */}
         {step === "landing" && (
           <>
-            <h1 className="mb-4 text-[20px] font-semibold leading-[150%] text-text-colortext-black">
+            <h1 className="mb-5 text-[22px] font-semibold leading-7 tracking-[-0.01em] text-text-colortext-black">
               {t("staffReturn.title")}
             </h1>
 
@@ -206,114 +260,114 @@ const [activeNav, setActiveNav] =
           </>
         )}
 
-        {/* Carton List */}
+        {/* Carton list */}
         {step === "carton-list" && (
           <>
-            <div className="mb-3 flex items-center justify-between">
-              <h1 className="text-[20px] font-semibold leading-[150%] text-text-colortext-black">
-                {t("staffReturn.title")}
-              </h1>
-
+            <h1 className="m-0">
               <button
                 type="button"
                 onClick={handleBackToLanding}
-                className="flex h-9 items-center gap-1.5 rounded-md bg-backgroundbg-white px-3 text-sm font-medium text-slate-700 transition-colors hover:bg-backgroundbg-gray"
+                aria-label={`${t("common.back")} ${t("staffReturn.title")}`}
+                className="-ml-1 flex min-h-11 items-center gap-1 text-left"
               >
-                <ArrowLeft className="h-4 w-4" />
-                {t("common.back")}
+                <ChevronLeft
+                  className="h-6 w-6 shrink-0 text-primaryprimary-green"
+                  strokeWidth={2}
+                />
+                <span className="text-[22px] font-semibold leading-7 tracking-[-0.01em] text-text-colortext-black">
+                  {t("staffReturn.title")}
+                </span>
               </button>
-            </div>
+            </h1>
 
-            <MoSummaryCard />
+            <div className="mb-5 mt-1">
+              <MoSummaryCard />
+            </div>
 
             <CartonList
               cartons={cartons}
+              onAddCartons={handleAddCartons}
               onOpenCarton={handleOpenCarton}
-              onAddCarton={handleAddCarton}
             />
 
-            {/* Bottom Actions */}
-            <div className="fixed inset-x-0 bottom-0 z-20 border-t border-strokestroke-gray bg-backgroundbg-white px-4 py-3">
-              <div className="mx-auto flex w-full max-w-[412px] gap-3">
-                <button
-                  type="button"
-                  onClick={handleRejectWO}
-                  className="h-12 flex-1 rounded-md border border-strokestroke-gray bg-backgroundbg-white px-4 text-sm font-semibold --text-colortext-red transition-colors hover:bg-backgroundbg-gray"
-                >
-                  {t("staffReturn.rejectWo")}
-                </button>
+            <StickyActionBar aboveNav>
+              <button
+                type="button"
+                onClick={handleRejectWO}
+                className={`${secondaryButton} flex-1 text-text-colortext-red`}
+              >
+                {t("staffReturn.rejectWo")}
+              </button>
 
-                <button
-                  type="button"
-                  onClick={handleSubmitWO}
-                  disabled={!allCartonsCompleted}
-                  className="h-12 flex-1 rounded-md bg-primaryprimary-green px-4 text-sm font-semibold text-white transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-white"
-                >
-                  {t("common.submit")}
-                </button>
-              </div>
-            </div>
+              <button
+                type="button"
+                onClick={handleSubmitWO}
+                disabled={!allCartonsCompleted}
+                className={`${primaryButton} flex-1`}
+              >
+                {t("common.submit")}
+              </button>
+            </StickyActionBar>
           </>
         )}
 
-        {/* Material List */}
+        {/* Material list */}
         {step === "material-list" && selectedCarton && (
           <>
-            <MoSummaryCard />
-
-            <div className="mt-5">
-              <MaterialList
-                cartonCode={selectedCarton.code}
-                completedMaterials={completedMaterials}
-                totalMaterials={selectedCarton.totalMaterials}
-                selectedMaterialCode={selectedMaterialCode}
-                materialOptions={MATERIAL_OPTIONS}
-                onBack={handleBackToCartons}
-                onSelectMaterial={handleSelectMaterial}
-                 onSaveCarton={handleSaveCartonDetail}
-              />
-            </div>
+            <MaterialList
+              carton={selectedCarton}
+              materialOptions={MATERIAL_OPTIONS}
+              selectedMaterialCode={selectedMaterialCode}
+              packedElsewhere={packedElsewhere}
+              onBack={handleBackToCartons}
+              onSelectMaterial={handleSelectMaterial}
+              onEditMaterial={handleEditMaterial}
+              onSaveCarton={handleSaveCarton}
+            />
           </>
         )}
 
-        {/* Material Detail */}
+        {/* Material detail */}
         {step === "material-detail" && selectedCarton && selectedMaterial && (
           <>
-            <MoSummaryCard />
-
-            <div className="mt-5">
-              <MaterialDetailForm
-                cartonCode={selectedCarton.code}
-                material={selectedMaterial}
-                completedCount={completedMaterials.length}
-                totalMaterials={selectedCarton.totalMaterials}
-                onBack={() => setStep("material-list")}
-                onComplete={handleMaterialComplete}
-              />
-            </div>
+            <MaterialDetailForm
+              key={editingEntry?.id ?? selectedMaterial.code}
+              carton={selectedCarton}
+              material={selectedMaterial}
+              initial={editingEntry ?? undefined}
+              packedElsewhere={packedElsewhere[selectedMaterial.code]}
+              onBack={handleBackToMaterialList}
+              onSave={handleSaveMaterial}
+              onRemove={editingEntry ? handleRemoveMaterial : undefined}
+            />
           </>
         )}
       </section>
-<MobileBottomNav
-  items={STAFF_RETURN_ITEMS}
-  activeItem={activeNav}
-  onNavigate={(item) => {
-    switch (item) {
-      case "packing-list":
-        setActiveNav(item);
-        setStep("landing");
-        break;
 
-      case "carton-sticker":
-        window.location.href = "/staff-return-sticker/M01234";
-        break;
+      {/* Bottom nav only on the top-level screens; form flows get the full screen */}
+      {showBottomNav && (
+        <MobileBottomNav
+          items={STAFF_RETURN_ITEMS}
+          activeItem={activeNav}
+          onNavigate={(item) => {
+            switch (item) {
+              case "packing-list":
+                setActiveNav(item);
+                clearSelection();
+                setStep("landing");
+                break;
 
-      case "history":
-        // Connect this to the History screen when available.
-        break;
-    }
-  }}
-/>
+              case "carton-sticker":
+                window.location.href = "/staff-return-sticker/M01234";
+                break;
+
+              case "history":
+                // Connect this to the History screen when available.
+                break;
+            }
+          }}
+        />
+      )}
     </main>
   );
 }

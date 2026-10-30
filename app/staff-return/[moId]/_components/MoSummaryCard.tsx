@@ -1,9 +1,12 @@
-import { Button } from "@/components/ui/button";
 import { useI18n } from "@/i18n";
+
+import { primaryButton } from "./StickyActionBar";
 
 type MoSummaryCardProps = {
   onCreatePackingList?: () => void;
   showCreateButton?: boolean;
+  /** One-line version for inner steps, so forms get the screen space. */
+  compact?: boolean;
 };
 
 const mo = {
@@ -17,71 +20,77 @@ const mo = {
 export default function MoSummaryCard({
   onCreatePackingList,
   showCreateButton = false,
+  compact = false,
 }: MoSummaryCardProps) {
   const { t } = useI18n();
 
-  return (
-    <section className="w-full rounded-lg border border-strokestroke-gray bg-backgroundbg-white shadow-none">
-      <div className="p-4">
-        <div className="flex flex-col gap-3">
-          {/* MO */}
-          <div>
-            <h2 className="text-[16px] font-semibold leading-[150%] text-text-colortext-black">
-              {mo.code}
-            </h2>
-
-            <p className="mt-1 text-[14px] font-medium leading-[125%] text-text-colortext-gray">
-              {t("common.submittedAt", { date: mo.submittedAt })}
-            </p>
-          </div>
-
-          {/* Return ID + Model */}
-          <dl className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col gap-1">
-              <dt className="text-[14px] font-medium leading-[125%] text-text-colortext-dark">
-                {t("common.returnId")}
-              </dt>
-
-              <dd className="text-[16px] font-medium leading-[125%] text-text-colortext-black">
-                {mo.returnId}
-              </dd>
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <dt className="text-[14px] font-medium leading-[125%] text-text-colortext-dark">
-                {t("common.model")}
-              </dt>
-
-              <dd className="text-[16px] font-medium leading-[125%] text-text-colortext-black">
-                {mo.model}
-              </dd>
-            </div>
-          </dl>
-
-          {/* WO */}
-          <div className="flex items-center gap-4 rounded-md border border-strokestroke-gray bg-backgroundbg-white px-4 py-3">
-            <span className="text-[14px] font-medium leading-[125%] text-text-colortext-dark">
-              {t("common.wo")}
-            </span>
-
-            <span className="text-[16px] font-semibold leading-[125%] text-text-colortext-black">
-              {mo.wo}
-            </span>
-          </div>
-
-          
-
-          {showCreateButton && (
-            <Button
-              type="button"
-              onClick={onCreatePackingList}
-              className="h-10 w-full rounded-md bg-[linear-gradient(0deg,rgba(11,89,52,1)_0%,rgba(5,131,70,1)_100%)] px-3 text-[12px] font-semibold leading-[125%] text-white shadow-none hover:opacity-90"
-            >
-              {t("staffReturn.createPackingList")}
-            </Button>
-          )}
+  if (compact) {
+    return (
+      <section className="flex w-full items-center justify-between gap-3 rounded-2xl border border-strokestroke-gray bg-backgroundbg-white px-4 py-3">
+        <div className="min-w-0">
+          <p className="truncate text-[15px] font-semibold leading-5 text-text-colortext-black">
+            {mo.code}
+          </p>
+          <p className="mt-0.5 truncate text-[13px] leading-[18px] text-text-colortext-gray">
+            {mo.model} · {mo.wo}
+          </p>
         </div>
+
+        <span className="shrink-0 text-[13px] leading-[18px] text-text-colortext-gray">
+          {mo.returnId}
+        </span>
+      </section>
+    );
+  }
+
+  return (
+    <section className="w-full rounded-2xl border border-strokestroke-gray bg-backgroundbg-white p-4">
+      <h2 className="text-[16px] font-semibold leading-6 text-text-colortext-black">
+        {mo.code}
+      </h2>
+
+      <p className="mt-0.5 text-[12px] font-medium leading-4 text-text-colortext-gray">
+        {t("common.submittedAt", { date: mo.submittedAt })}
+      </p>
+
+      <dl className="mt-4 grid grid-cols-2 gap-4">
+        <div>
+          <dt className="text-[12px] font-medium leading-4 text-text-colortext-gray">
+            {t("common.returnId")}
+          </dt>
+          <dd className="mt-1 text-[15px] font-medium leading-5 text-text-colortext-black">
+            {mo.returnId}
+          </dd>
+        </div>
+
+        <div>
+          <dt className="text-[12px] font-medium leading-4 text-text-colortext-gray">
+            {t("common.model")}
+          </dt>
+          <dd className="mt-1 text-[15px] font-medium leading-5 text-text-colortext-black">
+            {mo.model}
+          </dd>
+        </div>
+      </dl>
+
+      <div className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-4 py-3">
+        <span className="text-[12px] font-medium leading-4 text-text-colortext-gray">
+          {t("common.wo")}
+        </span>
+        <span className="text-[15px] font-semibold leading-5 text-text-colortext-black">
+          {mo.wo}
+        </span>
       </div>
+
+      {showCreateButton && (
+        <button
+          type="button"
+          onClick={onCreatePackingList}
+          className={`${primaryButton} mt-5 w-full`}
+        >
+          {t("staffReturn.createPackingList")}
+        </button>
+      )}
     </section>
   );
 }

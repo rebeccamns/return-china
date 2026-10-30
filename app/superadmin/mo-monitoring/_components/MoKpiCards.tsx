@@ -25,7 +25,7 @@ const CARDS: CardDef[] = [
   {
     titleKey: "moMonitoring.kpi.totalMo",
     color: {
-      bg: "bg-indigo-50",
+      bg: "bg-white",
       border: "border-l-indigo-400",
       text: "text-indigo-900",
       iconBg: "bg-indigo-100",
@@ -37,7 +37,7 @@ const CARDS: CardDef[] = [
   {
     titleKey: "moMonitoring.kpi.moInProgress",
     color: {
-      bg: "bg-yellow-50",
+      bg: "bg-white",
       border: "border-l-yellow-400",
       text: "text-yellow-900",
       iconBg: "bg-yellow-100",
@@ -49,7 +49,7 @@ const CARDS: CardDef[] = [
   {
     titleKey: "moMonitoring.kpi.moCompleted",
     color: {
-      bg: "bg-green-50",
+      bg: "bg-white",
       border: "border-l-green-500",
       text: "text-green-900",
       iconBg: "bg-green-100",
@@ -61,7 +61,7 @@ const CARDS: CardDef[] = [
   {
     titleKey: "moMonitoring.kpi.needIntervene",
     color: {
-      bg: "bg-red-50",
+      bg: "bg-white",
       border: "border-l-red-400",
       text: "text-red-900",
       iconBg: "bg-red-100",
@@ -86,7 +86,7 @@ export default function MoKpiCards({ mos }: Props) {
         return (
           <div
             key={card.titleKey}
-            className={`flex min-h-[100px] items-center justify-between rounded-xl border border-l-4 px-5 py-4 ${card.color.bg} ${card.color.border}`}
+            className={`flex min-h-[100px] items-center justify-between rounded-md border px-5 py-4 ${card.color.bg} ${card.color.border}`}
           >
             <div className="flex flex-col gap-1">
               <span className="text-sm font-medium text-gray-600">

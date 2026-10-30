@@ -68,7 +68,7 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
     <main className="relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray">
       <MobileHeader />
 
-      <section className="relative z-10 mx-auto min-h-[calc(100vh-90px)] w-full max-w-[412px] px-4 pb-8 pt-[170px]">
+      <section className="relative z-10 mx-auto min-h-[calc(100vh-90px)] w-full max-w-[412px] px-4 pb-8 pt-[calc(var(--mobile-header-h)+7rem)]">
         {/* Soft green background matching the existing Staff Return flow */}
         <div
           aria-hidden="true"

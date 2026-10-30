@@ -1,45 +1,88 @@
+"use client";
 
 import { UserRound } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-export default function MobileHeader() {
+type MobileHeaderProps = {
+  userName?: string;
+  userId?: string;
+  onUserClick?: () => void;
+};
+
+export default function MobileHeader({
+  userName = "Bagus Saputra",
+  userId = "I0123456",
+  onUserClick,
+}: MobileHeaderProps = {}) {
+  const router = useRouter();
+  const initials = userName
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0] ?? "")
+    .join("")
+    .toUpperCase();
+
+  function handleUserClick() {
+    if (onUserClick) {
+      onUserClick();
+      return;
+    }
+
+    sessionStorage.clear();
+    router.replace("/");
+    router.refresh();
+  }
+
   return (
-    <header className="fixed inset-x-0 top-0 z-20 w-full bg-backgroundbg-white">
-      {/* OPPO header */}
-      <div className="flex h-[58px] items-center justify-between border-b border-strokestroke-gray bg-backgroundbg-white px-4 py-1">
-        {/* Logo */}
-        <div className="flex items-center justify-center gap-2">
+    <header className="fixed inset-x-0 top-0 z-20 w-full bg-white/90 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
+      <div className="flex h-14 items-center justify-between gap-2 border-b border-strokestroke-gray px-5">
+        <div className="flex min-w-0 items-center gap-2">
           <img
             src="/oppo-logo.png"
             alt="OPPO"
-            className="h-3 w-[52px] object-contain"
+            width={52}
+            height={14}
+            className="h-3.5 w-[52px] shrink-0 object-contain"
           />
 
-          <div className="flex flex-col justify-center text-[10px] font-medium leading-[10px] text-black">
-            <span>Indonesia</span>
-            <span>Manufacturing</span>
-          </div>
+          <span
+            aria-hidden="true"
+            className="h-4 w-px shrink-0 bg-strokestroke-gray"
+          />
+
+          <span className="min-w-0 text-[10px] font-medium leading-[12px] text-text-colortext-gray">
+            Indonesia
+            <br />
+            Manufacturing
+          </span>
         </div>
 
-        {/* User */}
-        <div className="flex items-center gap-2">
-          <div className="flex flex-col items-end justify-center gap-0.5">
-            <span className="text-[12px] font-medium leading-[125%] text-text-colortext-black">
-              Bagus Saputra
+        <button
+          type="button"
+          onClick={handleUserClick}
+          aria-label={userName}
+          className="flex min-h-11 min-w-0 max-w-[60%] items-center gap-2 rounded-full p-1 transition active:bg-backgroundbg-gray focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green"
+        >
+          <span className="flex min-w-0 flex-col items-end">
+            <span className="max-w-[120px] truncate text-[13px] font-semibold leading-4 text-text-colortext-black">
+              {userName}
             </span>
-
-            <span className="text-[10px] leading-4 text-text-colortext-black">
-              I0123456
+            <span className="max-w-[120px] truncate text-[11px] leading-4 text-text-colortext-gray">
+              {userId}
             </span>
-          </div>
+          </span>
 
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 p-1">
-            <UserRound
-              className="h-4 w-4 text-text-colortext-black"
-              strokeWidth={1.8}
-              aria-hidden="true"
-            />
-          </div>
-        </div>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[12px] font-semibold text-[#006B3C]">
+            {initials || (
+              <UserRound
+                className="h-[18px] w-[18px]"
+                strokeWidth={1.8}
+                aria-hidden="true"
+              />
+            )}
+          </span>
+        </button>
       </div>
     </header>
   );

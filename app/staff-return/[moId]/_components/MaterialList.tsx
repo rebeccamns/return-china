@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Layers } from "lucide-react";
+
 import {
   Select,
   SelectContent,
@@ -10,147 +11,184 @@ import {
 } from "@/components/ui/select";
 import { useI18n } from "@/i18n";
 
-export type Material = {
-  id: string;
-  code: string;
-  englishName: string;
-  chinaName: string;
-};
+import StickyActionBar, { primaryButton } from "./StickyActionBar";
+import MoSummaryCard from "./MoSummaryCard";
+import {
+  type Carton,
+  type Material,
+  type MaterialEntry,
+  type PackedSummary,
+  cartonRange,
+} from "./types";
 
 type MaterialListProps = {
-  cartonCode: string;
-  completedMaterials: Material[];
-  totalMaterials: number;
-  selectedMaterialCode: string;
+  carton: Carton;
   materialOptions: Material[];
+  selectedMaterialCode: string;
+  /** Material totals already packed in OTHER cartons. */
+  packedElsewhere: PackedSummary;
   onBack: () => void;
   onSelectMaterial: (code: string) => void;
+  onEditMaterial: (entry: MaterialEntry) => void;
   onSaveCarton: () => void;
 };
 
 export default function MaterialList({
-  cartonCode,
-  completedMaterials,
-  totalMaterials,
-  selectedMaterialCode,
+  carton,
   materialOptions,
+  selectedMaterialCode,
+  packedElsewhere,
   onBack,
   onSelectMaterial,
+  onEditMaterial,
   onSaveCarton,
 }: MaterialListProps) {
   const { t } = useI18n();
-  const completedCodes = new Set(
-    completedMaterials.map((m) => m.code)
-  );
 
-  const isCartonComplete =
-    completedMaterials.length === totalMaterials;
+  const addedCodes = new Set(carton.materials.map((e) => e.material.code));
+  const isGroup = carton.codes.length > 1;
 
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <div>
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3.5">
+      <h1 className="m-0 min-w-0">
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-3 text-base font-semibold text-slate-900"
-          aria-label={t("common.back")}
+          aria-label={`${t("common.back")} ${cartonRange(carton.codes)}`}
+          className="-ml-1 flex min-h-11 min-w-0 items-center gap-1 text-left"
         >
-          <ArrowLeft className="h-4 w-4 text-slate-700" />
-          {cartonCode}
+          <ChevronLeft
+            className="h-6 w-6 shrink-0 text-primaryprimary-green"
+            strokeWidth={2}
+          />
+          <span className="truncate text-[22px] font-semibold leading-7 tracking-[-0.01em] text-text-colortext-black">
+            {cartonRange(carton.codes)}
+          </span>
         </button>
+      </h1>
 
-        <span className="text-sm text-slate-500">
-          {t("common.materialCount", { done: completedMaterials.length, total: totalMaterials })}
-        </span>
+      <p className="mt-0.5 pl-7 text-[13px] leading-[18px] text-text-colortext-gray">
+        {t("staffReturn.materialsCount", { count: carton.materials.length })}
+      </p>
+
+      <div className="mb-3 mt-2">
+        <MoSummaryCard compact />
       </div>
 
-      <div className="space-y-3 p-4">
-        {/* Materials already added to this carton */}
-        {completedMaterials.map((material, index) => (
-          <div
-            key={material.code}
-            className="flex items-center gap-3 rounded-lg border border-slate-200 px-3 py-3"
-          >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e6f4ea] text-sm font-medium text-[#0b5934]">
-              {index + 1}
-            </span>
+      {isGroup && (
+        <div className="mt-3 flex items-start gap-3 rounded-2xl bg-[#E7F5EC] p-4">
+          <Layers
+            className="mt-0.5 h-5 w-5 shrink-0 text-[#006B3C]"
+            strokeWidth={1.8}
+          />
+          <p className="text-[13px] leading-[18px] text-[#006B3C]">
+            {t("staffReturn.sameDetailsBanner", { count: carton.codes.length })}
+          </p>
+        </div>
+      )}
 
-            <div className="min-w-0 flex-1">
-              <div className="text-base font-semibold text-slate-900">
-                {material.code}
-              </div>
+      {/* Added materials */}
+      {carton.materials.length > 0 && (
+        <div className="mt-5 overflow-hidden rounded-2xl border border-strokestroke-gray bg-backgroundbg-white">
+          <ul className="divide-y divide-strokestroke-gray">
+            {carton.materials.map((entry, index) => (
+              <li key={entry.id}>
+                <button
+                  type="button"
+                  onClick={() => onEditMaterial(entry)}
+                  className="flex min-h-[60px] w-full items-center gap-3 px-4 py-2.5 text-left transition-colors active:bg-backgroundbg-gray"
+                >
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[13px] font-semibold text-[#006B3C]">
+                    {index + 1}
+                  </span>
 
-              <div className="truncate text-sm text-slate-600">
-                {material.englishName}{" "}
-                {material.chinaName}
-              </div>
-            </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[15px] font-semibold leading-5 text-text-colortext-black">
+                      {entry.material.code}
+                    </p>
+                    <p className="truncate text-[13px] leading-[18px] text-text-colortext-gray">
+                      {entry.material.englishName} {entry.material.chinaName}
+                    </p>
+                  </div>
 
-            <ChevronRight className="h-4 w-4 shrink-0 text-slate-400" />
-          </div>
-        ))}
+                  <span className="shrink-0 text-[13px] leading-[18px] font-medium text-text-colortext-black">
+                    {t("staffReturn.piecesCount", { count: entry.quantity })}
+                  </span>
 
-        {/* Material code picker */}
-        {!isCartonComplete && (
-          <>
-            <div className="space-y-2 pt-1">
-              <label className="block text-sm text-slate-500">
-                {t("common.materialCode")}
-              </label>
+                  <ChevronRight
+                    className="h-5 w-5 shrink-0 text-[#C4C4C4]"
+                    strokeWidth={2}
+                  />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
-              <Select
-                value={selectedMaterialCode}
-                onValueChange={onSelectMaterial}
-              >
-                <SelectTrigger className="h-12 w-full rounded-lg border-strokestroke-gray px-3 text-sm">
-                  <SelectValue placeholder={t("staffReturn.chooseMaterialCode")} />
-                </SelectTrigger>
+      {/* Material picker */}
+      <div className="mt-5 rounded-2xl border border-strokestroke-gray bg-backgroundbg-white p-4">
+        <label className="mb-2 block text-[12px] font-medium leading-4 text-text-colortext-gray">
+          {t("common.materialCode")}
+        </label>
 
-                <SelectContent>
-                  {materialOptions.map((option) => (
-                    <SelectItem
-                      key={option.id}
-                      value={option.code}
-                      disabled={completedCodes.has(
-                        option.code
-                      )}
-                      className="text-sm"
-                    >
-                      <span className="font-medium">
-                        {option.code}
+        <Select value={selectedMaterialCode} onValueChange={onSelectMaterial}>
+          <SelectTrigger className="h-12 w-full rounded-xl border-strokestroke-gray px-4 text-[16px]">
+            <SelectValue placeholder={t("staffReturn.chooseMaterialCode")} />
+          </SelectTrigger>
+
+          <SelectContent>
+            {materialOptions.map((option) => {
+              const packed = packedElsewhere[option.code];
+
+              return (
+                <SelectItem
+                  key={option.id}
+                  value={option.code}
+                  disabled={addedCodes.has(option.code)}
+                  className="py-2.5"
+                >
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-[16px] font-medium leading-5">
+                      {option.code}
+                    </span>
+                    <span className="text-[12px] font-medium leading-4 text-text-colortext-gray">
+                      {option.englishName}
+                    </span>
+                    {packed && (
+                      <span className="text-[12px] font-medium leading-4 text-[#006B3C]">
+                        {t("staffReturn.packedSummary", {
+                          pieces: packed.pieces,
+                          cartons: packed.cartons,
+                        })}
                       </span>
+                    )}
+                  </div>
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
 
-                      <span className="ml-2 text-slate-500">
-                        {option.englishName}
-                      </span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {!selectedMaterialCode && (
-              <p className="py-5 text-center text-sm italic text-slate-400">
-                {t("staffReturn.chooseMaterialHint")}
-              </p>
-            )}
-          </>
-        )}
-
-        {/* Save Carton Detail */}
-        {isCartonComplete && (
-          <div className="pt-2">
-            <button
-              type="button"
-              onClick={onSaveCarton}
-              className="flex h-11 w-full items-center justify-center rounded-lg bg-primaryprimary-green px-4 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-            >
-              {t("staffReturn.saveCartonDetail")}
-            </button>
-          </div>
+        {carton.materials.length === 0 && !selectedMaterialCode && (
+          <p className="mt-4 text-center text-[13px] leading-[18px] text-text-colortext-gray">
+            {t("staffReturn.chooseMaterialHint")}
+          </p>
         )}
       </div>
+
+      {/* Sticky Save */}
+      <StickyActionBar>
+        <button
+          type="button"
+          onClick={onSaveCarton}
+          disabled={carton.materials.length === 0}
+          className={`${primaryButton} flex-1`}
+        >
+          {t("staffReturn.saveCartonDetail")}
+        </button>
+      </StickyActionBar>
     </div>
   );
 }

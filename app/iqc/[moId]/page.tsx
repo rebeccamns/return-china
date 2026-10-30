@@ -150,7 +150,7 @@ const { moId } = use(params);
       {/* Original IQC / Staff Return decorative background */}
       <section
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-[58px] h-[255px] overflow-hidden"
+        className="pointer-events-none absolute inset-x-0 top-[var(--mobile-header-h)] h-[255px] overflow-hidden"
       >
         <div className="absolute -left-[90px] -top-[80px] h-[270px] w-[620px] rounded-[50%] bg-[#d8f4e2]" />
         <div className="absolute -left-[100px] top-[80px] h-[190px] w-[620px] rounded-[50%] bg-[#effbf3]" />
@@ -158,7 +158,7 @@ const { moId } = use(params);
 
       <MobileHeader />
 
-      <section className="relative z-10 mx-auto w-full max-w-[412px] px-4 pb-8 pt-[78px]">
+      <section className="relative z-10 mx-auto w-full max-w-[412px] px-4 pb-8 pt-[calc(var(--mobile-header-h)+1.25rem)]">
         {step === "overview" && (
           <>
             <h1 className="mb-5 text-[20px] font-semibold leading-[150%] text-text-colortext-black">
