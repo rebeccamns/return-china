@@ -240,16 +240,16 @@ export default function StaffReturnPage({
       <MobileHeader />
 
       <section
-        className={`relative z-10 mx-auto w-full max-w-[412px] px-5 pt-[calc(var(--mobile-header-h)+1.25rem)] ${
+        className={`relative z-10 mx-auto w-full max-w-[412px] px-5 max-md:px-4 pt-[calc(var(--mobile-header-h)+1.25rem)] max-md:pt-[calc(var(--mobile-header-h)+0.5rem)] ${
           showBottomNav
-            ? "pb-[calc(var(--bottom-nav-h)+88px)]"
-            : "pb-[calc(env(safe-area-inset-bottom,0px)+88px)]"
+            ? "pb-[calc(var(--bottom-nav-h)+88px)] max-md:pb-[calc(var(--bottom-nav-h)+var(--action-bar-h)+12px)]"
+            : "pb-[calc(env(safe-area-inset-bottom,0px)+88px)] max-md:pb-[calc(env(safe-area-inset-bottom,0px)+var(--action-bar-h)+12px)]"
         }`}
       >
         {/* Landing */}
         {step === "landing" && (
           <>
-            <h1 className="mb-5 text-[22px] font-semibold leading-7 tracking-[-0.01em] text-text-colortext-black">
+            <h1 className="mb-5 max-md:mb-3 text-[22px] max-md:text-title font-semibold leading-7 tracking-[-0.01em] text-text-colortext-black">
               {t("staffReturn.title")}
             </h1>
 
@@ -274,14 +274,19 @@ export default function StaffReturnPage({
                   className="h-6 w-6 shrink-0 text-primaryprimary-green"
                   strokeWidth={2}
                 />
-                <span className="text-[22px] font-semibold leading-7 tracking-[-0.01em] text-text-colortext-black">
+                <span className="text-[22px] max-md:text-title font-semibold leading-7 tracking-[-0.01em] text-text-colortext-black">
                   {t("staffReturn.title")}
                 </span>
               </button>
             </h1>
 
-            <div className="mb-5 mt-1">
-              <MoSummaryCard />
+            <div className="mb-5 max-md:mb-0 mt-1 max-md:mt-3">
+              <div className="max-md:hidden">
+                <MoSummaryCard />
+              </div>
+              <div className="hidden max-md:block">
+                <MoSummaryCard compact />
+              </div>
             </div>
 
             <CartonList

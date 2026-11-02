@@ -97,8 +97,10 @@
 :root {
   --mobile-header-h: calc(3.5rem + env(safe-area-inset-top));
   --bottom-nav-content-h: 66px;
+  --bottom-nav-pad-b: 12px;
   --bottom-nav-h: calc(
-    var(--bottom-nav-content-h) + env(safe-area-inset-bottom, 0px)
+    var(--bottom-nav-content-h) + var(--bottom-nav-pad-b) +
+      env(safe-area-inset-bottom, 0px)
   );
   --1-colors-border-border-primary: var(--7-primitive-primary-neutral-100);
   --2-spacing-size-padding-padding: var(--2-spacing-size-UI-spacing-spacing-24);
@@ -645,6 +647,13 @@ You can apply the theme on any DOM node, not just the `body`
 
   to {
     transform: translateY(calc(-100% - var(--gap)));
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --mobile-header-h: calc(52px + env(safe-area-inset-top));
+    --action-bar-h: 68px;
   }
 }
 

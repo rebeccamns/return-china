@@ -40,7 +40,7 @@ const DEFAULTS = {
 };
 
 const inputClass =
-  "h-12 rounded-xl border-strokestroke-gray bg-backgroundbg-white px-4 text-[16px] text-text-colortext-black";
+  "h-12 max-md:h-11 rounded-xl border-strokestroke-gray bg-backgroundbg-white px-4 text-[16px] max-md:text-field text-text-colortext-black";
 
 function toNumber(value: string) {
   const n = parseFloat(value.replace(",", "."));
@@ -116,18 +116,18 @@ export default function MaterialDetailForm({
             className="h-6 w-6 shrink-0 text-primaryprimary-green"
             strokeWidth={2}
           />
-          <span className="truncate text-[22px] font-semibold leading-7 tracking-[-0.01em] text-text-colortext-black">
+          <span className="truncate text-[22px] max-md:text-title font-semibold leading-7 tracking-[-0.01em] text-text-colortext-black">
             {material.code}
           </span>
         </button>
       </h1>
 
-      <p className="mt-0.5 pl-7 text-[13px] leading-[18px] text-text-colortext-gray">
+      <p className="mt-0.5 pl-7 text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
         {material.englishName} {material.chinaName}
       </p>
 
       {packedElsewhere && (
-        <p className="mt-0.5 pl-7 text-[13px] font-medium leading-[18px] text-[#006B3C]">
+        <p className="mt-0.5 pl-7 text-[13px] max-md:text-secondary font-medium max-md:font-normal leading-[18px] text-[#006B3C]">
           {t("staffReturn.packedSummary", {
             pieces: packedElsewhere.pieces,
             cartons: packedElsewhere.cartons,
@@ -135,12 +135,12 @@ export default function MaterialDetailForm({
         </p>
       )}
 
-      <div className="mb-3 mt-2">
+      <div className="mb-3 max-md:mb-2 mt-2">
         <MoSummaryCard compact />
       </div>
 
       {/* Progress */}
-      <div className="mt-5 flex gap-2" aria-hidden="true">
+      <div className="mt-5 max-md:mt-3 flex gap-2" aria-hidden="true">
         <div className="h-1 flex-1 rounded-full bg-[#008348]" />
         <div
           className={`h-1 flex-1 rounded-full transition-colors ${
@@ -149,20 +149,20 @@ export default function MaterialDetailForm({
         />
       </div>
 
-      <div className="mt-5 rounded-2xl border border-strokestroke-gray bg-backgroundbg-white p-4">
+      <div className="mt-5 max-md:mt-3 rounded-2xl border border-strokestroke-gray bg-backgroundbg-white p-4 max-md:p-3.5">
         {isStep1 ? (
           <>
-            <p className="text-[12px] font-medium leading-4 text-[#006B3C]">
+            <p className="text-[12px] max-md:text-caption font-medium leading-4 text-[#006B3C]">
               {t("staffReturn.step1")}
             </p>
-            <h2 className="mt-1 text-[16px] font-semibold leading-6 text-text-colortext-black">
+            <h2 className="mt-1 text-[16px] max-md:text-heading font-semibold leading-6 text-text-colortext-black">
               {t("staffReturn.cartonDetails")}
             </h2>
-            <p className="mt-1 text-[13px] leading-[18px] text-text-colortext-gray">
+            <p className="mt-1 text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
               {t("staffReturn.cartonDetailsHint")}
             </p>
 
-            <div className="mt-5 flex flex-col gap-4">
+            <div className="mt-5 max-md:mt-3 flex flex-col gap-4 max-md:gap-3">
               <div className="grid grid-cols-2 gap-3">
                 <Field
                   label={t("staffReturn.quantityOfCarton")}
@@ -179,7 +179,7 @@ export default function MaterialDetailForm({
               </div>
 
               {cartonCount > 1 && quantity > 0 && (
-                <p className="-mt-2 rounded-xl bg-[#E7F5EC] px-4 py-3 text-[13px] leading-[18px] text-[#006B3C]">
+                <p className="-mt-2 rounded-xl bg-[#E7F5EC] px-4 py-3 max-md:px-3.5 max-md:py-3.5 text-[13px] max-md:text-secondary leading-[18px] text-[#006B3C]">
                   {t("staffReturn.totalAcrossCartons", {
                     count: cartonCount,
                     total: quantity * cartonCount,
@@ -203,10 +203,10 @@ export default function MaterialDetailForm({
 
               <div>
                 <div className="mb-2 flex items-center justify-between">
-                  <span className="text-[12px] font-medium leading-4 text-text-colortext-gray">
+                  <span className="text-[12px] max-md:text-caption font-medium leading-4 text-text-colortext-gray">
                     {t("staffReturn.volume")}
                   </span>
-                  <span className="text-[12px] font-medium leading-4 text-text-colortext-gray">
+                  <span className="text-[12px] max-md:text-caption font-medium leading-4 text-text-colortext-gray">
                     {t("common.units.mmBare")}
                   </span>
                 </div>
@@ -242,17 +242,17 @@ export default function MaterialDetailForm({
           </>
         ) : (
           <>
-            <p className="text-[12px] font-medium leading-4 text-[#006B3C]">
+            <p className="text-[12px] max-md:text-caption font-medium leading-4 text-[#006B3C]">
               {t("staffReturn.step2")}
             </p>
-            <h2 className="mt-1 text-[16px] font-semibold leading-6 text-text-colortext-black">
+            <h2 className="mt-1 text-[16px] max-md:text-heading font-semibold leading-6 text-text-colortext-black">
               {t("staffReturn.uploadPhotos")}
             </h2>
-            <p className="mt-1 text-[13px] leading-[18px] text-text-colortext-gray">
+            <p className="mt-1 text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
               {t("staffReturn.uploadPhotosHint")}
             </p>
 
-            <div className="mt-5 flex flex-col gap-3">
+            <div className="mt-5 max-md:mt-3 flex flex-col gap-3">
               <PhotoUpload
                 label={t("common.frontPhoto")}
                 uploaded={photos.front}
@@ -270,8 +270,8 @@ export default function MaterialDetailForm({
               />
             </div>
 
-            <div className="mt-5">
-              <label className="mb-2 block text-[12px] font-medium leading-4 text-text-colortext-gray">
+            <div className="mt-5 max-md:mt-3">
+              <label className="mb-2 max-md:mb-1.5 block text-[12px] max-md:text-caption font-medium leading-4 text-text-colortext-gray">
                 {t("common.scanUpnBarcode")}{" "}
                 <span className="text-red-500">*</span>
               </label>
@@ -289,7 +289,7 @@ export default function MaterialDetailForm({
               <button
                 type="button"
                 onClick={onRemove}
-                className="mt-5 flex h-11 w-full items-center justify-center text-[15px] font-medium text-text-colortext-red"
+                className="mt-5 max-md:mt-3 flex h-11 w-full items-center justify-center text-[15px] max-md:text-button font-medium max-md:font-semibold text-text-colortext-red"
               >
                 {t("staffReturn.removeMaterial")}
               </button>
@@ -343,7 +343,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className="mb-2 block text-[12px] font-medium leading-4 text-text-colortext-gray">
+      <label className="mb-2 max-md:mb-1.5 block text-[12px] max-md:text-caption font-medium leading-4 text-text-colortext-gray">
         {label}
       </label>
 
@@ -359,7 +359,7 @@ function Field({
         />
 
         {suffix && (
-          <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[12px] font-medium leading-4 text-text-colortext-gray">
+          <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[12px] max-md:text-caption font-medium leading-4 text-text-colortext-gray">
             {suffix}
           </span>
         )}
@@ -383,14 +383,14 @@ function PhotoUpload({
     <button
       type="button"
       onClick={onUpload}
-      className={`flex w-full items-center gap-4 rounded-2xl p-3 text-left transition active:scale-[0.99] ${
+      className={`flex w-full items-center gap-4 max-md:gap-3 rounded-2xl p-3 max-md:p-2.5 text-left transition active:scale-[0.99] ${
         uploaded
           ? "border border-[#008348] bg-[#E7F5EC]"
           : "border-2 border-dashed border-[#4B4FF5] bg-[#F0F1FF] hover:bg-[#E8E9FF]"
       }`}
     >
       <span
-        className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white ${
+        className={`flex h-14 w-14 max-md:h-12 max-md:w-12 shrink-0 items-center justify-center rounded-xl bg-white ${
           uploaded ? "text-[#006B3C]" : "text-[#4B4FF5]"
         }`}
       >
@@ -402,11 +402,11 @@ function PhotoUpload({
       </span>
 
       <span className="min-w-0">
-        <span className="block text-[14px] font-semibold leading-5 text-black">
+        <span className="block text-[14px] max-md:text-body font-semibold leading-5 text-black">
           {label}
         </span>
         <span
-          className={`mt-0.5 block text-[12px] font-medium leading-4 ${
+          className={`mt-0.5 block text-[12px] max-md:text-caption font-medium leading-4 ${
             uploaded ? "text-[#006B3C]" : "text-[#272BC4]"
           }`}
         >

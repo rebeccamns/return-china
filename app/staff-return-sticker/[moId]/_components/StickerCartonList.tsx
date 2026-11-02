@@ -28,17 +28,17 @@ export default function StickerCartonList({
           key={carton.id}
           type="button"
           onClick={() => onSelect(carton)}
-          className="flex min-h-[60px] w-full items-center gap-3 px-4 py-2.5 text-left transition active:scale-[0.98] active:bg-backgroundbg-gray focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green"
+          className="flex min-h-[60px] max-md:min-h-[52px] w-full items-center gap-3 px-4 py-2.5 max-md:px-3.5 max-md:py-2 text-left transition active:scale-[0.98] active:bg-backgroundbg-gray focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green"
         >
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[13px] font-semibold text-[#006B3C]">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[13px] max-md:text-secondary font-semibold text-[#006B3C]">
             {carton.code.slice(-2)}
           </span>
 
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-[15px] font-semibold leading-5 text-text-colortext-black">
+            <span className="block truncate text-[15px] max-md:text-body font-semibold leading-5 text-text-colortext-black">
               {carton.code}
             </span>
-            <span className="mt-0.5 block text-[13px] leading-[18px] text-text-colortext-gray">
+            <span className="mt-0.5 block text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
               {carton.scanned
                 ? t("staffReturnSticker.stickerScanned")
                 : t("staffReturnSticker.stickerNotScanned")}

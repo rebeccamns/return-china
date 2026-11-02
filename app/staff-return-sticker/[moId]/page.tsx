@@ -53,8 +53,8 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
   const allScanned =
     cartons.length > 0 && scannedCount === cartons.length;
   const bottomPadding = showCartonList
-    ? "pb-[calc(var(--bottom-nav-h)+88px)]"
-    : "pb-[calc(var(--bottom-nav-h)+24px)]";
+    ? "pb-[calc(var(--bottom-nav-h)+88px)] max-md:pb-[calc(var(--bottom-nav-h)+var(--action-bar-h)+12px)]"
+    : "pb-[calc(var(--bottom-nav-h)+24px)] max-md:pb-[calc(var(--bottom-nav-h)+12px)]";
 
   function markStickerScanned(cartonId: string) {
     setCartons((current) =>
@@ -88,9 +88,9 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
       <MobileHeader />
 
       <section
-        className={`relative z-10 mx-auto w-full max-w-[412px] px-5 pt-[calc(var(--mobile-header-h)+1.25rem)] ${bottomPadding}`}
+        className={`relative z-10 mx-auto w-full max-w-[412px] px-5 max-md:px-4 pt-[calc(var(--mobile-header-h)+1.25rem)] max-md:pt-[calc(var(--mobile-header-h)+0.5rem)] ${bottomPadding}`}
       >
-        <div className="mb-3">
+        <div className="mb-3 max-md:mb-3">
           <BackTitle title={t("staffReturn.title")} />
         </div>
 
@@ -103,13 +103,13 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
         />
 
         {showCartonList && (
-          <div className="mt-5">
-            <div className="mb-3 flex items-center justify-between gap-3">
-              <h2 className="text-[16px] font-semibold leading-6 text-text-colortext-black">
+          <div className="mt-5 max-md:mt-3">
+            <div className="mb-3 max-md:mb-2 flex items-center justify-between gap-3">
+              <h2 className="text-[16px] max-md:text-heading font-semibold leading-6 text-text-colortext-black">
                 {t("staffReturn.cartonList")}
               </h2>
 
-              <span className="text-[12px] font-medium leading-4 text-text-colortext-gray">
+              <span className="text-[12px] max-md:text-caption font-medium leading-4 text-text-colortext-gray">
                 {t(cartons.length === 1 ? "common.cartonSingular" : "common.cartonPlural", { count: cartons.length })}
               </span>
             </div>
@@ -120,23 +120,23 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
             />
 
             {allScanned && !submitted && (
-              <div className="mt-4 flex items-start gap-3 rounded-2xl bg-[#E7F5EC] p-4">
+              <div className="mt-4 max-md:mt-3 flex items-start gap-3 rounded-2xl bg-[#E7F5EC] p-4 max-md:p-3.5">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-backgroundbg-white">
                   <Check className="h-4 w-4 text-[#006B3C]" />
                 </span>
 
                 <div>
-                  <p className="text-[13px] font-semibold leading-[18px] text-[#006B3C]">
+                  <p className="text-[13px] max-md:text-secondary font-semibold leading-[18px] text-[#006B3C]">
                     {t("staffReturnSticker.allScanned")}
                   </p>
-                  <p className="mt-1 text-[13px] leading-[18px] text-text-colortext-dark">
+                  <p className="mt-1 text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-dark">
                     {t("staffReturnSticker.allScannedDescription")}
                   </p>
                 </div>
               </div>
             )}
 
-            <p className="mt-4 text-center text-[13px] leading-[18px] text-text-colortext-gray">
+            <p className="mt-4 max-md:mt-3 text-center text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
               {t("staffReturnSticker.scanInstructions")}
             </p>
           </div>
@@ -191,24 +191,24 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
             aria-modal="true"
             aria-labelledby="submit-sticker-title"
             onClick={(event) => event.stopPropagation()}
-            className="w-full max-w-[360px] rounded-3xl border border-strokestroke-gray bg-backgroundbg-white p-4 shadow-[0_8px_30px_rgba(0,0,0,0.18)]"
+            className="w-full max-w-[360px] rounded-3xl border border-strokestroke-gray bg-backgroundbg-white p-4 max-md:p-3.5 shadow-[0_8px_30px_rgba(0,0,0,0.18)]"
           >
-            <div className="mb-4 flex h-8 w-8 items-center justify-center rounded-full bg-[#E7F5EC]">
-              <Check className="h-4 w-4 text-[#006B3C]" />
+            <div className="mb-4 max-md:mb-3 flex h-8 w-8 max-md:h-12 max-md:w-12 items-center justify-center rounded-full bg-[#E7F5EC]">
+              <Check className="h-4 w-4 max-md:h-6 max-md:w-6 text-[#006B3C]" />
             </div>
 
             <h2
               id="submit-sticker-title"
-              className="text-[16px] font-semibold leading-6 text-text-colortext-black"
+              className="text-[16px] max-md:text-heading font-semibold leading-6 text-text-colortext-black"
             >
               {t("staffReturnSticker.confirm.title")}
             </h2>
 
-            <p className="mt-2 text-[13px] leading-[18px] text-text-colortext-dark">
+            <p className="mt-2 text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-dark">
               {t("staffReturnSticker.confirm.description", { count: cartons.length })}
             </p>
 
-            <div className="mt-4 grid grid-cols-2 gap-3">
+            <div className="mt-4 max-md:mt-3 grid grid-cols-2 gap-3">
               <button
                 type="button"
                 onClick={() => setShowSubmitConfirm(false)}
@@ -240,27 +240,27 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
             aria-modal="true"
             aria-labelledby="sticker-success-title"
             onClick={(event) => event.stopPropagation()}
-            className="w-full max-w-[360px] rounded-3xl border border-strokestroke-gray bg-backgroundbg-white p-4 text-center shadow-[0_8px_30px_rgba(0,0,0,0.18)]"
+            className="w-full max-w-[360px] rounded-3xl border border-strokestroke-gray bg-backgroundbg-white p-4 max-md:p-3.5 text-center shadow-[0_8px_30px_rgba(0,0,0,0.18)]"
           >
-            <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#E7F5EC]">
-              <Check className="h-5 w-5 text-[#006B3C]" />
+            <div className="mx-auto mb-4 max-md:mb-3 flex h-10 w-10 max-md:h-12 max-md:w-12 items-center justify-center rounded-full bg-[#E7F5EC]">
+              <Check className="h-5 w-5 max-md:h-6 max-md:w-6 text-[#006B3C]" />
             </div>
 
             <h2
               id="sticker-success-title"
-              className="text-[16px] font-semibold leading-6 text-text-colortext-black"
+              className="text-[16px] max-md:text-heading font-semibold leading-6 text-text-colortext-black"
             >
               {t("staffReturnSticker.success.title")}
             </h2>
 
-            <p className="mt-2 text-[13px] leading-[18px] text-text-colortext-dark">
+            <p className="mt-2 text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-dark">
               {t("staffReturnSticker.success.description", { mo: moId || "MO-321654987" })}
             </p>
 
             <button
               type="button"
               onClick={() => setShowSuccess(false)}
-              className={`${primaryButton} mt-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green`}
+              className={`${primaryButton} mt-4 max-md:mt-3 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green`}
             >
               {t("common.done")}
             </button>

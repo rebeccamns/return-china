@@ -5,6 +5,13 @@ export default {
 ],
   corePlugins: { preflight: true },
   theme: {
+    textColor: ({ theme }) => {
+      const { secondary, ...textColors } = theme("colors");
+      return {
+        ...textColors,
+        "secondary-foreground": secondary.foreground,
+      };
+    },
     extend: {
       colors: {
         "7-primitive-primary-neutral-100":
@@ -203,6 +210,23 @@ export default {
         "inter-xs-semibold-xs": "var(--inter-xs-semibold-xs-font-family)",
         mono: "var(--app-font-family)",
         sans: "var(--app-font-family)",
+      },
+      fontSize: {
+        title: [
+          "20px",
+          {
+            lineHeight: "26px",
+            fontWeight: "600",
+            letterSpacing: "-0.01em",
+          },
+        ],
+        heading: ["16px", { lineHeight: "22px", fontWeight: "600" }],
+        body: ["14px", { lineHeight: "20px" }],
+        secondary: ["13px", { lineHeight: "18px" }],
+        caption: ["12px", { lineHeight: "16px", fontWeight: "500" }],
+        pill: ["11px", { lineHeight: "16px", fontWeight: "600" }],
+        button: ["15px", { lineHeight: "20px", fontWeight: "600" }],
+        field: ["16px", { lineHeight: "24px" }],
       },
       borderRadius: {
         lg: "var(--radius)",

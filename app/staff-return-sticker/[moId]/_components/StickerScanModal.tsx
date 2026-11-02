@@ -55,17 +55,17 @@ export default function StickerScanModal({
         aria-modal="true"
         aria-labelledby="sticker-scan-title"
         onClick={(event) => event.stopPropagation()}
-        className="w-full max-w-[380px] rounded-3xl border border-strokestroke-gray bg-backgroundbg-white p-4 shadow-[0_8px_30px_rgba(0,0,0,0.18)]"
+        className="w-full max-w-[380px] rounded-3xl border border-strokestroke-gray bg-backgroundbg-white p-4 max-md:p-3.5 shadow-[0_8px_30px_rgba(0,0,0,0.18)]"
       >
-        <div className="mb-4 flex items-start justify-between gap-3">
+        <div className="mb-4 max-md:mb-3 flex items-start justify-between gap-3">
           <div>
-            <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#E7F5EC]">
-              <ScanLine className="h-4 w-4 text-[#006B3C]" />
+            <div className="mb-3 max-md:mb-2 flex h-8 w-8 max-md:h-12 max-md:w-12 items-center justify-center rounded-full bg-[#E7F5EC]">
+              <ScanLine className="h-4 w-4 max-md:h-6 max-md:w-6 text-[#006B3C]" />
             </div>
-            <h2 id="sticker-scan-title" className="text-[16px] font-semibold leading-6 text-text-colortext-black">
+            <h2 id="sticker-scan-title" className="text-[16px] max-md:text-heading font-semibold leading-6 text-text-colortext-black">
               {t("staffReturnSticker.scanModal.title")}
             </h2>
-            <p className="mt-1 text-[13px] leading-[18px] text-text-colortext-gray">
+            <p className="mt-1 text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
               {t("staffReturnSticker.scanModal.cartonLabel", { code: carton.code })}
             </p>
           </div>
@@ -79,13 +79,13 @@ export default function StickerScanModal({
           </button>
         </div>
 
-        <p className="text-[13px] leading-[18px] text-text-colortext-dark">
+        <p className="text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-dark">
           {t("staffReturnSticker.scanModal.description")}
         </p>
 
         <label
           htmlFor="carton-sticker-code"
-          className="mb-1.5 mt-4 block text-[12px] font-medium leading-4 text-text-colortext-dark"
+          className="mb-1.5 mt-4 max-md:mt-3 block text-[12px] max-md:text-caption font-medium leading-4 text-text-colortext-dark"
         >
           {t("staffReturnSticker.scanModal.codeLabel")}
         </label>
@@ -101,23 +101,23 @@ export default function StickerScanModal({
             if (event.key === "Enter") verifySticker();
           }}
           placeholder={t("staffReturnSticker.scanModal.codePlaceholder")}
-          className="h-12 w-full rounded-xl border border-strokestroke-gray bg-backgroundbg-white px-3 text-[16px] text-text-colortext-black outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green"
+          className="h-12 max-md:h-11 w-full rounded-xl border border-strokestroke-gray bg-backgroundbg-white px-3 text-[16px] max-md:text-field text-text-colortext-black outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green"
         />
 
         {error && (
-          <p role="alert" className="mt-2 text-[12px] font-medium leading-4 text-text-colortext-red">
+          <p role="alert" className="mt-2 text-[12px] max-md:text-caption font-medium leading-4 text-text-colortext-red">
             {error}
           </p>
         )}
 
-        {/* <div className="mt-4 flex items-start gap-2 rounded-2xl bg-[#E7F5EC] p-4">
+        {/* <div className="mt-4 max-md:mt-3 flex items-start gap-2 rounded-2xl bg-[#E7F5EC] p-4 max-md:p-3.5">
           <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#006B3C]" />
-          <p className="text-[13px] leading-[18px] text-[#006B3C]">
+          <p className="text-[13px] max-md:text-secondary leading-[18px] text-[#006B3C]">
             {t("staffReturnSticker.scanModal.prototypeNote")}
           </p>
         </div> */}
 
-        <div className="mt-4 grid grid-cols-2 gap-3">
+        <div className="mt-4 max-md:mt-3 grid grid-cols-2 gap-3">
           <button
             type="button"
             onClick={onClose}

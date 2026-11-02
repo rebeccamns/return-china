@@ -35,8 +35,8 @@ export default function MobileHeader({
   }
 
   return (
-    <header className="fixed inset-x-0 top-0 z-20 w-full border-b border-black/[0.06] bg-white/70 pt-[env(safe-area-inset-top)] backdrop-blur-xl backdrop-saturate-150 supports-[not_(backdrop-filter:blur(1px))]:bg-white">
-      <div className="flex h-14 items-center justify-between gap-2 px-5">
+    <header className="fixed inset-x-0 top-0 z-20 w-full border-b border-black/[0.06] max-md:border-b-0 bg-white/70 pt-[env(safe-area-inset-top)] backdrop-blur-xl backdrop-saturate-150 supports-[not_(backdrop-filter:blur(1px))]:bg-white">
+      <div className="flex h-14 max-md:h-[52px] items-center justify-between gap-2 px-5 max-md:border-b max-md:border-black/[0.06] max-md:px-4">
         <div className="flex min-w-0 items-center gap-2">
           <img
             src="/oppo-logo.png"
@@ -65,15 +65,15 @@ export default function MobileHeader({
           className="flex min-h-11 min-w-0 max-w-[60%] items-center gap-2 rounded-full p-1 transition active:bg-backgroundbg-gray focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green"
         >
           <span className="flex min-w-0 flex-col items-end">
-            <span className="max-w-[120px] truncate text-[13px] font-semibold leading-4 text-text-colortext-black">
+            <span className="max-w-[120px] truncate text-[13px] max-md:text-caption font-semibold leading-4 text-text-colortext-black">
               {userName}
             </span>
-            <span className="max-w-[120px] truncate text-[11px] leading-4 text-text-colortext-gray">
+            <span className="max-w-[120px] truncate text-[11px] max-md:text-pill max-md:font-normal max-md:leading-[14px] leading-4 text-text-colortext-gray">
               {userId}
             </span>
           </span>
 
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[12px] font-semibold text-[#006B3C]">
+          <span className="flex h-9 w-9 max-md:h-8 max-md:w-8 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[12px] max-md:text-caption font-semibold text-[#006B3C]">
             {initials || (
               <UserRound
                 className="h-[18px] w-[18px]"

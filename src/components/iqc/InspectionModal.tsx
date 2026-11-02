@@ -45,17 +45,17 @@ export default function InspectionModal({
         aria-modal="true"
         aria-labelledby="iqc-modal-title"
         onClick={(event) => event.stopPropagation()}
-        className="w-full max-w-[412px] rounded-t-3xl bg-backgroundbg-white px-5 pt-3 shadow-lg sm:rounded-3xl sm:pb-5"
+        className="w-full max-w-[412px] rounded-t-3xl bg-backgroundbg-white px-5 max-md:px-4 pt-3 shadow-lg sm:rounded-3xl sm:pb-5"
         style={{ paddingBottom: "max(20px, env(safe-area-inset-bottom, 0px))" }}
       >
         {/* Grabber */}
         <div
           aria-hidden="true"
-          className="mx-auto mb-4 h-1 w-9 rounded-full bg-[#D9D9D9] sm:hidden"
+          className="mx-auto mb-4 max-md:mb-2 h-1 w-9 rounded-full bg-[#D9D9D9] sm:hidden"
         />
 
         <div className="flex flex-col items-center text-center">
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E7F5EC]">
+          <span className="flex h-14 w-14 max-md:h-12 max-md:w-12 items-center justify-center rounded-full bg-[#E7F5EC]">
             <Icon
               className="h-7 w-7 text-primaryprimary-green"
               strokeWidth={1.8}
@@ -64,17 +64,17 @@ export default function InspectionModal({
 
           <h2
             id="iqc-modal-title"
-            className="mt-4 text-[18px] font-semibold leading-6 text-text-colortext-black"
+            className="mt-4 max-md:mt-3 text-[18px] max-md:text-heading font-semibold leading-6 text-text-colortext-black"
           >
             {resolvedTitle}
           </h2>
 
-          <p className="mt-1.5 text-[14px] leading-5 text-text-colortext-gray">
+          <p className="mt-1.5 text-[14px] max-md:text-secondary leading-5 text-text-colortext-gray">
             {resolvedDescription}
           </p>
         </div>
 
-        <div className="mt-6 flex flex-col gap-2">
+        <div className="mt-6 max-md:mt-3 flex flex-col gap-2">
           {!success && (
             <button
               type="button"

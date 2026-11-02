@@ -16,7 +16,7 @@ export default function BackTitle({
   subtitle,
 }: BackTitleProps) {
   const titleClass =
-    "truncate text-[22px] font-semibold leading-7 tracking-[-0.01em] text-text-colortext-black";
+    "truncate text-[22px] max-md:text-title font-semibold leading-7 tracking-[-0.01em] text-text-colortext-black";
 
   return (
     <div>
@@ -41,7 +41,7 @@ export default function BackTitle({
 
       {subtitle && (
         <p
-          className={`mt-0.5 text-[13px] leading-[18px] text-text-colortext-gray ${
+          className={`mt-0.5 text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray ${
             onBack ? "pl-6" : ""
           }`}
         >

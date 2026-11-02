@@ -62,27 +62,27 @@ export default function MaterialList({
             className="h-6 w-6 shrink-0 text-primaryprimary-green"
             strokeWidth={2}
           />
-          <span className="truncate text-[22px] font-semibold leading-7 tracking-[-0.01em] text-text-colortext-black">
+          <span className="truncate text-[22px] max-md:text-title font-semibold leading-7 tracking-[-0.01em] text-text-colortext-black">
             {cartonRange(carton.codes)}
           </span>
         </button>
       </h1>
 
-      <p className="mt-0.5 pl-7 text-[13px] leading-[18px] text-text-colortext-gray">
+      <p className="mt-0.5 pl-7 text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
         {t("staffReturn.materialsCount", { count: carton.materials.length })}
       </p>
 
-      <div className="mb-3 mt-2">
+      <div className="mb-3 max-md:mb-2 mt-2">
         <MoSummaryCard compact />
       </div>
 
       {isGroup && (
-        <div className="mt-3 flex items-start gap-3 rounded-2xl bg-[#E7F5EC] p-4">
+        <div className="mt-3 flex items-start gap-3 rounded-2xl bg-[#E7F5EC] p-4 max-md:p-3.5">
           <Layers
             className="mt-0.5 h-5 w-5 shrink-0 text-[#006B3C]"
             strokeWidth={1.8}
           />
-          <p className="text-[13px] leading-[18px] text-[#006B3C]">
+          <p className="text-[13px] max-md:text-secondary leading-[18px] text-[#006B3C]">
             {t("staffReturn.sameDetailsBanner", { count: carton.codes.length })}
           </p>
         </div>
@@ -90,29 +90,29 @@ export default function MaterialList({
 
       {/* Added materials */}
       {carton.materials.length > 0 && (
-        <div className="mt-5 overflow-hidden rounded-2xl border border-strokestroke-gray bg-backgroundbg-white">
+        <div className="mt-5 max-md:mt-3 overflow-hidden rounded-2xl border border-strokestroke-gray bg-backgroundbg-white">
           <ul className="divide-y divide-strokestroke-gray">
             {carton.materials.map((entry, index) => (
               <li key={entry.id}>
                 <button
                   type="button"
                   onClick={() => onEditMaterial(entry)}
-                  className="flex min-h-[60px] w-full items-center gap-3 px-4 py-2.5 text-left transition-colors active:bg-backgroundbg-gray"
+                  className="flex min-h-[60px] max-md:min-h-[52px] w-full items-center gap-3 px-4 py-2.5 max-md:px-3.5 max-md:py-2 text-left transition-colors active:bg-backgroundbg-gray"
                 >
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[13px] font-semibold text-[#006B3C]">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[13px] max-md:text-secondary font-semibold text-[#006B3C]">
                     {index + 1}
                   </span>
 
                   <div className="min-w-0 flex-1">
-                    <p className="text-[15px] font-semibold leading-5 text-text-colortext-black">
+                    <p className="text-[15px] max-md:text-body font-semibold leading-5 text-text-colortext-black">
                       {entry.material.code}
                     </p>
-                    <p className="truncate text-[13px] leading-[18px] text-text-colortext-gray">
+                    <p className="truncate text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
                       {entry.material.englishName} {entry.material.chinaName}
                     </p>
                   </div>
 
-                  <span className="shrink-0 text-[13px] leading-[18px] font-medium text-text-colortext-black">
+                  <span className="shrink-0 text-[13px] max-md:text-secondary leading-[18px] font-medium max-md:font-normal text-text-colortext-black">
                     {t("staffReturn.piecesCount", { count: entry.quantity })}
                   </span>
 
@@ -128,13 +128,13 @@ export default function MaterialList({
       )}
 
       {/* Material picker */}
-      <div className="mt-5 rounded-2xl border border-strokestroke-gray bg-backgroundbg-white p-4">
-        <label className="mb-2 block text-[12px] font-medium leading-4 text-text-colortext-gray">
+      <div className="mt-5 max-md:mt-3 rounded-2xl border border-strokestroke-gray bg-backgroundbg-white p-4 max-md:p-3.5">
+        <label className="mb-2 max-md:mb-1.5 block text-[12px] max-md:text-caption font-medium leading-4 text-text-colortext-gray">
           {t("common.materialCode")}
         </label>
 
         <Select value={selectedMaterialCode} onValueChange={onSelectMaterial}>
-          <SelectTrigger className="h-12 w-full rounded-xl border-strokestroke-gray px-4 text-[16px]">
+          <SelectTrigger className="h-12 max-md:h-11 w-full rounded-xl border-strokestroke-gray px-4 text-[16px] max-md:text-field">
             <SelectValue placeholder={t("staffReturn.chooseMaterialCode")} />
           </SelectTrigger>
 
@@ -150,14 +150,14 @@ export default function MaterialList({
                   className="py-2.5"
                 >
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-[16px] font-medium leading-5">
+                    <span className="text-[16px] max-md:text-body font-medium max-md:font-normal leading-5">
                       {option.code}
                     </span>
-                    <span className="text-[12px] font-medium leading-4 text-text-colortext-gray">
+                    <span className="text-[12px] max-md:text-caption font-medium leading-4 text-text-colortext-gray">
                       {option.englishName}
                     </span>
                     {packed && (
-                      <span className="text-[12px] font-medium leading-4 text-[#006B3C]">
+                      <span className="text-[12px] max-md:text-caption font-medium leading-4 text-[#006B3C]">
                         {t("staffReturn.packedSummary", {
                           pieces: packed.pieces,
                           cartons: packed.cartons,
@@ -172,7 +172,7 @@ export default function MaterialList({
         </Select>
 
         {carton.materials.length === 0 && !selectedMaterialCode && (
-          <p className="mt-4 text-center text-[13px] leading-[18px] text-text-colortext-gray">
+          <p className="mt-4 max-md:mt-3 text-center text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
             {t("staffReturn.chooseMaterialHint")}
           </p>
         )}

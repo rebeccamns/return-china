@@ -1,6 +1,7 @@
 "use client";
 
 import { use, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import BackTitle from "@/components/layout/BackTitle";
 import MobileBottomNav, {
@@ -9,11 +10,11 @@ import MobileBottomNav, {
 import MobileHeader from "@/components/layout/mobile-header";
 import { useI18n } from "@/i18n";
 
-import InspectionModal from "./_components/InspectionModal";
+import InspectionModal from "@/components/iqc/InspectionModal";
 import MaterialInspectionForm from "./_components/MaterialInspectionForm";
 import MaterialInspectionList from "./_components/MaterialInspectionList";
 import type { IQCMaterial } from "./_components/iqc-types";
-import MoCompactCard from "./_components/MoCompactCard";
+import MoCompactCard from "@/components/iqc/MoCompactCard";
 import MoInspectionCard from "./_components/MoInspectionCard";
 
 type Step = "overview" | "material-list" | "material-detail";
@@ -93,10 +94,11 @@ export default function IQCPage({
   params: Promise<{ moId: string }>;
 }) {
   const { moId } = use(params);
+  const router = useRouter();
   const { t } = useI18n();
 
   const [step, setStep] = useState<Step>("overview");
-  const [activeNav, setActiveNav] = useState<MobileNavItem>("verification");
+  const [activeNav, setActiveNav] = useState<MobileNavItem>("identity");
   const [materials, setMaterials] = useState<IQCMaterial[]>(INITIAL_MATERIALS);
   const [selectedMaterialId, setSelectedMaterialId] = useState<string | null>(
     null,
@@ -125,10 +127,10 @@ export default function IQCPage({
 
   const bottomPadding =
     step === "material-list"
-      ? "pb-[calc(var(--bottom-nav-h)+88px)]" // sticky submit + nav
+      ? "pb-[calc(var(--bottom-nav-h)+88px)] max-md:pb-[calc(var(--bottom-nav-h)+var(--action-bar-h)+12px)]" // sticky submit + nav
       : step === "material-detail"
-        ? "pb-[calc(env(safe-area-inset-bottom,0px)+88px)]" // sticky save
-        : "pb-[calc(var(--bottom-nav-h)+24px)]"; // nav only
+        ? "pb-[calc(env(safe-area-inset-bottom,0px)+88px)] max-md:pb-[calc(env(safe-area-inset-bottom,0px)+var(--action-bar-h)+12px)]" // sticky save
+        : "pb-[calc(var(--bottom-nav-h)+24px)] max-md:pb-[calc(var(--bottom-nav-h)+12px)]"; // nav only
 
   function handleOpenInspection() {
     setStep("material-list");
@@ -174,12 +176,12 @@ export default function IQCPage({
       <MobileHeader />
 
       <section
-        className={`relative z-10 mx-auto w-full max-w-[412px] px-4 pt-[calc(var(--mobile-header-h)+0.75rem)] ${bottomPadding}`}
+        className={`relative z-10 mx-auto w-full max-w-[412px] px-4 pt-[calc(var(--mobile-header-h)+0.75rem)] max-md:pt-[calc(var(--mobile-header-h)+0.5rem)] ${bottomPadding}`}
       >
         {/* Overview */}
         {step === "overview" && (
           <>
-            <div className="mb-3">
+            <div className="mb-3 max-md:mb-3">
               <BackTitle title={t("iqc.title")} />
             </div>
 
@@ -212,7 +214,7 @@ export default function IQCPage({
               />
             </div>
 
-            <div className="mt-4">
+            <div className="mt-4 max-md:mt-3">
               <MaterialInspectionList
                 materials={materials}
                 onSelectMaterial={handleSelectMaterial}
@@ -262,15 +264,14 @@ export default function IQCPage({
         <MobileBottomNav
           activeItem={activeNav}
           onNavigate={(item) => {
-            setActiveNav(item);
-
             switch (item) {
               case "identity":
+                setActiveNav(item);
                 setStep("overview");
                 break;
 
               case "verification":
-                setStep("material-list");
+                router.push(`/iqc-verification/${moId}`);
                 break;
 
               case "history":

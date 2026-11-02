@@ -32,12 +32,12 @@ export default function MaterialInspectionList({
   return (
     <div>
       {/* Progress */}
-      <section className="rounded-2xl border border-strokestroke-gray bg-backgroundbg-white p-4">
+      <section className="rounded-2xl border border-strokestroke-gray bg-backgroundbg-white p-4 max-md:p-3.5">
         <div className="flex items-center justify-between gap-3">
-          <p className="text-[13px] leading-[18px] text-text-colortext-gray">
+          <p className="text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
             {t("iqc.materialInspected", { inspected: inspectedCount, total })}
           </p>
-          <p className="text-[13px] font-semibold leading-[18px] text-text-colortext-black">
+          <p className="text-[13px] max-md:text-secondary font-semibold leading-[18px] text-text-colortext-black">
             {progress}%
           </p>
         </div>
@@ -51,11 +51,11 @@ export default function MaterialInspectionList({
       </section>
 
       {/* Material list */}
-      <div className="mb-3 mt-5 flex items-center justify-between gap-2">
-        <h2 className="text-[16px] font-semibold leading-6 text-text-colortext-black">
+      <div className="mb-3 max-md:mb-2 mt-5 max-md:mt-3 flex items-center justify-between gap-2">
+        <h2 className="text-[16px] max-md:text-heading font-semibold leading-6 text-text-colortext-black">
           {t("common.materialList")}
         </h2>
-        <span className="text-[12px] leading-4 text-text-colortext-gray">
+        <span className="text-[12px] max-md:text-caption leading-4 text-text-colortext-gray">
           {t(total === 1 ? "common.materialSingular" : "common.materialPlural", {
             count: total,
           })}
@@ -69,9 +69,9 @@ export default function MaterialInspectionList({
               <button
                 type="button"
                 onClick={() => onSelectMaterial(material)}
-                className="flex min-h-[60px] w-full items-center gap-3 px-4 py-2.5 text-left transition-colors active:bg-backgroundbg-gray"
+                className="flex min-h-[60px] max-md:min-h-[52px] w-full items-center gap-3 px-4 py-2.5 max-md:px-3.5 max-md:py-2 text-left transition-colors active:bg-backgroundbg-gray"
               >
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[13px] font-semibold text-[#006B3C]">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[13px] max-md:text-secondary font-semibold text-[#006B3C]">
                   {material.status === "PASS" ? (
                     <Check className="h-4 w-4" strokeWidth={3} />
                   ) : (
@@ -80,17 +80,17 @@ export default function MaterialInspectionList({
                 </span>
 
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[15px] font-semibold leading-5 text-text-colortext-black">
+                  <span className="block truncate text-[15px] max-md:text-body font-semibold leading-5 text-text-colortext-black">
                     {material.code}
                   </span>
-                  <span className="mt-0.5 block truncate text-[13px] leading-[18px] text-text-colortext-gray">
+                  <span className="mt-0.5 block truncate text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
                     {material.englishName} {material.chinaName}
                   </span>
                 </span>
 
                 {material.status ? (
                   <span
-                    className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold leading-4 ${
+                    className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] max-md:text-pill font-semibold leading-4 ${
                       material.status === "PASS"
                         ? "bg-[#E7F5EC] text-[#006B3C]"
                         : "bg-red-50 text-red-600"
@@ -115,7 +115,7 @@ export default function MaterialInspectionList({
       </div>
 
       {allInspected && (
-        <p className="mt-4 rounded-xl bg-[#E7F5EC] px-4 py-3 text-[13px] leading-[18px] text-[#006B3C]">
+        <p className="mt-4 max-md:mt-3 rounded-xl bg-[#E7F5EC] px-4 py-3 max-md:px-3.5 max-md:py-3.5 text-[13px] max-md:text-secondary leading-[18px] text-[#006B3C]">
           {t("iqc.allInspected")}
         </p>
       )}
