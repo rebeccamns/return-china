@@ -1,8 +1,11 @@
 "use client";
 
 import { use, useState } from "react";
-import { ArrowLeft } from "lucide-react";
 
+import BackTitle from "@/components/layout/BackTitle";
+import MobileBottomNav, {
+  type MobileNavItem,
+} from "@/components/layout/mobile-bottom-nav";
 import MobileHeader from "@/components/layout/mobile-header";
 import { useI18n } from "@/i18n";
 
@@ -10,11 +13,8 @@ import InspectionModal from "./_components/InspectionModal";
 import MaterialInspectionForm from "./_components/MaterialInspectionForm";
 import MaterialInspectionList from "./_components/MaterialInspectionList";
 import type { IQCMaterial } from "./_components/iqc-types";
+import MoCompactCard from "./_components/MoCompactCard";
 import MoInspectionCard from "./_components/MoInspectionCard";
-
-import MobileBottomNav, {
-  type MobileNavItem,
-} from "@/components/layout/mobile-bottom-nav";
 
 type Step = "overview" | "material-list" | "material-detail";
 
@@ -25,7 +25,7 @@ const INITIAL_MATERIALS: IQCMaterial[] = [
     englishName: "Camera Module",
     chinaName: "相机模组",
     qty: 10,
-    upnBarcode: "",
+    upnBarcode: "abc",
     status: null,
     notes: "",
     photoName: "",
@@ -36,7 +36,7 @@ const INITIAL_MATERIALS: IQCMaterial[] = [
     englishName: "Battery cover AC175",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
-    upnBarcode: "",
+    upnBarcode: "abc",
     status: null,
     notes: "",
     photoName: "",
@@ -47,7 +47,7 @@ const INITIAL_MATERIALS: IQCMaterial[] = [
     englishName: "Battery cover AC175",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
-    upnBarcode: "",
+    upnBarcode: "abc",
     status: null,
     notes: "",
     photoName: "",
@@ -58,7 +58,7 @@ const INITIAL_MATERIALS: IQCMaterial[] = [
     englishName: "Battery cover AC175",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
-    upnBarcode: "",
+    upnBarcode: "abc",
     status: null,
     notes: "",
     photoName: "",
@@ -69,7 +69,7 @@ const INITIAL_MATERIALS: IQCMaterial[] = [
     englishName: "Battery cover AC175",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
-    upnBarcode: "",
+    upnBarcode: "abc",
     status: null,
     notes: "",
     photoName: "",
@@ -80,7 +80,7 @@ const INITIAL_MATERIALS: IQCMaterial[] = [
     englishName: "Battery cover AC175",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
-    upnBarcode: "",
+    upnBarcode: "abc",
     status: null,
     notes: "",
     photoName: "",
@@ -92,19 +92,21 @@ export default function IQCPage({
 }: {
   params: Promise<{ moId: string }>;
 }) {
-const { moId } = use(params);
+  const { moId } = use(params);
   const { t } = useI18n();
+
   const [step, setStep] = useState<Step>("overview");
-  const [activeNav, setActiveNav] =
-  useState<MobileNavItem>("verification");
+  const [activeNav, setActiveNav] = useState<MobileNavItem>("verification");
   const [materials, setMaterials] = useState<IQCMaterial[]>(INITIAL_MATERIALS);
-  const [selectedMaterialId, setSelectedMaterialId] = useState<string | null>(null);
+  const [selectedMaterialId, setSelectedMaterialId] = useState<string | null>(
+    null,
+  );
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const moData = {
-   moNumber: moId || "MO-321654987",
+    moNumber: moId || "MO-321654987",
     submittedAt: "2026-09-02 09:05",
     returnId: "RC-20260831-002",
     model: "Latte-M",
@@ -113,7 +115,20 @@ const { moId } = use(params);
 
   const selectedMaterial =
     materials.find((material) => material.id === selectedMaterialId) ?? null;
-  const inspectedCount = materials.filter((material) => material.status !== null).length;
+
+  const inspectedCount = materials.filter(
+    (material) => material.status !== null,
+  ).length;
+
+  /** The form flow gets the full screen; the nav stays on top-level screens. */
+  const showBottomNav = step !== "material-detail";
+
+  const bottomPadding =
+    step === "material-list"
+      ? "pb-[calc(var(--bottom-nav-h)+88px)]" // sticky submit + nav
+      : step === "material-detail"
+        ? "pb-[calc(env(safe-area-inset-bottom,0px)+88px)]" // sticky save
+        : "pb-[calc(var(--bottom-nav-h)+24px)]"; // nav only
 
   function handleOpenInspection() {
     setStep("material-list");
@@ -127,8 +142,8 @@ const { moId } = use(params);
   function handleSaveMaterial(updatedMaterial: IQCMaterial) {
     setMaterials((current) =>
       current.map((material) =>
-        material.id === updatedMaterial.id ? updatedMaterial : material
-      )
+        material.id === updatedMaterial.id ? updatedMaterial : material,
+      ),
     );
     setSelectedMaterialId(null);
     setStep("material-list");
@@ -146,11 +161,11 @@ const { moId } = use(params);
   }
 
   return (
-    <main className="relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray">
-      {/* Original IQC / Staff Return decorative background */}
+    <main className="relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray antialiased">
+      {/* Decorative background */}
       <section
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-[var(--mobile-header-h)] h-[255px] overflow-hidden"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[255px] overflow-hidden"
       >
         <div className="absolute -left-[90px] -top-[80px] h-[270px] w-[620px] rounded-[50%] bg-[#d8f4e2]" />
         <div className="absolute -left-[100px] top-[80px] h-[190px] w-[620px] rounded-[50%] bg-[#effbf3]" />
@@ -158,12 +173,16 @@ const { moId } = use(params);
 
       <MobileHeader />
 
-      <section className="relative z-10 mx-auto w-full max-w-[412px] px-4 pb-8 pt-[calc(var(--mobile-header-h)+1.25rem)]">
+      <section
+        className={`relative z-10 mx-auto w-full max-w-[412px] px-4 pt-[calc(var(--mobile-header-h)+0.75rem)] ${bottomPadding}`}
+      >
+        {/* Overview */}
         {step === "overview" && (
           <>
-            <h1 className="mb-5 text-[20px] font-semibold leading-[150%] text-text-colortext-black">
-              {t("iqc.title")}
-            </h1>
+            <div className="mb-3">
+              <BackTitle title={t("iqc.title")} />
+            </div>
+
             <MoInspectionCard
               moNumber={moData.moNumber}
               submittedAt={moData.submittedAt}
@@ -176,33 +195,24 @@ const { moId } = use(params);
           </>
         )}
 
+        {/* Material list */}
         {step === "material-list" && (
           <>
-            <div className="mb-3 flex items-center justify-between gap-3">
-              <h1 className="text-[20px] font-semibold leading-[150%] text-text-colortext-black">
-                {t("iqc.title")}
-              </h1>
-              <button
-                type="button"
-                onClick={() => setStep("overview")}
-                className="flex h-9 items-center gap-1.5 rounded-md bg-backgroundbg-white px-3 text-sm font-medium text-slate-700 transition-colors hover:bg-backgroundbg-gray"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                {t("common.back")}
-              </button>
-            </div>
-
-            <MoInspectionCard
-              moNumber={moData.moNumber}
-              submittedAt={moData.submittedAt}
-              returnId={moData.returnId}
-              model={moData.model}
-              inspectedCount={inspectedCount}
-              totalMaterials={moData.totalMaterials}
-              onClick={() => undefined}
+            <BackTitle
+              title={t("iqc.title")}
+              onBack={() => setStep("overview")}
+              backLabel={t("common.back")}
             />
 
-            <div className="mt-5">
+            <div className="mt-3">
+              <MoCompactCard
+                moNumber={moData.moNumber}
+                model={moData.model}
+                returnId={moData.returnId}
+              />
+            </div>
+
+            <div className="mt-4">
               <MaterialInspectionList
                 materials={materials}
                 onSelectMaterial={handleSelectMaterial}
@@ -213,31 +223,27 @@ const { moId } = use(params);
           </>
         )}
 
+        {/* Material detail */}
         {step === "material-detail" && selectedMaterial && (
-          <>
-            <MoSummaryCardFallback
-              moNumber={moData.moNumber}
-              submittedAt={moData.submittedAt}
-              returnId={moData.returnId}
-              model={moData.model}
-              inspectedCount={inspectedCount}
-              totalMaterials={moData.totalMaterials}
-            />
-            <div className="mt-5">
-              <MaterialInspectionForm
-                material={selectedMaterial}
-                onBack={handleBackToList}
-                onSave={handleSaveMaterial}
-              />
-            </div>
-          </>
+          <MaterialInspectionForm
+            key={selectedMaterial.id}
+            material={selectedMaterial}
+            moNumber={moData.moNumber}
+            model={moData.model}
+            returnId={moData.returnId}
+            onBack={handleBackToList}
+            onSave={handleSaveMaterial}
+          />
         )}
       </section>
 
       <InspectionModal
         open={showSubmitModal}
         title={t("iqc.modal.submitTitle")}
-        description={t("iqc.modal.submitDescription", { count: materials.length, mo: moData.moNumber })}
+        description={t("iqc.modal.submitDescription", {
+          count: materials.length,
+          mo: moData.moNumber,
+        })}
         confirmLabel={t("common.submit")}
         onCancel={() => setShowSubmitModal(false)}
         onConfirm={handleConfirmSubmit}
@@ -252,75 +258,28 @@ const { moId } = use(params);
         success
       />
 
-      <MobileBottomNav
-  activeItem={activeNav}
-  onNavigate={(item) => {
-    setActiveNav(item);
+      {showBottomNav && (
+        <MobileBottomNav
+          activeItem={activeNav}
+          onNavigate={(item) => {
+            setActiveNav(item);
 
-    switch (item) {
-      case "identity":
-        setStep("overview");
-        break;
+            switch (item) {
+              case "identity":
+                setStep("overview");
+                break;
 
-      case "verification":
-        setStep("material-list");
-        break;
+              case "verification":
+                setStep("material-list");
+                break;
 
-      case "history":
-        // History screen will be connected here.
-        break;
-    }
-  }}
-/>
+              case "history":
+                // History screen will be connected here.
+                break;
+            }
+          }}
+        />
+      )}
     </main>
-  );
-}
-
-function MoSummaryCardFallback({
-  moNumber,
-  submittedAt,
-  returnId,
-  model,
-  inspectedCount,
-  totalMaterials,
-}: {
-  moNumber: string;
-  submittedAt: string;
-  returnId: string;
-  model: string;
-  inspectedCount: number;
-  totalMaterials: number;
-}) {
-  const { t } = useI18n();
-  const progress = Math.round((inspectedCount / totalMaterials) * 100);
-
-  return (
-    <section className="w-full rounded-lg border border-strokestroke-gray bg-backgroundbg-white shadow-none">
-      <div className="p-4">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h2 className="text-[16px] font-semibold leading-[150%] text-text-colortext-black">
-              {moNumber}
-            </h2>
-            <p className="mt-1 text-[14px] font-medium leading-[125%] text-text-colortext-gray">
-              {t("common.submittedAt", { date: submittedAt })}
-            </p>
-          </div>
-          <span className="text-[14px] font-medium text-text-colortext-gray">
-            {progress}%
-          </span>
-        </div>
-        <dl className="mt-4 grid grid-cols-2 gap-4 border-b border-strokestroke-gray pb-4">
-          <div>
-            <dt className="text-[14px] text-text-colortext-dark">{t("common.returnId")}</dt>
-            <dd className="mt-1 break-words text-[16px] font-medium text-text-colortext-black">{returnId}</dd>
-          </div>
-          <div>
-            <dt className="text-[14px] text-text-colortext-dark">{t("common.model")}</dt>
-            <dd className="mt-1 text-[16px] font-medium text-text-colortext-black">{model}</dd>
-          </div>
-        </dl>
-      </div>
-    </section>
   );
 }

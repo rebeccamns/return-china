@@ -3,6 +3,10 @@
 import { useEffect, useState } from "react";
 import { Check, ScanLine, X } from "lucide-react";
 
+import {
+  primaryButton,
+  secondaryButton,
+} from "@/components/layout/StickyActionBar";
 import { useI18n } from "@/i18n";
 
 import type { StickerCarton } from "./StickerCartonList";
@@ -42,22 +46,26 @@ export default function StickerScanModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-6">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 px-4 py-6 backdrop-blur-[2px]"
+      onClick={onClose}
+    >
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="sticker-scan-title"
-        className="w-full max-w-[380px] rounded-2xl bg-white p-5 shadow-xl"
+        onClick={(event) => event.stopPropagation()}
+        className="w-full max-w-[380px] rounded-3xl border border-strokestroke-gray bg-backgroundbg-white p-4 shadow-[0_8px_30px_rgba(0,0,0,0.18)]"
       >
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
-            <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-[#E6F4EA]">
-              <ScanLine className="h-5 w-5 text-[#075D32]" />
+            <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#E7F5EC]">
+              <ScanLine className="h-4 w-4 text-[#006B3C]" />
             </div>
-            <h2 id="sticker-scan-title" className="text-lg font-semibold">
+            <h2 id="sticker-scan-title" className="text-[16px] font-semibold leading-6 text-text-colortext-black">
               {t("staffReturnSticker.scanModal.title")}
             </h2>
-            <p className="mt-1 text-sm text-[#777777]">
+            <p className="mt-1 text-[13px] leading-[18px] text-text-colortext-gray">
               {t("staffReturnSticker.scanModal.cartonLabel", { code: carton.code })}
             </p>
           </div>
@@ -65,19 +73,19 @@ export default function StickerScanModal({
             type="button"
             onClick={onClose}
             aria-label={t("staffReturnSticker.scanModal.closeDialog")}
-            className="rounded-md p-1 text-[#8F8F8E] hover:bg-[#F5F5F5]"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-text-colortext-gray transition active:scale-[0.98] hover:bg-backgroundbg-gray focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green"
           >
-            <X className="h-5 w-5" />
+            <X className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
 
-        <p className="text-sm leading-6 text-[#666666]">
+        <p className="text-[13px] leading-[18px] text-text-colortext-dark">
           {t("staffReturnSticker.scanModal.description")}
         </p>
 
         <label
           htmlFor="carton-sticker-code"
-          className="mb-1.5 mt-5 block text-sm font-medium text-[#444444]"
+          className="mb-1.5 mt-4 block text-[12px] font-medium leading-4 text-text-colortext-dark"
         >
           {t("staffReturnSticker.scanModal.codeLabel")}
         </label>
@@ -93,34 +101,34 @@ export default function StickerScanModal({
             if (event.key === "Enter") verifySticker();
           }}
           placeholder={t("staffReturnSticker.scanModal.codePlaceholder")}
-          className="h-11 w-full rounded-lg border border-[#D5D5D3] bg-white px-3 text-sm outline-none focus:border-[#007A3D] focus:ring-2 focus:ring-[#007A3D]/15"
+          className="h-12 w-full rounded-xl border border-strokestroke-gray bg-backgroundbg-white px-3 text-[16px] text-text-colortext-black outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green"
         />
 
         {error && (
-          <p role="alert" className="mt-2 text-xs leading-5 text-red-600">
+          <p role="alert" className="mt-2 text-[12px] font-medium leading-4 text-text-colortext-red">
             {error}
           </p>
         )}
 
-        <div className="mt-4 flex items-start gap-2 rounded-lg bg-[#F6F8F6] p-3">
-          <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#007A3D]" />
-          <p className="text-xs leading-5 text-[#666666]">
+        {/* <div className="mt-4 flex items-start gap-2 rounded-2xl bg-[#E7F5EC] p-4">
+          <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#006B3C]" />
+          <p className="text-[13px] leading-[18px] text-[#006B3C]">
             {t("staffReturnSticker.scanModal.prototypeNote")}
           </p>
-        </div>
+        </div> */}
 
-        <div className="mt-5 grid grid-cols-2 gap-3">
+        <div className="mt-4 grid grid-cols-2 gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="h-11 rounded-lg border border-[#DDDDDD] text-sm font-medium text-[#444444] hover:bg-[#F8F8F8]"
+            className={`${secondaryButton} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green`}
           >
             {t("common.cancel")}
           </button>
           <button
             type="button"
             onClick={verifySticker}
-            className="h-11 rounded-lg bg-[#007A3D] text-sm font-semibold text-white hover:bg-[#006532]"
+            className={`${primaryButton} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green`}
           >
             {t("staffReturnSticker.scanModal.verify")}
           </button>

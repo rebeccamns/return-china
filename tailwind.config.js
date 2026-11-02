@@ -201,16 +201,8 @@ export default {
         "inter-xs-medium-xs": "var(--inter-xs-medium-xs-font-family)",
         "inter-xs-regular-xs": "var(--inter-xs-regular-xs-font-family)",
         "inter-xs-semibold-xs": "var(--inter-xs-semibold-xs-font-family)",
-        mono: "var(--mono-font-family)",
-        sans: [
-          "ui-sans-serif",
-          "system-ui",
-          "sans-serif",
-          '"Apple Color Emoji"',
-          '"Segoe UI Emoji"',
-          '"Segoe UI Symbol"',
-          '"Noto Color Emoji"',
-        ],
+        mono: "var(--app-font-family)",
+        sans: "var(--app-font-family)",
       },
       borderRadius: {
         lg: "var(--radius)",

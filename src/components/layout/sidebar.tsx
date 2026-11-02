@@ -156,10 +156,10 @@ export default function Sidebar({
           </div>
 
           <div className="flex min-w-0 flex-col justify-center">
-            <span className="font-['Inter-Medium',Helvetica] text-[10px] font-medium leading-[10px] text-text-colortext-black">
+            <span className="font-sans text-[10px] font-medium leading-[10px] text-text-colortext-black">
               Indonesia
             </span>
-            <span className="whitespace-nowrap font-['Inter-Medium',Helvetica] text-[10px] font-medium leading-5 text-text-colortext-black">
+            <span className="whitespace-nowrap font-sans text-[10px] font-medium leading-5 text-text-colortext-black">
               Manufacturing
             </span>
           </div>

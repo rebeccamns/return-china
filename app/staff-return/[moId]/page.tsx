@@ -227,11 +227,11 @@ export default function StaffReturnPage({
   }
 
   return (
-    <main className="relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray font-[family-name:-apple-system,BlinkMacSystemFont,system-ui,Inter,sans-serif] antialiased">
+    <main className="relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray antialiased">
       {/* Green decorative background */}
       <section
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-[var(--mobile-header-h)] h-[255px] overflow-hidden"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[255px] overflow-hidden"
       >
         <div className="absolute -left-[90px] -top-[80px] h-[270px] w-[620px] rounded-[50%] bg-[#d8f4e2]" />
         <div className="absolute -left-[100px] top-[80px] h-[190px] w-[620px] rounded-[50%] bg-[#effbf3]" />

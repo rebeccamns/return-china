@@ -45,15 +45,10 @@ export default function MobileBottomNav({
   return (
     <nav
       aria-label="Mobile navigation"
-      className="fixed inset-x-0 bottom-0 z-40 bg-white/90 pb-[env(safe-area-inset-bottom,0px)] backdrop-blur-xl"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-black/[0.06] bg-white/70 pb-[env(safe-area-inset-bottom,0px)] backdrop-blur-xl backdrop-saturate-150 supports-[not_(backdrop-filter:blur(1px))]:bg-white"
     >
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 border-t border-strokestroke-gray"
-      />
       <div
-        className="mx-auto flex w-full max-w-[412px] items-center px-2"
-        style={{ height: "var(--bottom-nav-content-h)" }}
+        className="mx-auto flex h-[var(--bottom-nav-content-h)] w-full max-w-[412px] items-center px-2"
       >
         {items.map((item) => {
           const Icon = item.icon;
@@ -65,29 +60,23 @@ export default function MobileBottomNav({
               type="button"
               onClick={() => onNavigate(item.id)}
               aria-current={active ? "page" : undefined}
-              className={`flex min-h-11 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-xl transition-transform active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green focus-visible:ring-offset-1 md:hover:bg-slate-50 ${
-                active
-                  ? "text-text-colortext-green"
-                  : "text-text-colortext-gray md:hover:text-text-colortext-dark"
-              }`}
+              className="group flex h-full min-h-11 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 [-webkit-tap-highlight-color:transparent] focus-visible:outline-none"
             >
               <span
-                className={`flex h-7 w-12 items-center justify-center rounded-full transition-colors duration-200 ${
-                  active ? "bg-[#E7F5EC]" : "bg-transparent"
+                className={`flex h-10 w-10 aspect-square shrink-0 items-center justify-center rounded-full transition-[background-color,transform] duration-200 group-active:scale-90 group-focus-visible:ring-2 group-focus-visible:ring-primaryprimary-green motion-reduce:transition-none motion-reduce:group-active:scale-100 ${
+                  active
+                    ? "bg-[#E7F5EC] text-[#006B3C]"
+                    : "bg-transparent text-text-colortext-gray group-active:bg-backgroundbg-gray md:group-hover:bg-backgroundbg-gray md:group-hover:text-text-colortext-dark"
                 }`}
               >
                 <Icon
-                  className={`h-6 w-6 ${
-                    active
-                      ? "text-text-colortext-green"
-                      : "text-text-colortext-gray"
-                  }`}
+                  className="h-6 w-6"
                   strokeWidth={active ? 2 : 1.7}
                   aria-hidden="true"
                 />
               </span>
               <span
-                className={`block max-w-full truncate whitespace-nowrap text-[11px] leading-[14px] ${
+                className={`max-w-full truncate whitespace-nowrap text-[11px] leading-[14px] ${
                   active
                     ? "font-semibold text-text-colortext-green"
                     : "font-medium text-text-colortext-gray"

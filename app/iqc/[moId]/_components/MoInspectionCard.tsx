@@ -33,69 +33,68 @@ export default function MoInspectionCard({
     <button
       type="button"
       onClick={onClick}
-      className="w-full rounded-xl border border-strokestroke-gray bg-backgroundbg-white p-4 text-left transition-colors hover:bg-backgroundbg-gray"
+      className="w-full rounded-2xl border border-strokestroke-gray bg-backgroundbg-white p-4 text-left transition active:bg-backgroundbg-gray"
     >
-      {/* MO Header */}
+      {/* MO header */}
       <div className="flex items-start justify-between gap-3">
-        <div>
-          <h2 className="text-[16px] font-semibold leading-[125%] text-text-colortext-black">
+        <div className="min-w-0">
+          <h2 className="truncate text-[16px] font-semibold leading-6 text-text-colortext-black">
             {moNumber}
           </h2>
 
-          <p className="mt-1 text-[14px] font-medium leading-[125%] text-text-colortext-gray">
+          <p className="mt-0.5 text-[12px] leading-4 text-text-colortext-gray">
             {t("common.submittedAt", { date: submittedAt })}
           </p>
         </div>
 
         <ChevronRight
-          className="mt-1 h-7 w-7 shrink-0 text-text-colortext-gray"
+          className="mt-0.5 h-5 w-5 shrink-0 text-[#C4C4C4]"
           strokeWidth={2}
         />
       </div>
 
-      {/* MO Information */}
-      <div className="mt-4 grid grid-cols-2 gap-3">
+      {/* MO information */}
+      <dl className="mt-4 grid grid-cols-2 gap-4">
         <div>
-          <p className="text-[14px] font-medium leading-[125%] text-text-colortext-dark">
+          <dt className="text-[12px] leading-4 text-text-colortext-gray">
             {t("common.returnId")}
-          </p>
-
-          <p className="text-[16px] font-medium leading-[125%] text-text-colortext-black">
+          </dt>
+          <dd className="mt-1 break-words text-[15px] font-medium leading-5 text-text-colortext-black">
             {returnId}
-          </p>
+          </dd>
         </div>
 
         <div>
-          <p className="text-[14px] font-medium leading-[125%] text-text-colortext-dark">
+          <dt className="text-[12px] leading-4 text-text-colortext-gray">
             {t("common.model")}
-          </p>
-
-          <p className="mt-1 text-[16px] font-medium leading-[125%] text-text-colortext-black">
+          </dt>
+          <dd className="mt-1 text-[15px] font-medium leading-5 text-text-colortext-black">
             {model}
-          </p>
+          </dd>
         </div>
-      </div>
-
-      {/* Divider */}
-      <div className="my-4 h-px bg-strokestroke-gray" />
+      </dl>
 
       {/* Progress */}
-      <div className="flex items-center justify-between">
-        <p className="text-[14px] font-medium leading-[150%] text-text-colortext-gray">
-          {t("iqc.materialInspected", { inspected: inspectedCount, total: totalMaterials })}
-        </p>
+      <div className="mt-4 rounded-xl bg-slate-50 p-3">
+        <div className="flex items-center justify-between">
+          <p className="text-[13px] leading-[18px] text-text-colortext-gray">
+            {t("iqc.materialInspected", {
+              inspected: inspectedCount,
+              total: totalMaterials,
+            })}
+          </p>
 
-        <p className="text-[14px] font-medium leading-[150%] text-text-colortext-gray">
-          {progress}%
-        </p>
-      </div>
+          <p className="text-[13px] font-semibold leading-[18px] text-text-colortext-black">
+            {progress}%
+          </p>
+        </div>
 
-      {/* Progress bar */}
-      <div className="mt-2 h-4 overflow-hidden rounded-full bg-[#E5E5E5]">
-        <div
-          className="h-full rounded-full bg-primaryprimary-green transition-all"
-          style={{ width: `${progress}%` }}
-        />
+        <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#E6E6E6]">
+          <div
+            className="h-full rounded-full bg-[#008348] transition-all duration-300"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
       </div>
     </button>
   );

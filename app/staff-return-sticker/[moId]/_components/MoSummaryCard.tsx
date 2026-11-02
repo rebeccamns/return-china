@@ -43,64 +43,64 @@ export default function MoSummaryCard({
       ? Math.min(100, Math.round((scannedCount / totalCartons) * 100))
       : 0;
 
-const toggleExpanded = () => {
-  const next = !expanded;
+  const toggleExpanded = () => {
+    const next = !expanded;
 
-  setExpanded(next);
-  onExpandedChange?.(next);
-};
+    setExpanded(next);
+    onExpandedChange?.(next);
+  };
 
   return (
-    <section className="w-full rounded-lg border border-strokestroke-gray bg-backgroundbg-white shadow-none">
+    <section className="w-full rounded-2xl border border-strokestroke-gray bg-backgroundbg-white shadow-none">
       <button
         type="button"
         onClick={toggleExpanded}
         aria-expanded={expanded}
-        className="flex w-full items-start justify-between gap-3 p-4 text-left"
+        className="flex min-h-[60px] w-full items-center justify-between gap-3 p-4 text-left transition active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green"
       >
         <div className="min-w-0">
-          <h2 className="break-words text-[16px] font-semibold leading-[150%] text-text-colortext-black">
+          <span className="block break-words text-[16px] font-semibold leading-6 text-text-colortext-black">
             {moNumber}
-          </h2>
+          </span>
 
-          <p className="mt-1 text-[14px] font-medium leading-[125%] text-text-colortext-gray">
+          <p className="mt-0.5 text-[12px] font-medium leading-4 text-text-colortext-gray">
             {t("common.submittedAt", { date: submittedAt })}
           </p>
         </div>
 
         {expanded ? (
-          <ChevronDown className="mt-1 h-5 w-5 shrink-0 text-text-colortext-gray" />
+          <ChevronDown className="h-5 w-5 shrink-0 text-text-colortext-gray" />
         ) : (
-          <ChevronRight className="mt-1 h-5 w-5 shrink-0 text-text-colortext-gray" />
+          <ChevronRight className="h-5 w-5 shrink-0 text-text-colortext-gray" />
         )}
       </button>
 
       {expanded && (
         <div className="px-4 pb-4">
-          <dl className="grid grid-cols-2 gap-4 border-b border-strokestroke-gray pb-4">
+          <dl className="grid grid-cols-2 gap-4 border-t border-strokestroke-gray pt-4">
             <div className="flex min-w-0 flex-col gap-1">
-              <dt className="text-[14px] font-medium leading-[125%] text-text-colortext-dark">
+              <dt className="text-[12px] font-medium leading-4 text-text-colortext-dark">
                 {t("common.returnId")}
               </dt>
-              <dd className="break-words text-[16px] font-medium leading-[125%] text-text-colortext-black">
+              <dd className="break-words text-[15px] font-medium leading-5 text-text-colortext-black">
                 {returnId}
               </dd>
             </div>
 
             <div className="flex min-w-0 flex-col gap-1">
-              <dt className="text-[14px] font-medium leading-[125%] text-text-colortext-dark">
+              <dt className="text-[12px] font-medium leading-4 text-text-colortext-dark">
                 {t("common.model")}
               </dt>
-              <dd className="break-words text-[16px] font-medium leading-[125%] text-text-colortext-black">
+              <dd className="break-words text-[15px] font-medium leading-5 text-text-colortext-black">
                 {model}
               </dd>
             </div>
 
             <div className="col-span-2 flex min-w-0 flex-col gap-1">
-              <dt className="text-[14px] font-medium leading-[125%] text-text-colortext-dark">
+              <dt className="text-[12px] font-medium leading-4 text-text-colortext-dark">
                 {t("common.wo")}
               </dt>
-              <dd className="break-words text-[16px] font-medium leading-[125%] text-text-colortext-black">
+              <dd className="break-words text-[15px] font-semibold leading-5 text-text-colortext-black">
                 {wo}
               </dd>
             </div>
@@ -111,10 +111,10 @@ const toggleExpanded = () => {
       {showScanProgress && (
         <div className="px-4 pb-4">
           <div className="mb-3 flex items-center justify-between gap-3">
-            <span className="text-[14px] font-medium leading-[125%] text-text-colortext-gray">
+            <span className="text-[12px] font-medium leading-4 text-text-colortext-gray">
               {t("staffReturnSticker.stickersScanned", { scanned: scannedCount, total: totalCartons })}
             </span>
-            <span className="text-[14px] font-medium leading-[125%] text-text-colortext-gray">
+            <span className="text-[12px] font-medium leading-4 text-text-colortext-gray">
               {progress}%
             </span>
           </div>
@@ -125,7 +125,7 @@ const toggleExpanded = () => {
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={progress}
-            className="h-2.5 overflow-hidden rounded-full bg-[#E7E7E7]"
+            className="h-2 overflow-hidden rounded-full bg-backgroundbg-gray"
           >
             <div
               className="h-full rounded-full bg-primaryprimary-green transition-all duration-300"
@@ -134,7 +134,7 @@ const toggleExpanded = () => {
           </div>
 
           {totalCartons > 0 && scannedCount >= totalCartons && (
-            <div className="mt-3 flex items-center gap-2 text-sm font-medium text-primaryprimary-green">
+            <div className="mt-3 flex items-center gap-2 text-[13px] font-medium leading-[18px] text-primaryprimary-green">
               <Check className="h-4 w-4" />
               {t("staffReturnSticker.allScanned")}
             </div>
@@ -147,7 +147,7 @@ const toggleExpanded = () => {
           <button
             type="button"
             onClick={onCreatePackingList}
-            className="h-10 w-full rounded-md bg-[linear-gradient(0deg,rgba(11,89,52,1)_0%,rgba(5,131,70,1)_100%)] px-3 text-[12px] font-semibold leading-[125%] text-white shadow-none hover:opacity-90"
+            className="h-12 w-full rounded-[14px] bg-[linear-gradient(0deg,rgba(11,89,52,1)_0%,rgba(5,131,70,1)_100%)] px-4 text-[15px] font-semibold text-white shadow-none transition active:scale-[0.98] hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green"
           >
             {t("staffReturn.createPackingList")}
           </button>

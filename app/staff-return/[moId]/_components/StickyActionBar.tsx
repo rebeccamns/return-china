@@ -23,7 +23,7 @@ export default function StickyActionBar({
 }: StickyActionBarProps) {
   return (
     <div
-      className="fixed inset-x-0 z-30 border-t border-strokestroke-gray bg-white/90 backdrop-blur-xl"
+      className="fixed inset-x-0 z-30 border-t border-black/[0.06] bg-white/80 backdrop-blur-xl backdrop-saturate-150 supports-[not_(backdrop-filter:blur(1px))]:bg-white"
       style={{
         bottom: aboveNav ? "var(--bottom-nav-h)" : 0,
         paddingBottom: aboveNav ? 0 : "env(safe-area-inset-bottom, 0px)",

@@ -35,8 +35,8 @@ export default function MobileHeader({
   }
 
   return (
-    <header className="fixed inset-x-0 top-0 z-20 w-full bg-white/90 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
-      <div className="flex h-14 items-center justify-between gap-2 border-b border-strokestroke-gray px-5">
+    <header className="fixed inset-x-0 top-0 z-20 w-full border-b border-black/[0.06] bg-white/70 pt-[env(safe-area-inset-top)] backdrop-blur-xl backdrop-saturate-150 supports-[not_(backdrop-filter:blur(1px))]:bg-white">
+      <div className="flex h-14 items-center justify-between gap-2 px-5">
         <div className="flex min-w-0 items-center gap-2">
           <img
             src="/oppo-logo.png"

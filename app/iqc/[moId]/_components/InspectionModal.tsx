@@ -1,7 +1,8 @@
 "use client";
 
-import { CheckCircle2, X } from "lucide-react";
+import { CheckCircle2, ClipboardCheck } from "lucide-react";
 
+import { primaryButton, secondaryButton } from "@/components/layout/StickyActionBar";
 import { useI18n } from "@/i18n";
 
 type Props = {
@@ -14,6 +15,7 @@ type Props = {
   success?: boolean;
 };
 
+/** Bottom sheet on mobile, centered dialog from sm and up. */
 export default function InspectionModal({
   open,
   title,
@@ -31,35 +33,65 @@ export default function InspectionModal({
   const resolvedDescription = description ?? t("iqc.modal.defaultDescription");
   const resolvedConfirmLabel = confirmLabel ?? t("common.submit");
 
+  const Icon = success ? CheckCircle2 : ClipboardCheck;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-0 sm:items-center sm:p-4">
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center sm:p-4"
+      onClick={onCancel}
+    >
       <section
         role="dialog"
         aria-modal="true"
         aria-labelledby="iqc-modal-title"
-        className="w-full max-w-[412px] rounded-t-xl border border-strokestroke-gray bg-backgroundbg-white p-5 shadow-lg sm:rounded-xl"
+        onClick={(event) => event.stopPropagation()}
+        className="w-full max-w-[412px] rounded-t-3xl bg-backgroundbg-white px-5 pt-3 shadow-lg sm:rounded-3xl sm:pb-5"
+        style={{ paddingBottom: "max(20px, env(safe-area-inset-bottom, 0px))" }}
       >
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <CheckCircle2 className="h-5 w-5 shrink-0 text-primaryprimary-green" />
-            <h2 id="iqc-modal-title" className="text-[16px] font-semibold text-text-colortext-black">
-              {resolvedTitle}
-            </h2>
-          </div>
-          <button type="button" onClick={onCancel} aria-label={t("iqc.modal.closeDialog")} className="rounded-md p-1 text-text-colortext-gray hover:bg-backgroundbg-gray">
-            <X className="h-5 w-5" />
-          </button>
+        {/* Grabber */}
+        <div
+          aria-hidden="true"
+          className="mx-auto mb-4 h-1 w-9 rounded-full bg-[#D9D9D9] sm:hidden"
+        />
+
+        <div className="flex flex-col items-center text-center">
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E7F5EC]">
+            <Icon
+              className="h-7 w-7 text-primaryprimary-green"
+              strokeWidth={1.8}
+            />
+          </span>
+
+          <h2
+            id="iqc-modal-title"
+            className="mt-4 text-[18px] font-semibold leading-6 text-text-colortext-black"
+          >
+            {resolvedTitle}
+          </h2>
+
+          <p className="mt-1.5 text-[14px] leading-5 text-text-colortext-gray">
+            {resolvedDescription}
+          </p>
         </div>
-        <p className="mt-3 text-[14px] leading-5 text-text-colortext-gray">{resolvedDescription}</p>
-        <div className="mt-6 grid grid-cols-2 gap-3">
-          <button type="button" onClick={onCancel} className="h-11 rounded-md border border-strokestroke-gray bg-white text-[14px] font-semibold text-text-colortext-dark hover:bg-backgroundbg-gray">
-            {success ? t("common.close") : t("common.cancel")}
-          </button>
+
+        <div className="mt-6 flex flex-col gap-2">
           {!success && (
-            <button type="button" onClick={onConfirm} className="h-11 rounded-md bg-[linear-gradient(0deg,rgba(11,89,52,1)_0%,rgba(5,131,70,1)_100%)] text-[14px] font-semibold text-white hover:opacity-90">
+            <button
+              type="button"
+              onClick={onConfirm}
+              className={`${primaryButton} w-full`}
+            >
               {resolvedConfirmLabel}
             </button>
           )}
+
+          <button
+            type="button"
+            onClick={onCancel}
+            className={`${success ? primaryButton : secondaryButton} w-full`}
+          >
+            {success ? t("common.close") : t("common.cancel")}
+          </button>
         </div>
       </section>
     </div>

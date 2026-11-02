@@ -420,7 +420,7 @@ export default function MoTable({ mos, onIntervene }: Props) {
                         )}
                       </button>
                     </td>
-                    <td className="px-4 py-3 font-mono text-xs text-gray-700">
+                    <td className="px-4 py-3 font-sans text-xs text-gray-700">
                       {mo.moCode}
                     </td>
                     <td className="px-4 py-3 text-gray-700">{mo.model}</td>
@@ -521,4 +521,3 @@ export default function MoTable({ mos, onIntervene }: Props) {
     </div>
   );
 }
-

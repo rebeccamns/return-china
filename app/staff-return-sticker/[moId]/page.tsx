@@ -4,6 +4,14 @@
 import { use, useMemo, useState } from "react";
 import { Check } from "lucide-react";
 import MobileHeader from "@/components/layout/mobile-header";
+import MobileBottomNav, {
+  STAFF_RETURN_ITEMS,
+} from "@/components/layout/mobile-bottom-nav";
+import BackTitle from "@/components/layout/BackTitle";
+import StickyActionBar, {
+  primaryButton,
+  secondaryButton,
+} from "@/components/layout/StickyActionBar";
 import { useI18n } from "@/i18n";
 import MoSummaryCard from "./_components/MoSummaryCard";
 
@@ -44,6 +52,9 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
 
   const allScanned =
     cartons.length > 0 && scannedCount === cartons.length;
+  const bottomPadding = showCartonList
+    ? "pb-[calc(var(--bottom-nav-h)+88px)]"
+    : "pb-[calc(var(--bottom-nav-h)+24px)]";
 
   function markStickerScanned(cartonId: string) {
     setCartons((current) =>
@@ -65,90 +76,100 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
   }
 
   return (
-    <main className="relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray">
+    <main className="relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray ">
+      <section
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[255px] overflow-hidden"
+      >
+        <div className="absolute -left-[90px] -top-[80px] h-[270px] w-[620px] rounded-[50%] bg-[#d8f4e2]" />
+        <div className="absolute -left-[100px] top-[80px] h-[190px] w-[620px] rounded-[50%] bg-[#effbf3]" />
+      </section>
+
       <MobileHeader />
 
-      <section className="relative z-10 mx-auto min-h-[calc(100vh-90px)] w-full max-w-[412px] px-4 pb-8 pt-[calc(var(--mobile-header-h)+7rem)]">
-        {/* Soft green background matching the existing Staff Return flow */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-[390px] bg-gradient-to-br from-[#C8F1D8] via-[#E4F8EC] to-[#F8FCF9]"
+      <section
+        className={`relative z-10 mx-auto w-full max-w-[412px] px-5 pt-[calc(var(--mobile-header-h)+1.25rem)] ${bottomPadding}`}
+      >
+        <div className="mb-3">
+          <BackTitle title={t("staffReturn.title")} />
+        </div>
+
+        <MoSummaryCard
+          moNumber={moId || "MO-321654987"}
+          scannedCount={scannedCount}
+          totalCartons={cartons.length}
+          showScanProgress
+          onExpandedChange={setShowCartonList}
         />
 
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -left-20 top-[220px] h-[240px] w-[560px] rounded-[50%] bg-[#F7FFFA]"
-        />
+        {showCartonList && (
+          <div className="mt-5">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h2 className="text-[16px] font-semibold leading-6 text-text-colortext-black">
+                {t("staffReturn.cartonList")}
+              </h2>
 
-        <div className="relative mx-auto w-full">
-          <h1 className="mb-4 text-[20px] font-semibold leading-[150%] text-text-colortext-black">
-            {t("staffReturn.title")}
-          </h1>
+              <span className="text-[12px] font-medium leading-4 text-text-colortext-gray">
+                {t(cartons.length === 1 ? "common.cartonSingular" : "common.cartonPlural", { count: cartons.length })}
+              </span>
+            </div>
 
-          {/* Shared MO summary with sticker-scanning progress */}
-          <div className="overflow-hidden rounded-lg border border-strokestroke-gray bg-backgroundbg-white">
-            <MoSummaryCard
-              moNumber={moId || "MO-321654987"}
-              scannedCount={scannedCount}
-              totalCartons={cartons.length}
-              showScanProgress
-              onExpandedChange={setShowCartonList}
+            <StickerCartonList
+              cartons={cartons}
+              onSelect={setActiveCarton}
             />
 
-            {/* Carton list and Submit appear only when the MO card is expanded */}
-            {showCartonList && (
-              <div className="px-4 pb-4">
-                <div className="mb-3 flex items-center justify-between">
-                  <h2 className="text-[16px] font-semibold text-text-colortext-black">
-                    {t("staffReturn.cartonList")}
-                  </h2>
+            {allScanned && !submitted && (
+              <div className="mt-4 flex items-start gap-3 rounded-2xl bg-[#E7F5EC] p-4">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-backgroundbg-white">
+                  <Check className="h-4 w-4 text-[#006B3C]" />
+                </span>
 
-                  <span className="text-xs text-text-colortext-gray">
-                    {t(cartons.length === 1 ? "common.cartonSingular" : "common.cartonPlural", { count: cartons.length })}
-                  </span>
+                <div>
+                  <p className="text-[13px] font-semibold leading-[18px] text-[#006B3C]">
+                    {t("staffReturnSticker.allScanned")}
+                  </p>
+                  <p className="mt-1 text-[13px] leading-[18px] text-text-colortext-dark">
+                    {t("staffReturnSticker.allScannedDescription")}
+                  </p>
                 </div>
-
-                <StickerCartonList
-                  cartons={cartons}
-                  onSelect={setActiveCarton}
-                />
-
-                {allScanned && !submitted && (
-                  <div className="mt-4 flex items-start gap-3 rounded-xl border border-[#CDE9D8] bg-[#F0FAF4] p-3">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#DCEFE4]">
-                      <Check className="h-4 w-4 text-[#075D32]" />
-                    </span>
-
-                    <div>
-                      <p className="text-sm font-semibold text-[#075D32]">
-                        {t("staffReturnSticker.allScanned")}
-                      </p>
-                      <p className="mt-1 text-xs leading-5 text-[#47745A]">
-                        {t("staffReturnSticker.allScannedDescription")}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                <button
-                  type="button"
-                  disabled={!allScanned || submitted}
-                  onClick={() => setShowSubmitConfirm(true)}
-                  className="mt-5 flex h-12 w-full items-center justify-center rounded-lg bg-[linear-gradient(0deg,rgba(11,89,52,1)_0%,rgba(5,131,70,1)_100%)] px-4 text-base font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:bg-none disabled:bg-[#B8B8B8] disabled:text-white"
-                >
-                  {submitted ? t("common.submitted") : t("common.submit")}
-                </button>
               </div>
             )}
-          </div>
 
-          {showCartonList && (
-            <p className="mt-4 px-1 text-center text-xs leading-5 text-[#8F8F8E]">
+            <p className="mt-4 text-center text-[13px] leading-[18px] text-text-colortext-gray">
               {t("staffReturnSticker.scanInstructions")}
             </p>
-          )}
-        </div>
+          </div>
+        )}
+
+        {showCartonList && (
+          <StickyActionBar aboveNav>
+            <button
+              type="button"
+              disabled={!allScanned || submitted}
+              onClick={() => setShowSubmitConfirm(true)}
+              className={`${primaryButton} flex-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green`}
+            >
+              {submitted ? t("common.submitted") : t("common.submit")}
+            </button>
+          </StickyActionBar>
+        )}
       </section>
+
+      <MobileBottomNav
+        items={STAFF_RETURN_ITEMS}
+        activeItem="carton-sticker"
+        onNavigate={(item) => {
+          switch (item) {
+            case "packing-list":
+              window.location.href = `/staff-return/${moId}`;
+              break;
+            case "carton-sticker":
+            case "history":
+              break;
+          }
+        }}
+      />
 
       {/* Sticker scan modal */}
       {activeCarton && (
@@ -161,33 +182,37 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
 
       {/* Submit confirmation */}
       {showSubmitConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-6">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 px-4 py-6 backdrop-blur-[2px]"
+          onClick={() => setShowSubmitConfirm(false)}
+        >
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="submit-sticker-title"
-            className="w-full max-w-[360px] rounded-2xl bg-white p-5 shadow-xl"
+            onClick={(event) => event.stopPropagation()}
+            className="w-full max-w-[360px] rounded-3xl border border-strokestroke-gray bg-backgroundbg-white p-4 shadow-[0_8px_30px_rgba(0,0,0,0.18)]"
           >
-            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-[#E6F4EA]">
-              <Check className="h-5 w-5 text-[#075D32]" />
+            <div className="mb-4 flex h-8 w-8 items-center justify-center rounded-full bg-[#E7F5EC]">
+              <Check className="h-4 w-4 text-[#006B3C]" />
             </div>
 
             <h2
               id="submit-sticker-title"
-              className="text-lg font-semibold"
+              className="text-[16px] font-semibold leading-6 text-text-colortext-black"
             >
               {t("staffReturnSticker.confirm.title")}
             </h2>
 
-            <p className="mt-2 text-sm leading-6 text-[#666666]">
+            <p className="mt-2 text-[13px] leading-[18px] text-text-colortext-dark">
               {t("staffReturnSticker.confirm.description", { count: cartons.length })}
             </p>
 
-            <div className="mt-5 grid grid-cols-2 gap-3">
+            <div className="mt-4 grid grid-cols-2 gap-3">
               <button
                 type="button"
                 onClick={() => setShowSubmitConfirm(false)}
-                className="h-10 rounded-lg border border-[#DDDDDD] text-sm font-medium text-[#444444] hover:bg-[#F8F8F8]"
+                className={`${secondaryButton} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green`}
               >
                 {t("common.cancel")}
               </button>
@@ -195,7 +220,7 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
               <button
                 type="button"
                 onClick={submitStickerScan}
-                className="h-10 rounded-lg bg-[#007A3D] text-sm font-semibold text-white hover:bg-[#006532]"
+                className={`${primaryButton} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green`}
               >
                 {t("common.submit")}
               </button>
@@ -206,32 +231,36 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
 
       {/* Success modal */}
       {showSuccess && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-6">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 px-4 py-6 backdrop-blur-[2px]"
+          onClick={() => setShowSuccess(false)}
+        >
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="sticker-success-title"
-            className="w-full max-w-[360px] rounded-2xl bg-white p-5 text-center shadow-xl"
+            onClick={(event) => event.stopPropagation()}
+            className="w-full max-w-[360px] rounded-3xl border border-strokestroke-gray bg-backgroundbg-white p-4 text-center shadow-[0_8px_30px_rgba(0,0,0,0.18)]"
           >
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#E6F4EA]">
-              <Check className="h-7 w-7 text-[#075D32]" />
+            <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#E7F5EC]">
+              <Check className="h-5 w-5 text-[#006B3C]" />
             </div>
 
             <h2
               id="sticker-success-title"
-              className="text-lg font-semibold"
+              className="text-[16px] font-semibold leading-6 text-text-colortext-black"
             >
               {t("staffReturnSticker.success.title")}
             </h2>
 
-            <p className="mt-2 text-sm leading-6 text-[#666666]">
+            <p className="mt-2 text-[13px] leading-[18px] text-text-colortext-dark">
               {t("staffReturnSticker.success.description", { mo: moId || "MO-321654987" })}
             </p>
 
             <button
               type="button"
               onClick={() => setShowSuccess(false)}
-              className="mt-5 h-11 w-full rounded-lg bg-[#007A3D] text-sm font-semibold text-white hover:bg-[#006532]"
+              className={`${primaryButton} mt-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green`}
             >
               {t("common.done")}
             </button>
