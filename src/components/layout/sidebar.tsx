@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -12,9 +13,11 @@ import {
   UserRound,
   type LucideIcon,
 } from "lucide-react";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/i18n";
 import type { TranslationKey } from "@/i18n";
@@ -28,7 +31,10 @@ type NavLink = {
 type NavGroup = {
   labelKey: TranslationKey;
   icon: LucideIcon;
-  children: { labelKey: TranslationKey; href: string }[];
+  children: {
+    labelKey: TranslationKey;
+    href: string;
+  }[];
 };
 
 type NavItem = NavLink | NavGroup;
@@ -46,8 +52,14 @@ const NAV: Record<SidebarVariant, NavItem[]> = {
       labelKey: "navigation.entry",
       icon: Table2,
       children: [
-        { labelKey: "navigation.moEntry", href: "/operational/mo-entry" },
-        { labelKey: "navigation.woEntry", href: "/operational/wo-entry" },
+        {
+          labelKey: "navigation.moEntry",
+          href: "/operational/mo-entry",
+        },
+        {
+          labelKey: "navigation.woEntry",
+          href: "/operational/wo-entry",
+        },
       ],
     },
     {
@@ -56,6 +68,7 @@ const NAV: Record<SidebarVariant, NavItem[]> = {
       icon: History,
     },
   ],
+
   exim: [
     {
       labelKey: "navigation.exim",
@@ -68,6 +81,7 @@ const NAV: Record<SidebarVariant, NavItem[]> = {
       icon: History,
     },
   ],
+
   superadmin: [
     {
       labelKey: "navigation.dashboard",
@@ -87,6 +101,13 @@ const NAV: Record<SidebarVariant, NavItem[]> = {
   ],
 };
 
+// Dashboard/root routes must use exact matching.
+const ROOT_ROUTES = [
+  "/operational",
+  "/exim",
+  "/superadmin",
+];
+
 export default function Sidebar({
   variant = "pmc",
 }: {
@@ -95,24 +116,64 @@ export default function Sidebar({
   const pathname = usePathname();
   const router = useRouter();
   const { t } = useI18n();
+
   const items = NAV[variant];
 
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(
+  const groups = items.filter(
+    (item): item is NavGroup => "children" in item,
+  );
+
+  const [openGroups, setOpenGroups] = useState<
+    Record<string, boolean>
+  >(
     Object.fromEntries(
-      items
-        .filter((item): item is NavGroup => "children" in item)
-        .map((group) => [group.labelKey, true]),
+      groups.map((group) => [
+        group.labelKey,
+        group.children.some(
+          (child) =>
+            pathname === child.href ||
+            pathname.startsWith(`${child.href}/`),
+        ),
+      ]),
     ),
   );
 
+  // Automatically expand the group when navigating to one of its children.
+  useEffect(() => {
+    const activeGroup = groups.find((group) =>
+      group.children.some(
+        (child) =>
+          pathname === child.href ||
+          pathname.startsWith(`${child.href}/`),
+      ),
+    );
+
+    if (activeGroup) {
+      setOpenGroups((prev) => ({
+        ...prev,
+        [activeGroup.labelKey]: true,
+      }));
+    }
+  }, [pathname, variant]);
+
+  // Determine whether a navigation link is active.
+  const isLinkActive = (href: string) => {
+    if (ROOT_ROUTES.includes(href)) {
+      return pathname === href;
+    }
+
+    return (
+      pathname === href ||
+      pathname.startsWith(`${href}/`)
+    );
+  };
+
   const linkClass = (href: string) => {
-    // Use exact match for root dashboard so sub-routes don't activate Dashboard.
-    // For all other nav items startsWith keeps them active on child routes.
-    const isActive =
-      href === "/superadmin" ? pathname === href : pathname.startsWith(href);
+    const isActive = isLinkActive(href);
+
     return `flex h-10 items-center rounded px-2 transition-colors ${
       isActive
-        ? "bg-backgroundbg-green text-text-colortext-green hover:bg-backgroundbg-green/80"
+        ? "bg-[#DDEFE5]/80 text-text-colortext-green shadow-[inset_0_0_0_1px_rgba(11,89,52,0.05)] hover:bg-[#DDEFE5]"
         : "text-mode-sidebar-foreground hover:bg-slate-50"
     }`;
   };
@@ -127,25 +188,31 @@ export default function Sidebar({
   };
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-[3] flex w-full max-w-[255px] flex-col overflow-hidden border-r border-strokestroke-gray bg-white">
+    <aside className="fixed inset-y-0 left-0 z-[3] flex w-full max-w-[255px] flex-col overflow-hidden border-r border-strokestroke-gray bg-white/70 backdrop-blur-xl backdrop-saturate-150 supports-[not(backdrop-filter)]:bg-white">
+
       {/* Decorative background */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-96 overflow-hidden">
-        <img
-          className="absolute left-0 top-0 h-[317px] w-full object-cover"
-          src="/rec-1.png"
-          alt=""
-          aria-hidden="true"
-        />
-        <img
-          className="absolute left-0 top-[67px] h-[317px] w-full object-cover"
-          src="/rec-2.png"
-          alt=""
-          aria-hidden="true"
-        />
-      </div>
+{/* Decorative glass background */}
+<div className="pointer-events-none absolute inset-x-0 bottom-0 h-96 overflow-hidden">
+  <img
+    className="absolute left-0 top-0 h-[317px] w-full object-cover opacity-60"
+    src="/rec-1.png"
+    alt=""
+    aria-hidden="true"
+  />
+
+  <img
+    className="absolute left-0 top-[67px] h-[317px] w-full object-cover opacity-50"
+    src="/rec-2.png"
+    alt=""
+    aria-hidden="true"
+  />
+
+  {/* Soft white glass overlay */}
+  <div className="absolute inset-0 bg-gradient-to-t from-white/10 via-white/25 to-white/50" />
+</div>
 
       {/* Header */}
-      <header className="relative flex h-[52px] shrink-0 items-start bg-white p-2">
+      <header className="relative flex h-[52px] shrink-0 items-start p-2">
         <div className="flex min-w-0 flex-1 items-center gap-3 p-2">
           <div className="flex w-[59px] shrink-0 flex-col justify-center">
             <img
@@ -159,6 +226,7 @@ export default function Sidebar({
             <span className="font-sans text-[10px] font-medium leading-[10px] text-text-colortext-black">
               Indonesia
             </span>
+
             <span className="whitespace-nowrap font-sans text-[10px] font-medium leading-5 text-text-colortext-black">
               Manufacturing
             </span>
@@ -187,15 +255,27 @@ export default function Sidebar({
           {items.map((item) => {
             const Icon = item.icon;
 
+            // Navigation group
             if ("children" in item) {
-              const open = openGroups[item.labelKey];
+              const open = openGroups[item.labelKey] ?? false;
+
+              const hasActiveChild = item.children.some(
+                (child) => isLinkActive(child.href),
+              );
 
               return (
-                <section key={item.labelKey} className="flex flex-col gap-2">
+                <section
+                  key={item.labelKey}
+                  className="flex flex-col gap-2"
+                >
                   <Button
                     type="button"
                     variant="ghost"
-                    className="h-10 w-full justify-start rounded bg-white px-2 text-left text-mode-sidebar-foreground hover:bg-slate-50"
+                    className={`h-10 w-full justify-start rounded px-2 text-left transition-colors ${
+hasActiveChild
+  ? "bg-[#DDEFE5]/60 text-text-colortext-green"
+  : "bg-transparent text-mode-sidebar-foreground hover:bg-white/50"
+                    }`}
                     aria-expanded={open}
                     onClick={() =>
                       setOpenGroups((prev) => ({
@@ -242,6 +322,7 @@ export default function Sidebar({
               );
             }
 
+            // Normal navigation link
             return (
               <Link
                 key={item.href}
@@ -267,16 +348,20 @@ export default function Sidebar({
         <Button
           type="button"
           variant="ghost"
-          className="h-auto w-full justify-start gap-2.5 rounded-none p-4 hover:bg-slate-50"
+          className="h-auto w-full justify-start gap-2.5 rounded-none p-4 transition-colors hover:bg-white/40"
         >
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[linear-gradient(0deg,rgba(11,89,52,1)_0%,rgba(5,131,70,1)_100%)] p-1 text-white">
-            <UserRound className="h-4 w-4" strokeWidth={1.5} />
+            <UserRound
+              className="h-4 w-4"
+              strokeWidth={1.5}
+            />
           </span>
 
           <span className="flex min-w-0 flex-1 flex-col items-start text-left">
             <span className="w-full truncate font-inter-sm-semibold-sm text-sm font-semibold leading-5 text-text-colortext-black">
               Bagus Saputra
             </span>
+
             <span className="w-full truncate text-xs leading-5 text-text-colortext-black">
               I0123456
             </span>
@@ -292,9 +377,12 @@ export default function Sidebar({
           type="button"
           variant="ghost"
           onClick={handleLogout}
-          className="h-auto w-full justify-start gap-2 rounded-none px-4 py-3 text-text-colortext-red hover:bg-red-50 hover:text-text-colortext-red"
+          className="h-auto w-full justify-start gap-2 rounded-none px-4 py-3 text-text-colortext-red transition-colors hover:bg-red-50/50 hover:text-text-colortext-red"
         >
-          <LogOut className="h-6 w-6 shrink-0" strokeWidth={1.5} />
+          <LogOut
+            className="h-6 w-6 shrink-0"
+            strokeWidth={1.5}
+          />
 
           <span className="font-inter-sm-medium-sm text-sm font-medium leading-5">
             {t("navigation.logout")}
