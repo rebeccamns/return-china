@@ -2,7 +2,7 @@ import { STAGE_KEYS, type Role, type StageKey } from "./types";
 
 export const STAGE_VISIBILITY: Record<Role, StageKey[]> = {
   pmc: [...STAGE_KEYS],
-  iqc: ["iqcScan", "iqcQaPass"],
+  iqc: [...STAGE_KEYS],
   staff: [...STAGE_KEYS],
 };
 
