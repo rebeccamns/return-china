@@ -2,21 +2,18 @@
 "use client";
 
 import {
-  ArrowRightLeft,
   ChevronDown,
-  ChevronsUpDown,
-  FileText,
+  ClipboardList,
   History,
   LayoutDashboard,
-  LogOut,
-  Table2,
-  UserRound,
+  MonitorCheck,
+  Ship,
   type LucideIcon,
 } from "lucide-react";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/i18n";
@@ -50,7 +47,7 @@ const NAV: Record<SidebarVariant, NavItem[]> = {
     },
     {
       labelKey: "navigation.entry",
-      icon: Table2,
+      icon: ClipboardList,
       children: [
         {
           labelKey: "navigation.moEntry",
@@ -73,7 +70,7 @@ const NAV: Record<SidebarVariant, NavItem[]> = {
     {
       labelKey: "navigation.exim",
       href: "/exim",
-      icon: ArrowRightLeft,
+      icon: Ship,
     },
     {
       labelKey: "navigation.history",
@@ -91,7 +88,7 @@ const NAV: Record<SidebarVariant, NavItem[]> = {
     {
       labelKey: "navigation.moMonitoring",
       href: "/superadmin/mo-monitoring",
-      icon: FileText,
+      icon: MonitorCheck,
     },
     {
       labelKey: "navigation.history",
@@ -114,7 +111,6 @@ export default function Sidebar({
   variant?: SidebarVariant;
 }) {
   const pathname = usePathname();
-  const router = useRouter();
   const { t } = useI18n();
 
   const items = NAV[variant];
@@ -176,15 +172,6 @@ export default function Sidebar({
         ? "bg-[#DDEFE5]/80 text-text-colortext-green shadow-[inset_0_0_0_1px_rgba(11,89,52,0.05)] hover:bg-[#DDEFE5]"
         : "text-mode-sidebar-foreground hover:bg-slate-50"
     }`;
-  };
-
-  const handleLogout = () => {
-    if (typeof window !== "undefined") {
-      sessionStorage.clear();
-    }
-
-    router.replace("/");
-    router.refresh();
   };
 
   return (
@@ -274,7 +261,7 @@ export default function Sidebar({
                     className={`h-10 w-full justify-start rounded px-2 text-left transition-colors ${
 hasActiveChild
   ? "bg-[#DDEFE5]/60 text-text-colortext-green"
-  : "bg-transparent text-mode-sidebar-foreground hover:bg-white/50"
+  : "bg-transparent text-mode-sidebar-foreground hover:bg-slate-50"
                     }`}
                     aria-expanded={open}
                     onClick={() =>
@@ -285,8 +272,8 @@ hasActiveChild
                     }
                   >
                     <Icon
-                      className="mr-2 h-6 w-6 shrink-0"
-                      strokeWidth={1.5}
+                      className="mr-3 h-5 w-5 shrink-0"
+                      strokeWidth={1.75}
                     />
 
                     <span className="flex-1 truncate font-inter-sm-medium-sm text-sm font-medium leading-5">
@@ -330,8 +317,8 @@ hasActiveChild
                 href={item.href}
               >
                 <Icon
-                  className="mr-2 h-6 w-6 shrink-0"
-                  strokeWidth={1.5}
+                  className="mr-3 h-5 w-5 shrink-0"
+                  strokeWidth={1.75}
                 />
 
                 <span className="truncate font-inter-sm-medium-sm text-sm font-medium leading-5">
@@ -342,53 +329,6 @@ hasActiveChild
           })}
         </div>
       </nav>
-
-      {/* User and Logout */}
-      <footer className="relative mt-auto flex shrink-0 flex-col">
-        <Button
-          type="button"
-          variant="ghost"
-          className="h-auto w-full justify-start gap-2.5 rounded-none p-4 transition-colors hover:bg-white/40"
-        >
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[linear-gradient(0deg,rgba(11,89,52,1)_0%,rgba(5,131,70,1)_100%)] p-1 text-white">
-            <UserRound
-              className="h-4 w-4"
-              strokeWidth={1.5}
-            />
-          </span>
-
-          <span className="flex min-w-0 flex-1 flex-col items-start text-left">
-            <span className="w-full truncate font-inter-sm-semibold-sm text-sm font-semibold leading-5 text-text-colortext-black">
-              Bagus Saputra
-            </span>
-
-            <span className="w-full truncate text-xs leading-5 text-text-colortext-black">
-              I0123456
-            </span>
-          </span>
-
-          <ChevronsUpDown
-            className="h-4 w-4 shrink-0"
-            strokeWidth={1.5}
-          />
-        </Button>
-
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={handleLogout}
-          className="h-auto w-full justify-start gap-2 rounded-none px-4 py-3 text-text-colortext-red transition-colors hover:bg-red-50/50 hover:text-text-colortext-red"
-        >
-          <LogOut
-            className="h-6 w-6 shrink-0"
-            strokeWidth={1.5}
-          />
-
-          <span className="font-inter-sm-medium-sm text-sm font-medium leading-5">
-            {t("navigation.logout")}
-          </span>
-        </Button>
-      </footer>
     </aside>
   );
 }

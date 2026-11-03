@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { ActivityLogEntry, ActivityStatus } from "../../../_lib/types";
+import type { ActivityLogEntry, ActivityStatus, StepName } from "../../../_lib/types";
 
 type Filter = "all" | ActivityStatus;
 
@@ -22,11 +22,16 @@ const STATUS_COLOR: Record<ActivityStatus, string> = {
 
 type Props = {
   log: ActivityLogEntry[];
+  flow?: StepName;
 };
 
-export default function ActivityLog({ log }: Props) {
+export default function ActivityLog({ log: fullLog, flow }: Props) {
   const { t } = useI18n();
   const [filter, setFilter] = useState<string>("all");
+  const log = useMemo(
+    () => (flow ? fullLog.filter((e) => e.processStep === flow) : fullLog),
+    [fullLog, flow],
+  );
 
   const filtered = useMemo(() => {
     if (filter === "all") return log;

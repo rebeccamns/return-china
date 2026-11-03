@@ -311,7 +311,7 @@ export default function EximPage() {
                       </button>
 
                       {isExpanded && expanded && (
-                        <div className="border-t border-strokestroke-gray bg-[#FAFBFA] px-[18px] py-5">
+                        <div className="border-t border-strokestroke-gray bg-white px-[18px] py-5">
                           <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
                             <div>
                               <p className="text-sm font-semibold text-[#111111]">

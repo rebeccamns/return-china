@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useState } from "react";
-import { AlertCircle, ChevronDown, Info, MoreHorizontal, Plus } from "lucide-react";
+import { AlertCircle, ChevronDown, Info, MoreHorizontal, Minus, Plus } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,12 +26,13 @@ import KpiCard from "@/components/ui/kpichart";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n";
 import TaskProgressCard from "./TaskProgressCard";
+import SubmitFlowDialog, { type SubmitStep } from "./SubmitFlowDialog";
 
 const inputClass =
   "h-7 w-full rounded-md border border-strokestroke-gray bg-white px-2 text-xs outline-none transition-colors focus:border-primaryprimary-green";
 
 const nestedHeadClass =
-  "bg-slate-100 px-3 text-xs font-semibold text-slate-700";
+  "bg-[#F8F8F8] px-3 text-xs font-semibold text-slate-700";
 /* =========================================================
    PROGRESS BAR
 ========================================================= */
@@ -138,6 +139,8 @@ export function RevisionNotice() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draftMaterials, setDraftMaterials] = useState<Material[]>([]);
+  const [submitStep, setSubmitStep] = useState<SubmitStep>(null);
+  const [resubmitId, setResubmitId] = useState<string | null>(null);
   const detailsRef = React.useRef<HTMLDivElement>(null);
 
   function toggleShowAll() {
@@ -222,18 +225,37 @@ export function RevisionNotice() {
   }
 
   function resubmit(id: string) {
-    const item = items.find((entry) => entry.id === id);
+    if (!items.some((entry) => entry.id === id)) return;
+    setResubmitId(id);
+    setSubmitStep("confirm");
+  }
+
+  function confirmResubmit() {
+    const item = items.find((entry) => entry.id === resubmitId);
     if (!item) return;
 
     console.log("Resubmitting:", item); // TODO: send the corrected MO to your API
-    setItems((prev) => prev.filter((entry) => entry.id !== id));
+    setItems((prev) => prev.filter((entry) => entry.id !== item.id));
     setExpandedId(null);
     setEditingId(null);
     setDraftMaterials([]);
+    setSubmitStep("success");
   }
 
   return (
     <Card className="overflow-hidden rounded-lg border-strokestroke-gray bg-white">
+      <SubmitFlowDialog
+        step={submitStep}
+        confirmTitle={t("submitFlow.resubmitConfirmTitle")}
+        confirmDescription={t("submitFlow.resubmitConfirmDescription")}
+        successTitle={t("submitFlow.resubmitSuccessTitle")}
+        successDescription={t("submitFlow.resubmitSuccessDescription")}
+        onConfirm={confirmResubmit}
+        onClose={() => {
+          setSubmitStep(null);
+          setResubmitId(null);
+        }}
+      />
       <CardContent className="flex items-center justify-between gap-4 px-4 py-3">
         <div className="flex min-w-0 items-center gap-3">
           <Info className="h-4 w-4 shrink-0 text-red-500" />
@@ -319,12 +341,7 @@ export function RevisionNotice() {
                               }}
                               aria-label={isExpanded ? t("common.collapseRow") : t("common.expandRow")}
                             >
-                              <Plus
-                                className={cn(
-                                  "h-3.5 w-3.5 transition-transform duration-200",
-                                  isExpanded && "rotate-45",
-                                )}
-                              />
+                              {isExpanded ? <Minus className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
                             </Button>
                           </TableCell>
                           <TableCell className="px-3 text-xs">{item.code}</TableCell>
@@ -349,7 +366,7 @@ export function RevisionNotice() {
 
                         {isExpanded && (
                           <>
-                            <TableRow className="hover:bg-slate-100">
+                            <TableRow className="hover:bg-[#F8F8F8]">
                               <TableHead className={cn(nestedHeadClass, "w-12")} />
                               <TableHead className={nestedHeadClass}>{t("common.materialCode")}</TableHead>
                               <TableHead className={nestedHeadClass}>{t("common.englishName")}</TableHead>
@@ -681,12 +698,7 @@ function OngoingMoTable() {
                           }}
                           aria-label={t("common.expandRow")}
                         >
-                          <Plus
-                            className={cn(
-                              "h-4 w-4 transition-transform",
-                              isExpanded && "rotate-45",
-                            )}
-                          />
+                          {isExpanded ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
                         </Button>
                       </TableCell>
 
@@ -773,7 +785,7 @@ function OngoingMoTable() {
 
                     {isExpanded && (
                       <>
-                        <TableRow className="backgroundbg-gray-50 hover:bg-gray-50">
+                        <TableRow className="hover:bg-[#F8F8F8]">
                           <TableHead className={cn(nestedHeadClass, "w-12")} />
                           <TableHead className={nestedHeadClass}>
                             {t("common.materialCode")}

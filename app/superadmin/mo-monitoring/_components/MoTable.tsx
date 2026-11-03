@@ -23,6 +23,14 @@ import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n";
 import { Button } from "@/components/ui/button";
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -31,7 +39,7 @@ import {
 } from "@/components/ui/select";
 
 import StatusBadge from "./StatusBadge";
-import type { MoRecord, MoStatus, StepName } from "../../_lib/types";
+import type { MoRecord, MoStatus, StepName, TimelineStep } from "../../_lib/types";
 import { MO_STEPS, STEP_DISPLAY, getModelOptions, getStatusOptions, getStepOptions } from "../../_lib/mo-data";
 import { exportMoCsv } from "../../_lib/export";
 
@@ -76,32 +84,80 @@ function ProgressBar({ completed, total = 7 }: { completed: number; total?: numb
 
 // ─── Expand panel ────────────────────────────────────────────────────────────
 
-function ExpandedRow({ mo }: { mo: MoRecord }) {
+const STEP_STATUS_KEYS = {
+  completed: "moMonitoring.detail.stepCompleted",
+  reopened: "moMonitoring.detail.stepReopened",
+  in_progress: "moMonitoring.detail.stepInProgress",
+  not_started: "moMonitoring.detail.stepNotStarted",
+} as const;
+
+const STEP_STATUS_STYLE: Record<TimelineStep["status"], string> = {
+  completed: "border border-green-200 bg-green-50 text-green-700",
+  reopened: "border border-green-200 bg-green-50 text-green-700",
+  in_progress: "border border-yellow-200 bg-yellow-50 text-yellow-700",
+  not_started: "border border-gray-200 bg-gray-100 text-gray-600",
+};
+
+const nestedHeadClass = "h-9 bg-[#F8F8F8] px-4 text-xs font-semibold text-slate-700";
+
+function ExpandedRow({
+  mo,
+  onViewFlow,
+}: {
+  mo: MoRecord;
+  onViewFlow: (step: StepName) => void;
+}) {
+  const { t } = useI18n();
+
   return (
-    <tr>
-      <td colSpan={8} className="bg-gray-50 px-10 py-3">
-        <div className="flex flex-wrap gap-3">
-          {mo.timeline.map((step, i) => (
-            <div key={i} className="flex items-center gap-1.5">
-              <span
-                className={cn(
-                  "h-2 w-2 rounded-full",
-                  step.status === "completed" || step.status === "reopened"
-                    ? "bg-green-500"
-                    : step.status === "in_progress"
-                      ? "bg-yellow-400"
-                      : "bg-gray-300",
-                )}
-              />
-              <span className="text-xs text-gray-600">{STEP_DISPLAY[step.step]}</span>
-              {step.time && (
-                <span className="text-xs text-gray-400">{step.time}</span>
-              )}
-            </div>
-          ))}
+    <TableRow className="bg-white hover:bg-white">
+      <TableCell colSpan={8} className="bg-white px-12 py-3">
+        <div className="overflow-hidden rounded-md border border-strokestroke-gray">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-[#F8F8F8]">
+                <TableHead className={nestedHeadClass}>{t("moMonitoring.columns.flow")}</TableHead>
+                <TableHead className={nestedHeadClass}>{t("moMonitoring.columns.status")}</TableHead>
+                <TableHead className={nestedHeadClass}>{t("moMonitoring.columns.lastEdit")}</TableHead>
+                <TableHead className={cn(nestedHeadClass, "w-36")} />
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {mo.timeline.map((step) => (
+                <TableRow key={step.step} className="bg-white hover:bg-white">
+                  <TableCell className="px-4 py-2 text-xs font-medium text-gray-800">
+                    {STEP_DISPLAY[step.step]}
+                  </TableCell>
+                  <TableCell className="px-4 py-2">
+                    <span
+                      className={cn(
+                        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+                        STEP_STATUS_STYLE[step.status],
+                      )}
+                    >
+                      {t(STEP_STATUS_KEYS[step.status])}
+                    </span>
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap px-4 py-2 text-xs text-gray-500">
+                    {step.time ?? "—"}
+                  </TableCell>
+                  <TableCell className="px-4 py-2 text-right">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="h-7 rounded-md px-3 text-xs font-medium"
+                      onClick={() => onViewFlow(step.step)}
+                    >
+                      {t("moMonitoring.viewDetail")}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
-      </td>
-    </tr>
+      </TableCell>
+    </TableRow>
   );
 }
 
@@ -358,104 +414,98 @@ export default function MoTable({ mos, onIntervene }: Props) {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[800px] border-collapse text-sm">
-          <thead>
-            <tr className="border-b border-gray-100 bg-gray-50">
-              {/* expand toggle col */}
-              <th className="w-12 px-3 py-3" />
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                {t("moMonitoring.columns.moCode")}
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                {t("moMonitoring.columns.model")}
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                {t("moMonitoring.columns.currentStep")}
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                {t("moMonitoring.columns.progress")}
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                {t("moMonitoring.columns.status")}
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                {t("moMonitoring.columns.lastUpdated")}
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                {t("moMonitoring.columns.action")}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginated.length === 0 ? (
-              <tr>
-                <td colSpan={8} className="py-16 text-center">
-                  <p className="text-sm font-medium text-gray-500">{t("moMonitoring.noMoFound")}</p>
-                  <p className="mt-1 text-xs text-gray-400">{t("moMonitoring.noMoFoundHint")}</p>
-                </td>
-              </tr>
-            ) : (
-              paginated.flatMap((mo) => {
-                const isExpanded = expanded.has(mo.moCode);
-                const rows: React.ReactNode[] = [
-                  <tr
-                    key={mo.moCode}
-                    onClick={() => router.push(`/superadmin/mo-monitoring/${mo.moCode}`)}
-                    className="cursor-pointer border-b border-gray-100 hover:bg-gray-50"
-                  >
-                    {/* Expand toggle */}
-                    <td
-                      className="w-12 px-3 py-3 text-center"
-                      onClick={(e) => { e.stopPropagation(); toggleExpand(mo.moCode); }}
+      <div className="px-5 py-4">
+        <div className="overflow-hidden rounded-md border border-strokestroke-gray">
+          <Table className="min-w-[800px]">
+            <TableHeader>
+              <TableRow className="hover:bg-primaryprimary-green">
+                <TableHead className="w-12 px-3" />
+                <TableHead className="px-4">{t("moMonitoring.columns.moCode")}</TableHead>
+                <TableHead className="px-4">{t("moMonitoring.columns.model")}</TableHead>
+                <TableHead className="px-4">{t("moMonitoring.columns.currentStep")}</TableHead>
+                <TableHead className="px-4">{t("moMonitoring.columns.progress")}</TableHead>
+                <TableHead className="px-4">{t("moMonitoring.columns.status")}</TableHead>
+                <TableHead className="px-4">{t("moMonitoring.columns.lastUpdated")}</TableHead>
+                <TableHead className="px-4">{t("moMonitoring.columns.action")}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {paginated.length === 0 ? (
+                <TableRow className="hover:bg-transparent">
+                  <TableCell colSpan={8} className="py-16 text-center">
+                    <p className="text-sm font-medium text-gray-500">{t("moMonitoring.noMoFound")}</p>
+                    <p className="mt-1 text-xs text-gray-400">{t("moMonitoring.noMoFoundHint")}</p>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                paginated.flatMap((mo) => {
+                  const isExpanded = expanded.has(mo.moCode);
+                  const rows: React.ReactNode[] = [
+                    <TableRow
+                      key={mo.moCode}
+                      onClick={() => router.push(`/superadmin/mo-monitoring/${mo.moCode}`)}
+                      className="h-12 cursor-pointer hover:bg-[#FAFAFA]"
                     >
-                      <button
-                        type="button"
-                        aria-label={isExpanded ? t("common.collapseRow") : t("common.expandRow")}
-                        className="flex h-7 w-7 items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F]"
+                      <TableCell
+                        className="w-12 px-3 py-2 text-center"
+                        onClick={(e) => { e.stopPropagation(); toggleExpand(mo.moCode); }}
                       >
-                        {isExpanded ? (
-                          <Minus className="h-3.5 w-3.5" />
-                        ) : (
-                          <Plus className="h-3.5 w-3.5" />
-                        )}
-                      </button>
-                    </td>
-                    <td className="px-4 py-3 font-sans text-xs text-gray-700">
-                      {mo.moCode}
-                    </td>
-                    <td className="px-4 py-3 text-gray-700">{mo.model}</td>
-                    <td className="px-4 py-3 text-gray-700">{STEP_DISPLAY[mo.currentStep]}</td>
-                    <td className="px-4 py-3">
-                      <ProgressBar completed={mo.completedSteps} />
-                    </td>
-                    <td className="px-4 py-3">
-                      <StatusBadge status={mo.status} />
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-gray-500">
-                      {mo.lastUpdated}
-                    </td>
-                    <td
-                      className="px-4 py-3"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <ActionDropdown
+                        <button
+                          type="button"
+                          aria-label={isExpanded ? t("common.collapseRow") : t("common.expandRow")}
+                          className="flex h-7 w-7 items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F]"
+                        >
+                          {isExpanded ? (
+                            <Minus className="h-3.5 w-3.5" />
+                          ) : (
+                            <Plus className="h-3.5 w-3.5" />
+                          )}
+                        </button>
+                      </TableCell>
+                      <TableCell className="px-4 py-2 text-xs text-gray-700">{mo.moCode}</TableCell>
+                      <TableCell className="px-4 py-2 text-xs text-gray-700">{mo.model}</TableCell>
+                      <TableCell className="px-4 py-2 text-xs text-gray-700">{STEP_DISPLAY[mo.currentStep]}</TableCell>
+                      <TableCell className="px-4 py-2">
+                        <ProgressBar completed={mo.completedSteps} />
+                      </TableCell>
+                      <TableCell className="px-4 py-2">
+                        <StatusBadge status={mo.status} />
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap px-4 py-2 text-xs text-gray-500">
+                        {mo.lastUpdated}
+                      </TableCell>
+                      <TableCell
+                        className="px-4 py-2"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <ActionDropdown
+                          mo={mo}
+                          onViewDetail={() => router.push(`/superadmin/mo-monitoring/${mo.moCode}`)}
+                          onIntervene={() => onIntervene(mo)}
+                          onExportMo={() => handleExportSingle(mo)}
+                        />
+                      </TableCell>
+                    </TableRow>,
+                  ];
+                  if (isExpanded) {
+                    rows.push(
+                      <ExpandedRow
+                        key={`${mo.moCode}-expand`}
                         mo={mo}
-                        onViewDetail={() => router.push(`/superadmin/mo-monitoring/${mo.moCode}`)}
-                        onIntervene={() => onIntervene(mo)}
-                        onExportMo={() => handleExportSingle(mo)}
-                      />
-                    </td>
-                  </tr>,
-                ];
-                if (isExpanded) {
-                  rows.push(<ExpandedRow key={`${mo.moCode}-expand`} mo={mo} />);
-                }
-                return rows;
-              })
-            )}
-          </tbody>
-        </table>
+                        onViewFlow={(step) =>
+                          router.push(
+                            `/superadmin/mo-monitoring/${mo.moCode}?flow=${encodeURIComponent(step)}`,
+                          )
+                        }
+                      />,
+                    );
+                  }
+                  return rows;
+                })
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       {/* Footer */}

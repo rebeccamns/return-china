@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, Download, RotateCcw } from "lucide-react";
 import Link from "next/link";
 
@@ -13,17 +13,24 @@ import StatusBadge from "../_components/StatusBadge";
 import Timeline from "./_components/Timeline";
 import CurrentStageCard from "./_components/CurrentStageCard";
 import ActivityLog from "./_components/ActivityLog";
-import InterveneModal from "./_components/InterveneModal";
+import InterveneModal, { type IntervenePayload } from "./_components/InterveneModal";
 
-import { getMoDetail, intervene } from "../../_lib/mo-data";
+import { getMoDetail, intervene, currentRole } from "../../_lib/mo-data";
+import { getMoDetail as getStageData } from "@/lib/mo-detail/data";
+import type { StageKey } from "@/lib/mo-detail/types";
+import StageDetailPanel from "./_components/StageDetailPanel";
 import { exportMoCsv } from "../../_lib/export";
-import type { MoRecord } from "../../_lib/types";
+import type { MoRecord, StepName } from "../../_lib/types";
+import { MO_STEPS } from "../../_lib/mo-data";
 
 export default function MoDetailPage() {
   const { t } = useI18n();
   const router = useRouter();
   const params = useParams();
   const moCode = typeof params.moCode === "string" ? params.moCode : "";
+  const flowParam = useSearchParams().get("flow");
+  const initialFlow = MO_STEPS.find((step) => step === flowParam) ?? null;
+  const [selectedStep, setSelectedStep] = useState<StepName | null>(initialFlow);
 
   const [mo, setMo] = useState<MoRecord | null | undefined>(undefined); // undefined = loading
   const [interveneOpen, setInterveneOpen] = useState(false);
@@ -33,8 +40,52 @@ export default function MoDetailPage() {
     getMoDetail(moCode).then(setMo);
   }, [moCode]);
 
-  async function handleIntervene(reason: string) {
-    await intervene(moCode, reason);
+  const STAGE_KEY_BY_STEP: Record<StepName, StageKey> = {
+    "PMC Entry": "pmcEntry",
+    IQC: "iqcScan",
+    "PMC Open WO": "pmcOpenWo",
+    "Staff Return": "staffReturn",
+    Exim: "exim",
+    "Staff Return 2": "staffReturnSticker",
+    "IQC QA Pass": "iqcQaPass",
+  };
+
+  // Only flows that are finished (completed/reopened) show their submitted data.
+  const selectedEntry = mo?.timeline.find((entry) => entry.step === selectedStep);
+  const showStageDetail =
+    !!selectedStep &&
+    (selectedEntry?.status === "completed" || selectedEntry?.status === "reopened");
+
+  // TODO(backend): load the real stage data for this MO; falls back to the demo MO data
+  const stageData =
+    getStageData(moCode) ?? getStageData("T2026090410261301048");
+  const selectedStage =
+    showStageDetail && selectedStep
+      ? (stageData?.stages.find((s) => s.stageKey === STAGE_KEY_BY_STEP[selectedStep]) ?? null)
+      : null;
+
+  function handleSelectStep(step: StepName) {
+    const entry = mo?.timeline.find((e) => e.step === step);
+    // The ongoing flow has no data yet, so it returns to the default overview
+    setSelectedStep(entry?.status === "in_progress" ? null : step);
+  }
+
+  // Items come from the PMC Entry material list
+  const interveneItems = (
+    stageData?.stages.find((s) => s.stageKey === "pmcEntry")?.data as
+      | { materials?: { code: string; englishName: string }[] }
+      | undefined
+  )?.materials?.map((m) => ({ code: m.code, name: m.englishName })) ?? [];
+
+  // Reflow targets: every flow up to and including the current one
+  const stageOptions = mo
+    ? MO_STEPS.slice(0, MO_STEPS.indexOf(mo.currentStep) + 1)
+    : [];
+
+  async function handleIntervene({ stage, items, reason }: IntervenePayload) {
+    // TODO(backend): persist the reflow target and revision items; only a log note is stored for now
+    const itemNote = items.length ? ` | Items: ${items.join(", ")}` : "";
+    await intervene(moCode, `Reflow to ${stage} - ${reason}${itemNote}`);
     // Refresh local state to reflect the blocked status + new log entry
     const updated = await getMoDetail(moCode);
     setMo(updated);
@@ -172,16 +223,27 @@ export default function MoDetailPage() {
             <div className="flex flex-col gap-5 p-6 lg:flex-row">
               {/* LEFT: Timeline (~35%) */}
               <div className="w-full lg:w-[340px] lg:shrink-0">
-                <Timeline mo={mo} />
+                <Timeline mo={mo} selectedStep={selectedStep} onSelect={handleSelectStep} />
               </div>
 
               {/* RIGHT: Current Stage + Activity Log */}
               <div className="flex flex-1 flex-col gap-5 min-w-0">
-                <CurrentStageCard
-                  mo={mo}
-                  onIntervene={() => setInterveneOpen(true)}
-                />
-                <ActivityLog log={mo.activityLog} />
+                {showStageDetail && selectedStep ? (
+                  <StageDetailPanel
+                    mo={mo}
+                    step={selectedStep}
+                    stage={selectedStage}
+                    canIntervene={currentRole === "superadmin"}
+                    onIntervene={() => setInterveneOpen(true)}
+                  />
+                ) : (
+                  <CurrentStageCard
+                    mo={mo}
+                    flow={selectedStep ?? undefined}
+                    onIntervene={() => setInterveneOpen(true)}
+                  />
+                )}
+                <ActivityLog log={mo.activityLog} flow={selectedStep ?? undefined} />
               </div>
             </div>
           </div>
@@ -191,6 +253,10 @@ export default function MoDetailPage() {
       {/* Intervene Modal */}
       <InterveneModal
         open={interveneOpen}
+        moCode={mo.moCode}
+        currentStep={mo.currentStep}
+        stageOptions={stageOptions}
+        items={interveneItems}
         onClose={() => setInterveneOpen(false)}
         onConfirm={handleIntervene}
       />

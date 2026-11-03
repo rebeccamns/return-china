@@ -3,21 +3,21 @@
 import { CheckCircle, Circle, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n";
-import type { MoRecord, TimelineStep } from "../../../_lib/types";
+import type { MoRecord, StepName, TimelineStep } from "../../../_lib/types";
 import { STEP_DISPLAY } from "../../../_lib/mo-data";
 
 function StepIcon({ status }: { status: TimelineStep["status"] }) {
   if (status === "completed") {
     return (
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-100">
-        <CheckCircle className="h-5 w-5 text-green-600" strokeWidth={2} />
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E3F1E9]">
+        <CheckCircle className="h-5 w-5 text-[#08783F]" strokeWidth={2} />
       </span>
     );
   }
   if (status === "reopened") {
     return (
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-100">
-        <RefreshCw className="h-5 w-5 text-green-500" strokeWidth={2} />
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E3F1E9]">
+        <RefreshCw className="h-5 w-5 text-[#08783F]" strokeWidth={2} />
       </span>
     );
   }
@@ -45,9 +45,13 @@ function stepStatusLabel(status: TimelineStep["status"], t: (key: Parameters<Ret
   }
 }
 
-type Props = { mo: MoRecord };
+type Props = {
+  mo: MoRecord;
+  selectedStep: StepName | null;
+  onSelect: (step: StepName) => void;
+};
 
-export default function Timeline({ mo }: Props) {
+export default function Timeline({ mo, selectedStep, onSelect }: Props) {
   const { t } = useI18n();
 
   return (
@@ -60,6 +64,7 @@ export default function Timeline({ mo }: Props) {
         {mo.timeline.map((step, i) => {
           const isLast = i === mo.timeline.length - 1;
           const isDim = step.status === "not_started";
+          const isSelected = selectedStep === step.step;
 
           return (
             <li key={i} className="flex gap-3">
@@ -72,9 +77,15 @@ export default function Timeline({ mo }: Props) {
               </div>
 
               {/* card */}
-              <div
+              <button
+                type="button"
+                disabled={isDim}
+                aria-pressed={isSelected}
+                onClick={() => onSelect(step.step)}
                 className={cn(
-                  "mb-2 flex flex-1 items-center justify-between rounded-lg px-3 py-2",
+                  "mb-2 flex flex-1 items-center justify-between rounded-lg px-3 py-2 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F]",
+                  !isDim && "cursor-pointer hover:border-[#08783F]/40",
+                  isSelected && "ring-2 ring-[#08783F]",
                   step.status === "in_progress"
                     ? "bg-yellow-50 border border-yellow-200"
                     : isDim
@@ -90,7 +101,7 @@ export default function Timeline({ mo }: Props) {
                     className={cn(
                       "text-xs",
                       step.status === "completed" || step.status === "reopened"
-                        ? "text-green-600"
+                        ? "text-[#08783F]"
                         : step.status === "in_progress"
                           ? "text-yellow-600"
                           : "text-gray-400",
@@ -102,7 +113,7 @@ export default function Timeline({ mo }: Props) {
                 {step.time && (
                   <span className="ml-3 shrink-0 text-xs text-gray-400">{step.time}</span>
                 )}
-              </div>
+              </button>
             </li>
           );
         })}

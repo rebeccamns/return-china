@@ -85,6 +85,15 @@ export const en = {
     moMonitoring: "MO Monitoring",
     logout: "Logout",
   },
+  account: {
+    label: "Account menu",
+    name: "Name",
+    nik: "NIK",
+    role: "Role",
+    pmc: "PMC",
+    exim: "Exim",
+    superadmin: "Super Admin",
+  },
   status: {
     completed: "Completed",
     rejected: "Rejected",
@@ -190,6 +199,29 @@ export const en = {
     completeAllRows: "Complete all material rows before submitting MO.",
     moSubmittedSingular: "MO submitted with {count} material.",
     moSubmittedPlural: "MO submitted with {count} materials.",
+    emptyTitle: "No material list yet",
+    emptyDescription: "Fill in the MO details above and click Create Task to add a material list.",
+  },
+  submitFlow: {
+    confirm: "Confirm",
+    moConfirmTitle: "Confirm MO Submission?",
+    moConfirmDescription:
+      "All required information has been completed. Would you like to submit this MO?",
+    moSuccessTitle: "MO Created Successfully",
+    moSuccessDescription:
+      "The MO has been created and will proceed to the next process.",
+    woConfirmTitle: "Confirm WO Submission?",
+    woConfirmDescription:
+      'Would you like to submit WO "{wo}" for MO {id}?',
+    woSuccessTitle: "WO Created Successfully",
+    woSuccessDescription:
+      "The WO has been created and will proceed to the next process.",
+    resubmitConfirmTitle: "Confirm MO Resubmission?",
+    resubmitConfirmDescription:
+      "All corrections have been made. Would you like to resubmit this MO?",
+    resubmitSuccessTitle: "MO Resubmitted Successfully",
+    resubmitSuccessDescription:
+      "The MO has been resubmitted and will proceed to the next process.",
   },
   woEntry: {
     breadcrumbSection: "Entry",
@@ -595,6 +627,8 @@ export const en = {
       needIntervene: "Need Intervene",
     },
     columns: {
+      flow: "Flow",
+      lastEdit: "Last Edit",
       moCode: "MO Code",
       model: "Model",
       currentStep: "Current Step",
@@ -632,10 +666,18 @@ export const en = {
     intervene: {
       modalTitle: "Intervene MO",
       modalDescription: "This will block the MO from proceeding. Please provide a reason.",
-      reasonLabel: "Reason",
-      reasonPlaceholder: "Describe why you are intervening in this MO...",
+      currentlyAt: "Currently at {step}",
+      reflowToStage: "Reflow to stage",
+      selectStage: "Select a flow",
+      stageRequired: "Please select the flow to reflow to.",
+      itemsLabel: "Select item(s) that need revision",
+      itemsOptional: "Optional",
+      selectAll: "Select all",
+      noItems: "No items available.",
+      reasonLabel: "Reason for intervention",
+      reasonPlaceholder: "Explain why this is being reflowed...",
       cancelBtn: "Cancel",
-      confirmBtn: "Confirm Intervention",
+      confirmBtn: "Reflow",
       reasonRequired: "Please provide a reason for the intervention.",
     },
   },

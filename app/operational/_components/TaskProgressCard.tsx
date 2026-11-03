@@ -1,12 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n";
-import type { TranslationKey } from "@/i18n";
 
 /* =========================================================
    TYPES + DATA
@@ -69,18 +67,6 @@ const sampleTasks: Task[] = [
 
 type Status = "Completed" | "In progress" | "Not started";
 
-const STATUS_STYLES: Record<Status, string> = {
-  Completed: "bg-[#E6F4EA] text-[#0b5934]",
-  "In progress": "bg-blue-50 text-blue-700",
-  "Not started": "bg-slate-100 text-slate-600",
-};
-
-const STATUS_LABEL_KEYS: Record<Status, TranslationKey> = {
-  Completed: "status.completed",
-  "In progress": "status.inProgress",
-  "Not started": "status.notStarted",
-};
-
 const taskName = (t: Task) => `${t.batch} - ${t.type} ${t.model}`;
 
 const percent = (t: Task) =>
@@ -119,15 +105,12 @@ function Bar({ value, className }: { value: number; className?: string }) {
    TASK PROGRESS CARD
 ========================================================= */
 
-type View = "overall" | "details";
-
 export default function TaskProgressCard({
   tasks = sampleTasks,
 }: {
   tasks?: Task[];
 }) {
   const { t } = useI18n();
-  const [view, setView] = useState<View>("overall");
 
   // Ongoing tasks first, completed ones last
   const sorted = useMemo(
@@ -147,33 +130,6 @@ export default function TaskProgressCard({
     <Card className="min-w-0 flex-1 overflow-hidden rounded-lg border-slate-200">
       <CardHeader className="flex flex-row items-center justify-between gap-4 border-b px-4 py-3">
         <CardTitle className="text-sm font-semibold">{t("dashboard.taskProgress.title")}</CardTitle>
-
-        <div
-          role="tablist"
-          aria-label={t("dashboard.taskProgress.viewTablist")}
-          className="flex h-8 rounded-md bg-slate-100 p-0.5"
-        >
-          {(["overall", "details"] as const).map((item) => (
-            <Button
-              key={item}
-              type="button"
-              role="tab"
-              aria-selected={view === item}
-              variant="ghost"
-              className={cn(
-                "h-7 rounded px-3 text-[10px] font-medium capitalize",
-                view === item
-                  ? "bg-[#08783F] text-white hover:bg-[#066B3B] hover:text-white"
-                  : "text-slate-700",
-              )}
-              onClick={() => setView(item)}
-            >
-              {item === "overall"
-                ? t("dashboard.taskProgress.overall")
-                : t("dashboard.taskProgress.details")}
-            </Button>
-          ))}
-        </div>
       </CardHeader>
 
       <CardContent className="space-y-4 px-4 py-3">
@@ -181,7 +137,7 @@ export default function TaskProgressCard({
           <div className="rounded-md border border-dashed border-slate-200 bg-slate-50 p-4 text-center text-xs text-slate-500">
             {t("dashboard.taskProgress.noTasks")}
           </div>
-        ) : view === "overall" ? (
+        ) : (
           <>
             <section className="space-y-2">
               <div className="flex items-end gap-1">
@@ -249,56 +205,6 @@ export default function TaskProgressCard({
               </ul>
             </section>
           </>
-        ) : (
-          <ul className="max-h-[300px] divide-y divide-slate-200 overflow-y-auto">
-            {sorted.map((task) => {
-              const status = statusOf(task);
-              const pct = percent(task);
-              const remaining = task.total - task.done;
-
-              return (
-                <li key={task.id} className="space-y-2 py-3 first:pt-0 last:pb-0">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="truncate text-xs font-semibold text-slate-900">
-                        {taskName(task)}
-                      </p>
-                      <p className="mt-0.5 truncate text-[10px] text-slate-500">
-                        {t("dashboard.taskProgress.autoCreated", { mo: task.createdFromMo, date: task.createdAt })}
-                      </p>
-                    </div>
-
-                    <span
-                      className={cn(
-                        "shrink-0 rounded px-2 py-0.5 text-[10px] font-semibold",
-                        STATUS_STYLES[status],
-                      )}
-                    >
-                      {t(STATUS_LABEL_KEYS[status])}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Bar value={pct} className="h-2" />
-                    <span className="w-9 shrink-0 text-right text-[10px] text-slate-600">
-                      {pct}%
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-3 text-[10px] text-slate-500">
-                    <span>
-                      <strong className="font-semibold text-slate-700">
-                        {task.done}
-                      </strong>{" "}
-                      {t("dashboard.taskProgress.moDoneSuffix", { total: task.total })}
-                      {remaining > 0 && ` · ${t("dashboard.taskProgress.remaining", { count: remaining })}`}
-                    </span>
-                    <span className="shrink-0">{t("dashboard.taskProgress.updated", { date: task.updatedAt })}</span>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
         )}
       </CardContent>
     </Card>

@@ -1,4 +1,5 @@
 import LanguageSwitcher from "./language-switcher";
+import UserMenu from "./user-menu";
 
 const topBarDetails = ["Mon, 22 Sep 2026", "10:24"];
 
@@ -17,6 +18,7 @@ const TopBarSection = (): JSX.Element => {
             </span>
           ))}
         </div>
+        <UserMenu />
       </div>
     </header>
   );

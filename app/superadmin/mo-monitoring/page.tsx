@@ -8,9 +8,10 @@ import { useI18n } from "@/i18n";
 
 import MoKpiCards from "./_components/MoKpiCards";
 import MoTable from "./_components/MoTable";
-import InterveneModal from "./[moCode]/_components/InterveneModal";
+import InterveneModal, { type IntervenePayload } from "./[moCode]/_components/InterveneModal";
+import { getMoDetail as getStageData } from "@/lib/mo-detail/data";
 
-import { getMoList, intervene } from "../_lib/mo-data";
+import { getMoList, intervene, MO_STEPS } from "../_lib/mo-data";
 import type { MoRecord } from "../_lib/types";
 
 export default function MoMonitoringPage() {
@@ -24,9 +25,23 @@ export default function MoMonitoringPage() {
     getMoList().then(setMos);
   }, []);
 
-  async function handleIntervene(reason: string) {
+  // TODO(backend): load the real PMC Entry materials; falls back to the demo MO data
+  const stageData =
+    getStageData(interveneTarget?.moCode ?? "") ?? getStageData("T2026090410261301048");
+  const interveneItems = (
+    stageData?.stages.find((s) => s.stageKey === "pmcEntry")?.data as
+      | { materials?: { code: string; englishName: string }[] }
+      | undefined
+  )?.materials?.map((m) => ({ code: m.code, name: m.englishName })) ?? [];
+  const stageOptions = interveneTarget
+    ? MO_STEPS.slice(0, MO_STEPS.indexOf(interveneTarget.currentStep) + 1)
+    : [];
+
+  async function handleIntervene({ stage, items, reason }: IntervenePayload) {
     if (!interveneTarget) return;
-    await intervene(interveneTarget.moCode, reason);
+    // TODO(backend): persist the reflow target and revision items
+    const itemNote = items.length ? ` | Items: ${items.join(", ")}` : "";
+    await intervene(interveneTarget.moCode, `Reflow to ${stage} - ${reason}${itemNote}`);
     // Refresh the list to reflect changes
     const updated = await getMoList();
     setMos(updated);
@@ -69,6 +84,10 @@ export default function MoMonitoringPage() {
       {/* Intervene Modal */}
       <InterveneModal
         open={!!interveneTarget}
+        moCode={interveneTarget?.moCode ?? ""}
+        currentStep={interveneTarget?.currentStep ?? MO_STEPS[0]}
+        stageOptions={stageOptions}
+        items={interveneItems}
         onClose={() => setInterveneTarget(null)}
         onConfirm={handleIntervene}
       />

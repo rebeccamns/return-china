@@ -3,8 +3,6 @@
 import { useState } from "react";
 import {
   CheckCircle2,
-  ChevronDown,
-  ChevronUp,
   X,
   XCircle,
 } from "lucide-react";
@@ -27,8 +25,9 @@ import type {
   StageRecord,
 } from "@/lib/mo-detail/types";
 
-import StageDataContent from "@/components/history/StageDataContent";
 import HistoryStatus from "./HistoryStatus";
+import { DetailValue, MoreDetails } from "./RowPrimitives";
+import StageRows from "./StageRows";
 
 const STAGE_LABELS: Record<StageKey, TranslationKey> = {
   pmcEntry: "history.detail.stages.pmcEntry",
@@ -45,29 +44,6 @@ function getIdentityStage(
 ): StageRecord<"iqcScan"> | undefined {
   return stages.find(
     (stage): stage is StageRecord<"iqcScan"> => stage.stageKey === "iqcScan",
-  );
-}
-
-function MoreDetails({
-  expanded,
-  onToggle,
-}: {
-  expanded: boolean;
-  onToggle: () => void;
-}) {
-  const { t } = useI18n();
-  const Icon = expanded ? ChevronUp : ChevronDown;
-
-  return (
-    <button
-      type="button"
-      aria-expanded={expanded}
-      onClick={onToggle}
-      className="flex min-h-11 w-full items-center justify-between gap-2 text-left text-[13px] font-medium text-text-colortext-gray focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green"
-    >
-      {t(expanded ? "iqcHistory.lessDetails" : "iqcHistory.moreDetails")}
-      <Icon aria-hidden="true" className="h-4 w-4 shrink-0" />
-    </button>
   );
 }
 
@@ -174,17 +150,6 @@ function MaterialRow({
         </dl>
       )}
     </li>
-  );
-}
-
-function DetailValue({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-start justify-between gap-3">
-      <dt className="shrink-0 text-text-colortext-gray">{label}</dt>
-      <dd className="min-w-0 break-all text-right text-text-colortext-black">
-        {value}
-      </dd>
-    </div>
   );
 }
 
@@ -361,7 +326,7 @@ export default function StageDetailView({
         </p>
       ) : !isIqcStage ? (
         <section className="mt-3">
-          <StageDataContent stage={stage} />
+          <StageRows stage={stage} />
         </section>
       ) : count === 0 ? (
         <p className="mt-3 rounded-2xl border border-strokestroke-gray bg-backgroundbg-white p-4 text-center text-[13px] leading-[18px] text-text-colortext-gray">

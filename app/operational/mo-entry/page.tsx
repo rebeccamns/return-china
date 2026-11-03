@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Send } from "lucide-react";
+import { ClipboardList, Plus, Send } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +25,7 @@ import {
 import Sidebar from "@/components/layout/sidebar";
 import TopBar from "@/components/layout/topbar";
 import { useI18n } from "@/i18n";
+import SubmitFlowDialog, { type SubmitStep } from "../_components/SubmitFlowDialog";
 
 type MaterialRow = {
   code: string;
@@ -94,6 +95,8 @@ export default function MoEntryPage() {
   const [rows, setRows] = useState<MaterialRow[]>(initialRows);
   const [checkedRows, setCheckedRows] = useState<Set<number>>(new Set());
   const [statusMessage, setStatusMessage] = useState("");
+  const [submitStep, setSubmitStep] = useState<SubmitStep>(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   function updateRow(index: number, field: keyof MaterialRow, value: string) {
     setRows((prev) =>
@@ -183,6 +186,10 @@ export default function MoEntryPage() {
       return;
     }
 
+    if (isSubmitted) {
+      setIsSubmitted(false);
+      setRows(initialRows);
+    }
     setStatusMessage(
       `Task created for MO ${moNumber.trim()} · Model ${model.trim()} · Project ${projectNumber.trim()}.`,
     );
@@ -202,6 +209,11 @@ export default function MoEntryPage() {
       return;
     }
 
+    setSubmitStep("confirm");
+  }
+
+  function confirmSubmitMo() {
+    // TODO: send the MO to your API here
     setStatusMessage(
       t(
         rows.length === 1
@@ -210,10 +222,27 @@ export default function MoEntryPage() {
         { count: rows.length },
       ),
     );
+    setRows([]);
+    setCheckedRows(new Set());
+    setMoNumber("");
+    setModel("");
+    setProjectNumber("");
+    setTargetDeliveryDate("");
+    setIsSubmitted(true);
+    setSubmitStep("success");
   }
 
   return (
     <main className="min-h-screen w-full bg-backgroundbg-gray">
+      <SubmitFlowDialog
+        step={submitStep}
+        confirmTitle={t("submitFlow.moConfirmTitle")}
+        confirmDescription={t("submitFlow.moConfirmDescription")}
+        successTitle={t("submitFlow.moSuccessTitle")}
+        successDescription={t("submitFlow.moSuccessDescription")}
+        onConfirm={confirmSubmitMo}
+        onClose={() => setSubmitStep(null)}
+      />
       <Sidebar />
 
       <div className="flex min-h-screen flex-col pl-[255px]">
@@ -336,6 +365,19 @@ export default function MoEntryPage() {
               </div>
             )}
 
+            {isSubmitted ? (
+              <div className="flex flex-col items-center px-[18px] py-12 text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#E7F5EC] text-[#008348]">
+                  <ClipboardList className="h-6 w-6" />
+                </div>
+                <h2 className="mt-3 text-sm font-semibold text-[#111111]">
+                  {t("moEntry.emptyTitle")}
+                </h2>
+                <p className="mt-1 max-w-sm text-xs text-[#8F8F8E]">
+                  {t("moEntry.emptyDescription")}
+                </p>
+              </div>
+            ) : (
             <div className="px-[18px] pb-[18px] pt-4">
               <div className="mb-3">
                 <h2 className="text-sm font-semibold text-[#111111]">
@@ -523,6 +565,7 @@ export default function MoEntryPage() {
                 </Table>
               </div>
             </div>
+            )}
           </div>
         </div>
       </div>

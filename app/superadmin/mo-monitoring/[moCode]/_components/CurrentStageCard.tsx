@@ -3,7 +3,7 @@
 import { Info, PauseCircle } from "lucide-react";
 import { useI18n } from "@/i18n";
 import StatusBadge from "../../_components/StatusBadge";
-import type { MoRecord } from "../../../_lib/types";
+import type { MoRecord, StepName } from "../../../_lib/types";
 import { STEP_DISPLAY, currentRole } from "../../../_lib/mo-data";
 
 // TODO(backend): replace with real auth/role check
@@ -19,13 +19,26 @@ const FLOW_INDEX: Record<string, number> = {
 
 type Props = {
   mo: MoRecord;
+  flow?: StepName;
   onIntervene: () => void;
 };
 
-export default function CurrentStageCard({ mo, onIntervene }: Props) {
+export default function CurrentStageCard({ mo, flow, onIntervene }: Props) {
   const { t } = useI18n();
-  const flowN = FLOW_INDEX[mo.currentStep] ?? 1;
-  const stepName = STEP_DISPLAY[mo.currentStep];
+  const focusStep = flow ?? mo.currentStep;
+  const flowN = FLOW_INDEX[focusStep] ?? 1;
+  const stepName = STEP_DISPLAY[focusStep];
+  const focusEntry = mo.timeline.find((entry) => entry.step === focusStep);
+  const lastEdit = flow ? (focusEntry?.time ?? "—") : mo.lastUpdated;
+  const badgeStatus = flow
+    ? focusEntry?.status === "completed" || focusEntry?.status === "reopened"
+      ? "Completed"
+      : focusEntry?.status === "in_progress"
+        ? "In Progress"
+        : "Pending"
+    : mo.status === "Completed"
+      ? "Completed"
+      : "In Progress";
 
   const canIntervene = currentRole === "superadmin";
 
@@ -40,11 +53,11 @@ export default function CurrentStageCard({ mo, onIntervene }: Props) {
         <h3 className="text-base font-semibold text-gray-900">
           {t("moMonitoring.detail.flowLabel", { n: String(flowN), name: stepName })}
         </h3>
-        <StatusBadge status={mo.status === "Completed" ? "Completed" : "In Progress"} />
+        <StatusBadge status={badgeStatus} />
       </div>
 
       <p className="mt-1 text-xs text-gray-400">
-        {t("moMonitoring.detail.lastUpdated")} {mo.lastUpdated}
+        {t("moMonitoring.detail.lastUpdated")} {lastEdit}
       </p>
 
       {/* Info banner */}

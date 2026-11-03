@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useState } from "react";
-import { Plus, Send } from "lucide-react";
+import { Minus, Plus, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,9 +17,10 @@ import Sidebar from "@/components/layout/sidebar";
 import TopBar from "@/components/layout/topbar";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n";
+import SubmitFlowDialog, { type SubmitStep } from "../_components/SubmitFlowDialog";
 
 const nestedHeadClass =
-  "bg-slate-100 px-3 text-xs font-semibold text-slate-700";
+  "bg-[#F8F8F8] px-3 text-xs font-semibold text-slate-700";
 
 type Material = {
   code: string;
@@ -143,20 +144,43 @@ export default function WoEntryPage() {
   const [rows] = useState<WoRow[]>(initialRows);
   const [woValues, setWoValues] = useState<Record<string, string>>({});
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [submitStep, setSubmitStep] = useState<SubmitStep>(null);
+  const [pendingId, setPendingId] = useState<string | null>(null);
 
   function updateWo(id: string, value: string) {
     setWoValues((prev) => ({ ...prev, [id]: value }));
   }
 
   function submitWo(id: string) {
-    const wo = woValues[id];
-    if (!wo?.trim()) return;
-    // TODO: send { moId: id, wo } to your API here
-    alert(t("woEntry.woSubmitted", { wo, id }));
+    if (!woValues[id]?.trim()) return;
+    setPendingId(id);
+    setSubmitStep("confirm");
+  }
+
+  function confirmSubmitWo() {
+    // TODO: send { moId: pendingId, wo: woValues[pendingId] } to your API here
+    setSubmitStep("success");
+  }
+
+  function closeDialog() {
+    setSubmitStep(null);
+    setPendingId(null);
   }
 
   return (
     <main className="min-h-screen w-full bg-backgroundbg-gray">
+      <SubmitFlowDialog
+        step={submitStep}
+        confirmTitle={t("submitFlow.woConfirmTitle")}
+        confirmDescription={t("submitFlow.woConfirmDescription", {
+          wo: pendingId ? (woValues[pendingId] ?? "").trim() : "",
+          id: pendingId ?? "",
+        })}
+        successTitle={t("submitFlow.woSuccessTitle")}
+        successDescription={t("submitFlow.woSuccessDescription")}
+        onConfirm={confirmSubmitWo}
+        onClose={closeDialog}
+      />
       <Sidebar />
       <div className="flex min-h-screen flex-col pl-[255px]">
         <TopBar />
@@ -218,11 +242,11 @@ export default function WoEntryPage() {
                                 }
                                 aria-label={t("common.expandRow")}
                               >
-                                <Plus
-                                  className={`h-3.5 w-3.5 transition-transform ${
-                                    isExpanded ? "rotate-45" : ""
-                                  }`}
-                                />
+                                {isExpanded ? (
+                                  <Minus className="h-3.5 w-3.5" />
+                                ) : (
+                                  <Plus className="h-3.5 w-3.5" />
+                                )}
                               </Button>
                             </TableCell>
 
@@ -281,7 +305,7 @@ export default function WoEntryPage() {
                             <>
                               <TableRow
                                 key={`${row.id}-header`}
-                                className="hover:bg-slate-100"
+                                className="hover:bg-[#F8F8F8]"
                               >
                                 <TableHead
                                   className={cn(nestedHeadClass, "w-12")}
@@ -305,7 +329,7 @@ export default function WoEntryPage() {
                               {row.materials.map((material, i) => (
                                 <TableRow
                                   key={`${row.id}-material-${i}`}
-                                  className="bg-slate-50/40 hover:bg-slate-50/40"
+                                  className="bg-white hover:bg-white"
                                 >
                                   <TableCell />
                                   <TableCell className="text-xs">

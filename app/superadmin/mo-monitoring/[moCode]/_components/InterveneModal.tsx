@@ -3,25 +3,53 @@
 import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { useI18n } from "@/i18n";
+import { STEP_DISPLAY } from "../../../_lib/mo-data";
+import type { StepName } from "../../../_lib/types";
+
+export type InterveneItem = { code: string; name: string };
+
+export type IntervenePayload = {
+  stage: StepName;
+  items: string[];
+  reason: string;
+};
 
 type Props = {
   open: boolean;
+  moCode: string;
+  currentStep: StepName;
+  stageOptions: StepName[];
+  items: InterveneItem[];
   onClose: () => void;
-  onConfirm: (reason: string) => void;
+  onConfirm: (payload: IntervenePayload) => void;
 };
 
-export default function InterveneModal({ open, onClose, onConfirm }: Props) {
+export default function InterveneModal({
+  open,
+  moCode,
+  currentStep,
+  stageOptions,
+  items,
+  onClose,
+  onConfirm,
+}: Props) {
   const { t } = useI18n();
+  const [stage, setStage] = useState<StepName | "">("");
+  const [selected, setSelected] = useState<string[]>([]);
   const [reason, setReason] = useState("");
   const [error, setError] = useState("");
+  const [stageError, setStageError] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const allSelected = items.length > 0 && selected.length === items.length;
 
   // Reset state and focus textarea when opened
   useEffect(() => {
     if (open) {
+      setStage("");
+      setSelected([]);
       setReason("");
       setError("");
-      setTimeout(() => textareaRef.current?.focus(), 50);
+      setStageError("");
     }
   }, [open]);
 
@@ -37,14 +65,19 @@ export default function InterveneModal({ open, onClose, onConfirm }: Props) {
 
   if (!open) return null;
 
+  function toggleItem(code: string) {
+    setSelected((prev) =>
+      prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code],
+    );
+  }
+
   function handleConfirm() {
-    if (!reason.trim()) {
-      setError(t("moMonitoring.intervene.reasonRequired"));
-      return;
-    }
-    onConfirm(reason.trim());
-    setReason("");
-    setError("");
+    const missingStage = !stage;
+    const missingReason = !reason.trim();
+    setStageError(missingStage ? t("moMonitoring.intervene.stageRequired") : "");
+    setError(missingReason ? t("moMonitoring.intervene.reasonRequired") : "");
+    if (missingStage || missingReason || !stage) return;
+    onConfirm({ stage, items: selected, reason: reason.trim() });
   }
 
   return (
@@ -54,7 +87,7 @@ export default function InterveneModal({ open, onClose, onConfirm }: Props) {
       role="dialog"
       aria-labelledby="intervene-modal-title"
     >
-      <div className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+      <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl bg-white p-6 shadow-xl">
         {/* Close button */}
         <button
           type="button"
@@ -71,9 +104,74 @@ export default function InterveneModal({ open, onClose, onConfirm }: Props) {
         >
           {t("moMonitoring.intervene.modalTitle")}
         </h2>
-        <p className="mb-5 text-sm text-gray-500">
-          {t("moMonitoring.intervene.modalDescription")}
-        </p>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-gray-200 pb-4 text-sm">
+          <span className="font-semibold text-gray-800">{moCode}</span>
+          <span className="text-gray-500">
+            {t("moMonitoring.intervene.currentlyAt", { step: STEP_DISPLAY[currentStep] })}
+          </span>
+        </div>
+
+        <label
+          htmlFor="intervene-stage"
+          className="mb-1.5 block text-sm font-medium text-gray-700"
+        >
+          {t("moMonitoring.intervene.reflowToStage")}
+          <span className="ml-1 text-red-500">*</span>
+        </label>
+        <select
+          id="intervene-stage"
+          value={stage}
+          onChange={(e) => { setStage(e.target.value as StepName); setStageError(""); }}
+          aria-invalid={!!stageError}
+          className="mb-1 w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-[#058346] focus:outline-none focus:ring-1 focus:ring-[#058346]"
+        >
+          <option value="">{t("moMonitoring.intervene.selectStage")}</option>
+          {stageOptions.map((s) => (
+            <option key={s} value={s}>{STEP_DISPLAY[s]}</option>
+          ))}
+        </select>
+        {stageError && <p className="text-xs text-red-600">{stageError}</p>}
+
+        <div className="mb-1.5 mt-4">
+          <span className="text-sm font-medium text-gray-700">
+            {t("moMonitoring.intervene.itemsLabel")}
+            <span className="ml-1 text-xs font-normal text-gray-400">
+              ({t("moMonitoring.intervene.itemsOptional")})
+            </span>
+          </span>
+        </div>
+        <div className="mb-4 max-h-48 overflow-y-auto rounded-lg border border-gray-200">
+          {items.length === 0 ? (
+            <p className="px-3 py-3 text-sm text-gray-400">{t("moMonitoring.intervene.noItems")}</p>
+          ) : (
+            <>
+              <label className="flex cursor-pointer items-center gap-3 border-b border-gray-200 bg-[#F8F8F8] px-3 py-2 text-sm font-medium text-gray-700">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  onChange={() => setSelected(allSelected ? [] : items.map((i) => i.code))}
+                  className="h-4 w-4 accent-[#058346]"
+                />
+                {t("moMonitoring.intervene.selectAll")}
+              </label>
+              {items.map((item) => (
+                <label
+                  key={item.code}
+                  className="flex cursor-pointer items-center gap-3 border-b border-gray-100 px-3 py-2 text-sm text-gray-800 last:border-b-0 hover:bg-slate-50"
+                >
+                  <input
+                    type="checkbox"
+                    checked={selected.includes(item.code)}
+                    onChange={() => toggleItem(item.code)}
+                    className="h-4 w-4 accent-[#058346]"
+                  />
+                  <span className="font-medium">{item.code}</span>
+                  <span className="truncate text-gray-500">{item.name}</span>
+                </label>
+              ))}
+            </>
+          )}
+        </div>
 
         <label
           htmlFor="intervene-reason"
@@ -111,7 +209,7 @@ export default function InterveneModal({ open, onClose, onConfirm }: Props) {
           <button
             type="button"
             onClick={handleConfirm}
-            className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+            className="rounded-lg bg-[#058346] px-4 py-2 text-sm font-semibold text-white hover:bg-[#047038] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#058346]"
           >
             {t("moMonitoring.intervene.confirmBtn")}
           </button>
