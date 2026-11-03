@@ -1,8 +1,11 @@
+import type { ReactNode } from "react";
+
 type Props = {
   moNumber: string;
   model: string;
   returnId: string;
   progress?: { label: string; percent: number };
+  status?: ReactNode;
 };
 
 /** One-line MO context for inner steps, so forms get the screen space. */
@@ -11,6 +14,7 @@ export default function MoCompactCard({
   model,
   returnId,
   progress,
+  status,
 }: Props) {
   const percent = progress
     ? Math.max(0, Math.min(100, progress.percent))
@@ -28,9 +32,12 @@ export default function MoCompactCard({
               {returnId}
             </span>
           </div>
-          <p className="mt-0.5 truncate text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
-            {model}
-          </p>
+          <div className="mt-0.5 flex min-w-0 items-center justify-between gap-2">
+            <p className="min-w-0 truncate text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
+              {model}
+            </p>
+            {status}
+          </div>
 
           <div className="mt-3 border-t border-strokestroke-gray pt-3">
             <div className="flex items-center justify-between gap-3">

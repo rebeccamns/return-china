@@ -11,7 +11,7 @@ export const STAGE_KEYS = [
 ] as const;
 
 export type StageKey = (typeof STAGE_KEYS)[number];
-export type Role = "pmc";
+export type Role = "pmc" | "iqc";
 export type MOStatus = "Completed" | "In Progress" | "Rejected" | "Pending";
 export type StageStatus = "completed" | "in-progress" | "pending" | "rejected";
 export type IQCStatus = "PASS" | "REJECT";
@@ -116,6 +116,7 @@ export type StageDetail = {
 
 export type MoDetail = {
   moCode: string;
+  returnId: string;
   batchNumber: string;
   productDescription: string;
   overallStatus: MOStatus;
@@ -124,4 +125,12 @@ export type MoDetail = {
   submittedBy: string;
   submittedAt: string;
   stages: StageDetail[];
+};
+
+export type MoSummary = Pick<
+  MoDetail,
+  "moCode" | "returnId" | "model" | "submittedAt" | "overallStatus"
+> & {
+  completedStages: number;
+  totalStages: number;
 };

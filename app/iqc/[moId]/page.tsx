@@ -275,7 +275,7 @@ export default function IQCPage({
                 break;
 
               case "history":
-                // History screen will be connected here.
+                router.push("/iqc-history");
                 break;
             }
           }}

@@ -1,0 +1,47 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { listMoSummaries } from "@/lib/mo-detail/data";
+import type { MobileNavItem } from "@/components/layout/mobile-bottom-nav";
+
+import HistoryList from "./_components/HistoryList";
+import HistoryLoading from "./_components/HistoryLoading";
+import HistoryShell, { DEFAULT_MO_ID } from "./_components/HistoryShell";
+
+export default function IQCHistoryPage() {
+  const router = useRouter();
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => setReady(true), []);
+
+  function navigate(item: MobileNavItem) {
+    switch (item) {
+      case "identity":
+        // TODO: Replace this fallback with the selected/default MO when available.
+        router.push(`/iqc/${DEFAULT_MO_ID}`);
+        break;
+      case "verification":
+        // TODO: Replace this fallback with the selected/default MO when available.
+        router.push(`/iqc-verification/${DEFAULT_MO_ID}`);
+        break;
+      case "history":
+        router.push("/iqc-history");
+        break;
+      case "packing-list":
+      case "carton-sticker":
+        break;
+    }
+  }
+
+  return (
+    <HistoryShell onNavigate={navigate}>
+      {ready ? (
+        <HistoryList summaries={listMoSummaries()} />
+      ) : (
+        <HistoryLoading />
+      )}
+    </HistoryShell>
+  );
+}

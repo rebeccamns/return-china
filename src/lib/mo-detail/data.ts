@@ -185,6 +185,7 @@ function pendingStage(stage: StageDetail): StageDetail {
 
 const completed: MoDetail = {
   moCode: "T2026090410261301048",
+  returnId: "RC-20260831-002",
   batchNumber: "BATCH202609",
   productDescription: "Return Idle Latte M",
   overallStatus: "Completed",
@@ -197,6 +198,7 @@ const completed: MoDetail = {
 
 const inProgress: MoDetail = {
   moCode: "T2026090410261301039",
+  returnId: completed.returnId,
   batchNumber: "BATCH202608",
   productDescription: "Verify Material A77",
   overallStatus: "In Progress",
@@ -280,4 +282,22 @@ const details = new Map<string, MoDetail>([
 
 export function getMoDetail(moId: string): MoDetail | null {
   return details.get(moId) ?? null;
+}
+
+export function listMoSummaries() {
+  return [...details.values()]
+    .map((mo) => ({
+      moCode: mo.moCode,
+      returnId: mo.returnId,
+      model: mo.model,
+      submittedAt: mo.submittedAt,
+      overallStatus: mo.overallStatus,
+      completedStages: mo.stages.filter((stage) => stage.status === "completed")
+        .length,
+      totalStages: mo.stages.length,
+    }))
+    .sort(
+      (a, b) =>
+        new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime(),
+    );
 }
