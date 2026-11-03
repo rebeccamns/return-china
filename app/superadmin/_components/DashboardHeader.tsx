@@ -87,7 +87,7 @@ export default function DashboardHeader({
                   className={cn(
                     "h-[30px] flex-1 rounded px-4 text-[13px] transition-colors sm:px-5",
                     active
-                      ? "bg-gradient-to-b from-[#058346] to-[#0b5934] font-semibold text-white"
+                      ? "bg-[#08783F] font-semibold text-white"
                       : "font-medium text-[#444444] hover:bg-slate-50",
                   )}
                 >
@@ -128,9 +128,9 @@ export default function DashboardHeader({
           {/* Export button */}
           <Button
             type="button"
-            variant="outline"
+            variant="secondary"
             onClick={onExport}
-            className="h-[38px] w-full gap-2 rounded-md border-[#058346] bg-white px-3 text-[13px] font-semibold text-[#0b5934] hover:bg-[#EAF6EE] hover:text-[#0b5934] sm:w-auto"
+            className="h-[38px] w-full gap-2 rounded-md px-3 text-[13px] font-semibold sm:w-auto"
           >
             <Download className="h-4 w-4" strokeWidth={1.75} />
             {t("superadmin.export")}

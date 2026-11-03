@@ -266,13 +266,10 @@ export default function WoEntryPage() {
                             <TableCell className="px-3 py-2">
                               <Button
                                 type="button"
+                                variant="primary"
                                 disabled={!canSubmit}
                                 onClick={() => submitWo(row.id)}
-                                className={`h-9 w-full gap-2 rounded-md px-3 text-xs font-semibold text-white ${
-                                  canSubmit
-                                    ? "bg-gradient-to-b from-[#058346] to-[#0b5934] hover:opacity-90"
-                                    : "cursor-not-allowed bg-slate-300 hover:bg-slate-300"
-                                }`}
+                                className="h-9 w-full gap-2 rounded-md px-3 text-xs font-semibold"
                               >
                                 <Send className="h-3.5 w-3.5" />
                                 {t("woEntry.submitWo")}

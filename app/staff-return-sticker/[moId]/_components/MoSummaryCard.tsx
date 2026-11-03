@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { Check, ChevronDown, ChevronRight } from "lucide-react";
 
+import { primaryButton } from "@/components/layout/StickyActionBar";
 import { useI18n } from "@/i18n";
 
 type MoSummaryCardProps = {
@@ -147,7 +148,7 @@ export default function MoSummaryCard({
           <button
             type="button"
             onClick={onCreatePackingList}
-            className="h-12 max-md:h-11 w-full rounded-[14px] bg-[linear-gradient(0deg,rgba(11,89,52,1)_0%,rgba(5,131,70,1)_100%)] px-4 text-[15px] max-md:text-button font-semibold text-white shadow-none transition active:scale-[0.98] hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green"
+            className={`${primaryButton} w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green`}
           >
             {t("staffReturn.createPackingList")}
           </button>

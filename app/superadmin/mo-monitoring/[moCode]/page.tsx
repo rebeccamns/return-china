@@ -73,7 +73,7 @@ export default function MoDetailPage() {
             <button
               type="button"
               onClick={() => router.push("/superadmin/mo-monitoring")}
-              className="mt-6 inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="mt-6 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-black/5"
             >
               <ArrowLeft className="h-4 w-4" />
               {t("moMonitoring.backBtn")}
@@ -121,7 +121,7 @@ export default function MoDetailPage() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#058346]"
+              className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-gray-700 transition hover:bg-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F]"
             >
               <ArrowLeft className="h-4 w-4" strokeWidth={1.75} />
               {t("moMonitoring.backBtn")}
@@ -130,7 +130,7 @@ export default function MoDetailPage() {
             <button
               type="button"
               onClick={() => exportMoCsv([mo], `mo-${mo.moCode}.csv`)}
-              className="inline-flex items-center gap-2 rounded-lg bg-[#058346] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0b5934] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#058346]"
+              className="inline-flex items-center gap-2 rounded-lg border border-[#08783F] bg-[#08783F] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:border-[#066B3B] hover:bg-[#066B3B] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F]"
             >
               <Download className="h-4 w-4" strokeWidth={1.75} />
               {t("moMonitoring.exportMoData")}

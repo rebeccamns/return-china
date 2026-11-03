@@ -146,7 +146,7 @@ function ActionDropdown({
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
         onKeyDown={handleKey}
-        className="flex h-8 w-8 items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#058346]"
+        className="flex h-8 w-8 items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F]"
       >
         <MoreHorizontal className="h-4 w-4" />
       </button>
@@ -347,8 +347,9 @@ export default function MoTable({ mos, onIntervene }: Props) {
           {/* Export */}
           <Button
             type="button"
+            variant="primary"
             onClick={handleExport}
-            className="h-9 gap-1.5 bg-[#058346] px-3 text-sm font-semibold text-white hover:bg-[#0b5934] focus-visible:ring-[#058346]"
+            className="h-9 gap-1.5 px-3 text-sm font-semibold"
           >
             <Download className="h-4 w-4" strokeWidth={1.75} />
             {t("moMonitoring.exportBtn")}
@@ -411,7 +412,7 @@ export default function MoTable({ mos, onIntervene }: Props) {
                       <button
                         type="button"
                         aria-label={isExpanded ? t("common.collapseRow") : t("common.expandRow")}
-                        className="flex h-7 w-7 items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#058346]"
+                        className="flex h-7 w-7 items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F]"
                       >
                         {isExpanded ? (
                           <Minus className="h-3.5 w-3.5" />
@@ -480,7 +481,7 @@ export default function MoTable({ mos, onIntervene }: Props) {
             disabled={safePage <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             aria-label="Previous page"
-            className="flex h-8 w-8 items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#058346]"
+            className="flex h-8 w-8 items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F]"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -496,7 +497,7 @@ export default function MoTable({ mos, onIntervene }: Props) {
                 type="button"
                 onClick={() => setPage(pg)}
                 className={cn(
-                  "flex h-8 w-8 items-center justify-center rounded text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-[#058346]",
+                  "flex h-8 w-8 items-center justify-center rounded text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F]",
                   pg === safePage
                     ? "border border-gray-300 bg-white font-semibold text-gray-900"
                     : "text-gray-500 hover:bg-gray-50",
@@ -512,7 +513,7 @@ export default function MoTable({ mos, onIntervene }: Props) {
             disabled={safePage >= totalPages}
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             aria-label="Next page"
-            className="flex h-8 w-8 items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#058346]"
+            className="flex h-8 w-8 items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F]"
           >
             <ChevronRight className="h-4 w-4" />
           </button>

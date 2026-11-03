@@ -149,7 +149,7 @@ export default function LoginPage() {
                 type="button"
                 aria-label={showPassword ? "Sembunyikan password" : "Lihat password"}
                 onClick={() => setShowPassword((visible) => !visible)}
-                className="shrink-0 text-slate-400 transition hover:text-emerald-700"
+                className="shrink-0 text-slate-400 transition hover:text-[#08783F]"
               >
                 {showPassword ? (
                   <EyeOff className="h-[18px] w-[18px]" />
@@ -162,7 +162,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="flex h-[50px] w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#087443] to-[#05613a] text-sm font-semibold text-white shadow-sm transition hover:brightness-105 active:scale-[0.99]"
+            className="flex h-[50px] w-full items-center justify-center gap-2 rounded-lg border border-[#08783F] bg-[#08783F] text-sm font-semibold text-white shadow-sm transition hover:border-[#066B3B] hover:bg-[#066B3B] active:scale-[0.99]"
           >
             Masuk
             <ArrowRight className="h-[18px] w-[18px]" />
@@ -191,9 +191,9 @@ export default function LoginPage() {
               key={route.href}
               type="button"
               onClick={() => router.push(route.href)}
-              className="group rounded-lg border border-slate-200 bg-white/80 backdrop-blur-sm p-3 text-left transition hover:border-emerald-300 hover:bg-emerald-50/50"
+              className="group rounded-lg border border-slate-200 bg-white/80 backdrop-blur-sm p-3 text-left transition hover:border-[#08783F]/30 hover:bg-[#E7F5EC]/50"
             >
-              <span className="block text-sm font-medium text-slate-800 group-hover:text-emerald-800">
+              <span className="block text-sm font-medium text-slate-800 group-hover:text-[#066B3B]">
                 {route.label}
               </span>
               <span className="mt-1 block text-xs leading-relaxed text-slate-500">

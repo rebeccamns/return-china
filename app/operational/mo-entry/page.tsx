@@ -318,8 +318,9 @@ export default function MoEntryPage() {
 
                 <Button
                   type="button"
+                  variant="primary"
                   onClick={createTask}
-                  className="h-9 shrink-0 gap-2 rounded-md bg-gradient-to-b from-[#058346] to-[#0B5934] px-4 text-xs font-semibold text-white hover:opacity-90"
+                  className="h-9 shrink-0 gap-2 rounded-md px-4 text-xs font-semibold"
                 >
                   <Plus className="h-3.5 w-3.5" />
                   {t("moEntry.createTask")}
@@ -382,9 +383,9 @@ export default function MoEntryPage() {
 
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="secondary"
                     onClick={addRow}
-                    className="h-8 gap-1.5 rounded-md border-strokestroke-gray px-3 text-xs font-medium text-[#555554] hover:bg-[#F8F8F8]"
+                    className="h-8 gap-1.5 rounded-md px-3 text-xs font-medium"
                   >
                     <Plus className="h-3.5 w-3.5" />
                     {t("moEntry.addNewMaterial")}
@@ -392,8 +393,9 @@ export default function MoEntryPage() {
 
                   <Button
                     type="button"
+                    variant="primary"
                     onClick={submitMo}
-                    className="h-8 gap-2 rounded-md bg-gradient-to-b from-[#058346] to-[#0B5934] px-3.5 text-xs font-semibold text-white hover:opacity-90"
+                    className="h-8 gap-2 rounded-md px-3.5 text-xs font-semibold"
                   >
                     <Send className="h-3.5 w-3.5" />
                     {t("moEntry.submitMo")}

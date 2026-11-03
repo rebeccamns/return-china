@@ -351,12 +351,12 @@ export default function EximPage() {
                             <div className="flex items-center gap-3">
                               <Button
                                 type="button"
-                                variant="outline"
+                                variant="destructive"
                                 onClick={() => {
                                   setRejectReason("");
                                   setRejectOpen(true);
                                 }}
-                                className="h-10 gap-2 rounded-md border-strokestroke-gray bg-white px-4 text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-600"
+                                className="h-10 gap-2 rounded-md px-4 text-sm font-medium"
                               >
                                 <X className="h-4 w-4" />
                                 {t("exim.reject")}
@@ -364,14 +364,10 @@ export default function EximPage() {
 
                               <Button
                                 type="button"
+                                variant="primary"
                                 disabled={!canSubmit}
                                 onClick={handleSubmit}
-                                className={cn(
-                                  "h-10 gap-2 rounded-md px-5 text-sm font-semibold text-white",
-                                  canSubmit
-                                    ? "bg-gradient-to-b from-[#058346] to-[#0B5934] hover:opacity-90"
-                                    : "cursor-not-allowed bg-slate-300 hover:bg-slate-300",
-                                )}
+                                className="h-10 gap-2 rounded-md px-5 text-sm font-semibold"
                               >
                                 <Send className="h-4 w-4" />
                                 {t("common.submit")}
@@ -426,7 +422,7 @@ export default function EximPage() {
           <DialogFooter>
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               onClick={() => setRejectOpen(false)}
             >
               {t("common.cancel")}
@@ -434,9 +430,9 @@ export default function EximPage() {
 
             <Button
               type="button"
+              variant="destructiveSolid"
               disabled={!rejectReason.trim()}
               onClick={handleReject}
-              className="bg-red-600 text-white hover:bg-red-700 disabled:bg-slate-300"
             >
               {t("exim.rejectDialog.confirm")}
             </Button>

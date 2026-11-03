@@ -163,7 +163,7 @@ export default function TaskProgressCard({
               className={cn(
                 "h-7 rounded px-3 text-[10px] font-medium capitalize",
                 view === item
-                  ? "bg-gradient-to-b from-[#058346] to-[#0b5934] text-white hover:text-white"
+                  ? "bg-[#08783F] text-white hover:bg-[#066B3B] hover:text-white"
                   : "text-slate-700",
               )}
               onClick={() => setView(item)}

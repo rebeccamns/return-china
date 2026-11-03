@@ -392,7 +392,7 @@ function HistoryDetail({
 
         <Button
           type="button"
-          variant="outline"
+          variant="ghost"
           className="h-9 gap-2"
           onClick={onBack}
         >
@@ -443,7 +443,7 @@ function HistoryDetail({
       {/* Process timeline */}
       <section className="rounded-lg border border-strokestroke-gray bg-white p-5">
         <div className="mb-5 flex items-center gap-2">
-          <Clock3 className="h-4 w-4 text-primaryprimary-green" />
+          {/* <Clock3 className="h-4 w-4 text-primaryprimary-green" /> */}
           <div>
             <h2 className="text-sm font-semibold text-[#111111]">
               Process Timeline
@@ -524,11 +524,6 @@ function HistoryDetail({
           })}
         </div>
 
-        <p className="mt-2 rounded-md bg-slate-50 p-3 text-xs leading-5 text-[#64748B]">
-          Demo timeline: process events and timestamps are illustrative.
-          Replace this data with recorded workflow activity before using
-          the page for operational decisions.
-        </p>
       </section>
 
       {/* Activity log */}

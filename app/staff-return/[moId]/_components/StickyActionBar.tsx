@@ -1,15 +1,14 @@
 import type { ReactNode } from "react";
 
 export const primaryButton =
-  "h-12 max-md:h-11 rounded-[14px] px-4 text-[15px] max-md:text-button font-semibold text-white " +
-  "bg-[linear-gradient(0deg,rgba(11,89,52,1)_0%,rgba(5,131,70,1)_100%)] " +
-  "transition active:scale-[0.98] hover:opacity-90 " +
-  "disabled:cursor-not-allowed disabled:bg-none disabled:bg-slate-300 disabled:active:scale-100";
+  "h-12 max-md:h-11 rounded-[14px] border border-[#08783F] bg-[#08783F] px-4 text-[15px] max-md:text-button font-semibold text-white shadow-sm " +
+  "transition active:scale-[0.98] hover:border-[#066B3B] hover:bg-[#066B3B] " +
+  "disabled:cursor-not-allowed disabled:border-slate-300 disabled:bg-slate-300 disabled:hover:bg-slate-300 disabled:active:scale-100";
 
 export const secondaryButton =
-  "h-12 max-md:h-11 rounded-[14px] border border-strokestroke-gray bg-backgroundbg-white px-4 " +
-  "text-[15px] max-md:text-button font-semibold text-text-colortext-black transition active:scale-[0.98] " +
-  "hover:bg-backgroundbg-gray";
+  "h-12 max-md:h-11 rounded-[14px] border border-[#08783F]/25 bg-white/65 px-4 backdrop-blur-sm " +
+  "text-[15px] max-md:text-button font-semibold text-[#08783F] transition active:scale-[0.98] " +
+  "hover:border-[#08783F]/40 hover:bg-[#E7F5EC] hover:text-[#066B3B]";
 
 type StickyActionBarProps = {
   children: ReactNode;

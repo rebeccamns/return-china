@@ -16,7 +16,6 @@ import MaterialList from "./_components/MaterialList";
 import MoSummaryCard from "./_components/MoSummaryCard";
 import StickyActionBar, {
   primaryButton,
-  secondaryButton,
 } from "./_components/StickyActionBar";
 import {
   type Carton,
@@ -299,7 +298,7 @@ export default function StaffReturnPage({
               <button
                 type="button"
                 onClick={handleRejectWO}
-                className={`${secondaryButton} flex-1 text-text-colortext-red`}
+                className="h-12 max-md:h-11 flex-1 rounded-[14px] border border-red-200 bg-red-50 px-4 text-[15px] max-md:text-button font-semibold text-red-600 transition active:scale-[0.98] hover:bg-red-100"
               >
                 {t("staffReturn.rejectWo")}
               </button>

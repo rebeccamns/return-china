@@ -335,7 +335,7 @@ export function RevisionNotice() {
                               <Button
                                 type="button"
                                 variant="ghost"
-                                className="h-7 px-2 text-xs font-medium text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800"
+                                className="h-7 px-2 text-xs font-medium text-[#08783F] hover:bg-[#E7F5EC] hover:text-[#066B3B]"
                                 onClick={(event) => {
                                   event.stopPropagation();
                                   startEdit(item);
@@ -436,7 +436,7 @@ export function RevisionNotice() {
                                   {isEditing ? (
                                     <Button
                                       type="button"
-                                      variant="outline"
+                                      variant="secondary"
                                       className="h-7 rounded-md px-3 text-xs"
                                       onClick={addDraftMaterial}
                                     >
@@ -452,7 +452,7 @@ export function RevisionNotice() {
                                       <>
                                         <Button
                                           type="button"
-                                          variant="outline"
+                                          variant="ghost"
                                           className="h-7 rounded-md px-3 text-xs"
                                           onClick={cancelEdit}
                                         >
@@ -460,7 +460,8 @@ export function RevisionNotice() {
                                         </Button>
                                         <Button
                                           type="button"
-                                          className="h-7 rounded-md bg-[#058346] px-3 text-xs font-semibold text-white hover:bg-[#0b5934]"
+                                          variant="primary"
+                                          className="h-7 rounded-md px-3 text-xs font-semibold"
                                           onClick={saveEdit}
                                         >
                                           Save Changes
@@ -469,7 +470,8 @@ export function RevisionNotice() {
                                     )}
                                     <Button
                                       type="button"
-                                      className="h-7 rounded-md bg-gradient-to-b from-[#058346] to-[#0b5934] px-4 text-xs font-semibold text-white hover:opacity-90"
+                                      variant="primary"
+                                      className="h-7 rounded-md px-4 text-xs font-semibold"
                                       onClick={() => resubmit(item.id)}
                                       disabled={isEditing}
                                       title={isEditing ? "Save or cancel your changes before resubmitting" : undefined}
@@ -714,7 +716,7 @@ function OngoingMoTable() {
                           <div className="flex items-center justify-center gap-1.5">
                             <Button
                               type="button"
-                              variant="outline"
+                              variant="ghost"
                               className="h-7 rounded-md px-2.5 text-xs"
                               onClick={(event) => {
                                 event.stopPropagation();
@@ -726,7 +728,8 @@ function OngoingMoTable() {
 
                             <Button
                               type="button"
-                              className="h-7 rounded-md bg-[#058346] px-2.5 text-xs text-white hover:bg-[#0b5934]"
+                              variant="primary"
+                              className="h-7 rounded-md px-2.5 text-xs"
                               onClick={(event) => {
                                 event.stopPropagation();
                                 submitEdit();
@@ -852,7 +855,7 @@ function OngoingMoTable() {
                             <TableCell colSpan={6} className="py-3">
                               <Button
                                 type="button"
-                                variant="outline"
+                                variant="secondary"
                                 className="h-7 rounded-md px-3 text-xs"
                                 onClick={() => addMaterial(row.id)}
                               >
