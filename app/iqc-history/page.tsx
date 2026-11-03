@@ -6,9 +6,11 @@ import { useRouter } from "next/navigation";
 import { listMoSummaries } from "@/lib/mo-detail/data";
 import type { MobileNavItem } from "@/components/layout/mobile-bottom-nav";
 
-import HistoryList from "./_components/HistoryList";
-import HistoryLoading from "./_components/HistoryLoading";
-import HistoryShell, { DEFAULT_MO_ID } from "./_components/HistoryShell";
+import HistoryList from "@/components/mobile-history/HistoryList";
+import HistoryLoading from "@/components/mobile-history/HistoryLoading";
+import HistoryShell from "@/components/mobile-history/HistoryShell";
+
+const DEFAULT_MO_ID = "20260831002";
 
 export default function IQCHistoryPage() {
   const router = useRouter();
@@ -38,7 +40,7 @@ export default function IQCHistoryPage() {
   return (
     <HistoryShell onNavigate={navigate}>
       {ready ? (
-        <HistoryList summaries={listMoSummaries()} />
+        <HistoryList summaries={listMoSummaries()} basePath="/iqc-history" />
       ) : (
         <HistoryLoading />
       )}

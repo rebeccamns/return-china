@@ -1,4 +1,5 @@
 import { ChevronLeft } from "lucide-react";
+import type { ReactNode } from "react";
 
 type BackTitleProps = {
   title: string;
@@ -6,6 +7,8 @@ type BackTitleProps = {
   onBack?: () => void;
   backLabel?: string;
   subtitle?: string;
+  /** Optional content rendered inline beside the title. */
+  titleExtra?: ReactNode;
 };
 
 /** Back button merged with the page title:  ‹ Title */
@@ -14,6 +17,7 @@ export default function BackTitle({
   onBack,
   backLabel = "Back",
   subtitle,
+  titleExtra,
 }: BackTitleProps) {
   const titleClass =
     "truncate text-[22px] max-md:text-title font-semibold leading-7 tracking-[-0.01em] text-text-colortext-black";
@@ -33,6 +37,7 @@ export default function BackTitle({
               strokeWidth={2}
             />
             <span className={titleClass}>{title}</span>
+            {titleExtra}
           </button>
         ) : (
           <span className={`block py-1.5 ${titleClass}`}>{title}</span>

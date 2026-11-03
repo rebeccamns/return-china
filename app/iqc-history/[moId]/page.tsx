@@ -9,10 +9,12 @@ import { useI18n } from "@/i18n";
 import { getMoDetail } from "@/lib/mo-detail/data";
 import type { StageDetail, StageKey } from "@/lib/mo-detail/types";
 
-import HistoryShell, { DEFAULT_MO_ID } from "../_components/HistoryShell";
-import HistoryLoading from "../_components/HistoryLoading";
-import MoTimeline from "../_components/MoTimeline";
-import StageDetailView from "../_components/StageDetailView";
+import HistoryShell from "@/components/mobile-history/HistoryShell";
+import HistoryLoading from "@/components/mobile-history/HistoryLoading";
+import MoTimeline from "@/components/mobile-history/MoTimeline";
+import StageDetailView from "@/components/mobile-history/StageDetailView";
+
+const DEFAULT_MO_ID = "20260831002";
 
 export default function IQCHistoryDetailPage({
   params,
@@ -83,12 +85,13 @@ export default function IQCHistoryDetailPage({
       ) : selectedStage ? (
         <StageDetailView
           mo={mo}
+          role="iqc"
           stage={selectedStage}
           onBack={() => setSelectedStageKey(null)}
         />
       ) : (
         <MoTimeline
-          mo={mo}
+          mo={mo} role="iqc"
           onSelectStage={selectStage}
           onBack={() => router.push("/iqc-history")}
         />

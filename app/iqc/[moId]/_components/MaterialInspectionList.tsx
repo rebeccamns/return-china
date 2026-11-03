@@ -26,30 +26,10 @@ export default function MaterialInspectionList({
 
   const inspectedCount = materials.filter((m) => m.status !== null).length;
   const total = materials.length;
-  const progress = total ? Math.round((inspectedCount / total) * 100) : 0;
   const allInspected = total > 0 && inspectedCount === total;
 
   return (
     <div>
-      {/* Progress */}
-      <section className="rounded-2xl border border-strokestroke-gray bg-backgroundbg-white p-4 max-md:p-3.5">
-        <div className="flex items-center justify-between gap-3">
-          <p className="text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
-            {t("iqc.materialInspected", { inspected: inspectedCount, total })}
-          </p>
-          <p className="text-[13px] max-md:text-secondary font-semibold leading-[18px] text-text-colortext-black">
-            {progress}%
-          </p>
-        </div>
-
-        <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#E6E6E6]">
-          <div
-            className="h-full rounded-full bg-[#008348] transition-all duration-300"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-      </section>
-
       {/* Material list */}
       <div className="mb-3 max-md:mb-2 mt-5 max-md:mt-3 flex items-center justify-between gap-2">
         <h2 className="text-[16px] max-md:text-heading font-semibold leading-6 text-text-colortext-black">

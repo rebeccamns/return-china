@@ -164,8 +164,10 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
             case "packing-list":
               window.location.href = `/staff-return/${moId}`;
               break;
-            case "carton-sticker":
             case "history":
+              window.location.href = "/staff-return-history";
+              break;
+            case "carton-sticker":
               break;
           }
         }}

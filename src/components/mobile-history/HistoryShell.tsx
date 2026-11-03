@@ -3,17 +3,20 @@
 import type { ReactNode } from "react";
 
 import MobileBottomNav from "@/components/layout/mobile-bottom-nav";
-import type { MobileNavItem } from "@/components/layout/mobile-bottom-nav";
+import type {
+  MobileNavItem,
+  NavItem,
+} from "@/components/layout/mobile-bottom-nav";
 import MobileHeader from "@/components/layout/mobile-header";
-
-export const DEFAULT_MO_ID = "20260831002";
 
 export default function HistoryShell({
   children,
   onNavigate,
+  items,
 }: {
   children: ReactNode;
   onNavigate: (item: MobileNavItem) => void;
+  items?: NavItem[];
 }) {
   return (
     <main className="relative min-h-screen w-full overflow-x-hidden bg-backgroundbg-gray antialiased">
@@ -31,7 +34,7 @@ export default function HistoryShell({
         {children}
       </section>
 
-      <MobileBottomNav activeItem="history" onNavigate={onNavigate} />
+      <MobileBottomNav items={items} activeItem="history" onNavigate={onNavigate} />
     </main>
   );
 }

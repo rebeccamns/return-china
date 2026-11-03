@@ -87,7 +87,11 @@ export default function MaterialInspectionForm({
     <div>
       <BackTitle
         title={material.code}
-        subtitle={`${material.englishName} ${material.chinaName}`}
+        titleExtra={
+          <span className="ml-1 truncate text-[13px] max-md:text-secondary font-normal leading-[18px] text-text-colortext-gray">
+            {material.englishName} {material.chinaName}
+          </span>
+        }
         onBack={onBack}
         backLabel={t("iqc.form.backToList")}
       />

@@ -3,6 +3,7 @@ import { STAGE_KEYS, type Role, type StageKey } from "./types";
 export const STAGE_VISIBILITY: Record<Role, StageKey[]> = {
   pmc: [...STAGE_KEYS],
   iqc: ["iqcScan", "iqcQaPass"],
+  staff: [...STAGE_KEYS],
 };
 
 function isRole(role: string): role is Role {
@@ -17,4 +18,5 @@ export function canViewStageDetail(role: string, stageKey: StageKey): boolean {
 export const HISTORY_BASE_PATH: Record<Role, string> = {
   pmc: "/operational/history",
   iqc: "/iqc-history",
+  staff: "/staff-return-history",
 };

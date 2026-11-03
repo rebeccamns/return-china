@@ -15,6 +15,7 @@ import { canViewStageDetail } from "@/lib/mo-detail/access";
 import {
   STAGE_KEYS,
   type MoDetail,
+  type Role,
   type StageDetail,
   type StageKey,
   type StageStatus,
@@ -31,13 +32,6 @@ const STAGE_LABELS: Record<StageKey, TranslationKey> = {
   staffReturnSticker: "history.detail.stages.staffReturnSticker",
   iqcQaPass: "history.detail.stages.iqcQaPass",
 };
-
-function statusLabel(status: StageStatus, t: (key: TranslationKey) => string) {
-  if (status === "completed") return t("status.completed");
-  if (status === "rejected") return t("status.rejected");
-  if (status === "in-progress") return t("status.inProgress");
-  return t("status.notStarted");
-}
 
 function StatusIcon({ status }: { status: StageStatus }) {
   const Icon =
@@ -64,7 +58,9 @@ export default function MoTimeline({
   mo,
   onSelectStage,
   onBack,
+  role,
 }: {
+  role: Role;
   mo: MoDetail;
   onSelectStage: (stage: StageDetail) => void;
   onBack: () => void;
@@ -117,26 +113,23 @@ export default function MoTimeline({
           >
             {t("iqcHistory.processTimeline")}
           </h2>
-          <p className="mt-0.5 text-[13px] leading-[18px] text-text-colortext-gray">
-            {t("iqcHistory.timelineDescription")}
-          </p>
         </div>
 
-        <ul className="space-y-0">
+        <ul className="space-y-1">
           {STAGE_KEYS.map((stageKey, index) => {
             const stage = mo.stages.find((item) => item.stageKey === stageKey);
             if (!stage) return null;
             const available =
-              canViewStageDetail("iqc", stage.stageKey) &&
+              canViewStageDetail(role, stage.stageKey) &&
               stage.status !== "pending" &&
               stage.data !== null;
             const meta =
               stage.status === "pending"
                 ? t("iqcHistory.notStartedYet")
-                : [stage.timestamp, stage.employeeName].filter(Boolean).join(" · ");
+                : (stage.timestamp ?? "");
 
             return (
-              <li key={stage.stageKey} className="flex gap-2.5">
+              <li key={stage.stageKey} className="flex gap-2.5 ">
                 <span className="flex w-6 shrink-0 flex-col items-center">
                   <span className="flex h-6 w-6 items-center justify-center">
                     <StatusIcon status={stage.status} />
@@ -151,7 +144,6 @@ export default function MoTimeline({
                   meta={meta}
                   onSelect={() => onSelectStage(stage)}
                   label={t(STAGE_LABELS[stage.stageKey])}
-                  statusText={statusLabel(stage.status, t)}
                 />
               </li>
             );
@@ -168,14 +160,12 @@ function StageRow({
   meta,
   onSelect,
   label,
-  statusText,
 }: {
   stage: StageDetail;
   available: boolean;
   meta: string;
   onSelect: () => void;
   label: string;
-  statusText: string;
 }) {
   const { t } = useI18n();
   const content = (
@@ -184,7 +174,6 @@ function StageRow({
         <span className="truncate text-[14px] font-semibold leading-5 text-text-colortext-black">
           {label}
         </span>
-        <HistoryStatus status={stage.status} label={statusText} />
       </span>
       <span className="mt-0.5 block truncate text-[12px] leading-4 text-text-colortext-gray">
         {meta}

@@ -10,7 +10,7 @@ export type MobileNavItem =
   | "packing-list"
   | "carton-sticker";
 
-type NavItem = {
+export type NavItem = {
   id: MobileNavItem;
   label: string;
   icon: typeof ClipboardList;

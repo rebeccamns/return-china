@@ -21,11 +21,13 @@ import { useI18n, type TranslationKey } from "@/i18n";
 import { canViewStageDetail } from "@/lib/mo-detail/access";
 import type {
   MoDetail,
+  Role,
   StageDetail,
   StageKey,
   StageRecord,
 } from "@/lib/mo-detail/types";
 
+import StageDataContent from "@/components/history/StageDataContent";
 import HistoryStatus from "./HistoryStatus";
 
 const STAGE_LABELS: Record<StageKey, TranslationKey> = {
@@ -266,14 +268,16 @@ export default function StageDetailView({
   mo,
   stage,
   onBack,
+  role,
 }: {
+  role: Role;
   mo: MoDetail;
   stage: StageDetail;
   onBack: () => void;
 }) {
   const { t } = useI18n();
 
-  if (!canViewStageDetail("iqc", stage.stageKey)) {
+  if (!canViewStageDetail(role, stage.stageKey)) {
     return (
       <>
         <BackTitle
@@ -292,6 +296,7 @@ export default function StageDetailView({
   const verification = stage.stageKey === "iqcQaPass" ? stage.data : null;
   const identityStage = getIdentityStage(mo.stages);
   const scannedMaterials = identityStage?.data?.materials ?? [];
+  const isIqcStage = identity !== null || verification !== null;
   const count = identity?.materials.length ?? verification?.cartons.length ?? 0;
   const pieces =
     identity?.materials.reduce((sum, material) => sum + material.quantity, 0) ??
@@ -354,6 +359,10 @@ export default function StageDetailView({
             ? t("iqcHistory.notStartedYet")
             : t("iqcHistory.noData")}
         </p>
+      ) : !isIqcStage ? (
+        <section className="mt-3">
+          <StageDataContent stage={stage} />
+        </section>
       ) : count === 0 ? (
         <p className="mt-3 rounded-2xl border border-strokestroke-gray bg-backgroundbg-white p-4 text-center text-[13px] leading-[18px] text-text-colortext-gray">
           {t("iqcHistory.noData")}

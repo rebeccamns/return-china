@@ -366,7 +366,7 @@ export default function StaffReturnPage({
                 break;
 
               case "history":
-                // Connect this to the History screen when available.
+                window.location.href = "/staff-return-history";
                 break;
             }
           }}

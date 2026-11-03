@@ -211,6 +211,18 @@ export default function IQCPage({
                 moNumber={moData.moNumber}
                 model={moData.model}
                 returnId={moData.returnId}
+                progress={{
+                  label: t("iqc.materialInspected", {
+                    inspected: inspectedCount,
+                    total: moData.totalMaterials,
+                  }),
+                  percent:
+                    moData.totalMaterials > 0
+                      ? Math.round(
+                          (inspectedCount / moData.totalMaterials) * 100,
+                        )
+                      : 0,
+                }}
               />
             </div>
 
