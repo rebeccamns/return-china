@@ -269,7 +269,9 @@ export default function MoDetailView({
               href={entryHref}
               className="text-text-colortext-gray hover:text-black"
             >
-              {t("navigation.entry")}
+              {historyHref === "/exim/history"
+                ? t("exim.title")
+                : t("navigation.entry")}
             </Link>
             <span aria-hidden="true" className="text-[#B5B5B3]">
               ›

@@ -1,8 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search, CalendarDays, ChevronDown, RotateCcw } from "lucide-react";
+import Link from "next/link";
+import { CalendarDays, ChevronDown, Eye, Search } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -18,25 +20,29 @@ import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n";
 import type { TranslationKey } from "@/i18n";
 
-type Status = "Submitted" | "Rejected" | "Resubmitted";
+type Status = "Completed" | "Rejected" | "Resubmitted";
 type DateRange = "7" | "30" | "custom" | "all";
 
 type HistoryRow = {
+  id: string;
   code: string;
   model: string;
-  wo: string;
+  projectNumber: string;
+  task: string;
   status: Status;
+  notes: string;
+  submittedBy: string;
   submittedAt: string;
 };
 
 const STATUS_STYLES: Record<Status, string> = {
-  Submitted: "bg-[#E6F4EA] text-[#0b5934]",
+  Completed: "bg-[#E6F4EA] text-[#0b5934]",
   Rejected: "bg-red-50 text-red-600",
   Resubmitted: "bg-amber-50 text-amber-700",
 };
 
 const STATUS_LABEL_KEYS: Record<Status, TranslationKey> = {
-  Submitted: "status.submitted",
+  Completed: "status.completed",
   Rejected: "status.rejected",
   Resubmitted: "status.resubmitted",
 };
@@ -47,31 +53,58 @@ const headClass =
 // Demo data. Replace with your API data when available.
 const rows: HistoryRow[] = [
   {
-    code: "T2026090410261301041",
+    id: "h-1",
+    code: "T2026090410261301048",
     model: "Latte-M",
-    wo: "WO-20260920-001",
-    status: "Submitted",
+    projectNumber: "9991028",
+    task: "BATCH202609 - Return Idle Latte M",
+    status: "Completed",
+    notes: "-",
+    submittedBy: "Bagus Saputra",
     submittedAt: "Sep 20, 2026 14:32",
   },
   {
-    code: "T2026090410261301039",
-    model: "Reno 12",
-    wo: "WO-20260919-002",
+    id: "h-2",
+    code: "T2026090410261301041",
+    model: "A58",
+    projectNumber: "9991027",
+    task: "BATCH202609 - Receive Material A58",
     status: "Rejected",
+    notes: "Quantity mismatch on Camera Module (expected 7, received 5)",
+    submittedBy: "Bagus Saputra",
     submittedAt: "Sep 19, 2026 09:15",
   },
   {
-    code: "T2026090410261301033",
-    model: "Latte-M",
-    wo: "WO-20260918-003",
+    id: "h-3",
+    code: "T2026090410261301039",
+    model: "A77",
+    projectNumber: "9991026",
+    task: "BATCH202608 - Verify Material A77",
     status: "Resubmitted",
+    notes: "Previously rejected: wrong material code on Display Panel",
+    submittedBy: "Bagus Saputra",
     submittedAt: "Sep 18, 2026 16:48",
   },
   {
+    id: "h-4",
+    code: "T2026090410261301033",
+    model: "Latte-M",
+    projectNumber: "9991025",
+    task: "BATCH202608 - Return Idle Latte M",
+    status: "Completed",
+    notes: "-",
+    submittedBy: "Bagus Saputra",
+    submittedAt: "Sep 17, 2026 11:02",
+  },
+  {
+    id: "h-5",
     code: "T2026090410261301028",
-    model: "A5 Pro",
-    wo: "WO-20260916-004",
-    status: "Submitted",
+    model: "A98",
+    projectNumber: "9991024",
+    task: "BATCH202608 - Receive Material A98",
+    status: "Rejected",
+    notes: "China name does not match the master list",
+    submittedBy: "Bagus Saputra",
     submittedAt: "Sep 16, 2026 08:40",
   },
 ];
@@ -101,7 +134,7 @@ export default function EximHistoryPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [modelFilter, setModelFilter] = useState("All");
-  const [dateRange, setDateRange] = useState<DateRange>("7");
+  const [dateRange, setDateRange] = useState<DateRange>("all");
   const [customStart, setCustomStart] = useState("");
   const [customEnd, setCustomEnd] = useState("");
 
@@ -129,7 +162,11 @@ export default function EximHistoryPage() {
         !query ||
         row.code.toLowerCase().includes(query) ||
         row.model.toLowerCase().includes(query) ||
-        row.wo.toLowerCase().includes(query);
+        row.projectNumber.toLowerCase().includes(query) ||
+        row.task.toLowerCase().includes(query) ||
+        row.status.toLowerCase().includes(query) ||
+        row.notes.toLowerCase().includes(query) ||
+        row.submittedBy.toLowerCase().includes(query);
 
       const matchesStatus =
         statusFilter === "All" || row.status === statusFilter;
@@ -162,7 +199,7 @@ export default function EximHistoryPage() {
     setSearch("");
     setStatusFilter("All");
     setModelFilter("All");
-    setDateRange("7");
+    setDateRange("all");
     setCustomStart("");
     setCustomEnd("");
   }
@@ -219,7 +256,7 @@ export default function EximHistoryPage() {
                   {(search ||
                     statusFilter !== "All" ||
                     modelFilter !== "All" ||
-                    dateRange !== "7") && (
+                    dateRange !== "all") && (
                     <div className="flex h-9 items-center">
                       <button
                         type="button"
@@ -249,7 +286,7 @@ export default function EximHistoryPage() {
                         className={cn(inputClass, "appearance-none pr-8")}
                       >
                         <option value="All">{t("exim.history.allStatuses")}</option>
-                        <option value="Submitted">{t("status.submitted")}</option>
+                        <option value="Completed">{t("status.completed")}</option>
                         <option value="Rejected">{t("status.rejected")}</option>
                         <option value="Resubmitted">{t("status.resubmitted")}</option>
                       </select>
@@ -371,13 +408,17 @@ export default function EximHistoryPage() {
 
               <div className="overflow-x-auto rounded-md border border-strokestroke-gray">
                 
-                <Table className="min-w-[850px]">
+                <Table className="min-w-[1100px]">
                   <TableHeader>
                     <TableRow className="hover:bg-[#F8F8F8]">
                       <TableHead className={headClass}>{t("common.moCode")}</TableHead>
                       <TableHead className={headClass}>{t("common.model")}</TableHead>
+                      <TableHead className={headClass}>{t("history.detail.projectNumber")}</TableHead>
+                      <TableHead className={headClass}>{t("common.task")}</TableHead>
                       <TableHead className={headClass}>{t("common.status")}</TableHead>
-                      <TableHead className={headClass}>{t("exim.history.submittedAtColumn")}</TableHead>
+                      <TableHead className={headClass}>{t("common.notes")}</TableHead>
+                      <TableHead className={headClass}>{t("history.submittedBy")}</TableHead>
+                      <TableHead className={headClass}>{t("history.dateSubmitted")}</TableHead>
                       <TableHead className={headClass}>{t("common.action")}</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -386,7 +427,7 @@ export default function EximHistoryPage() {
                     {filtered.length === 0 ? (
                       <TableRow>
                         <TableCell
-                          colSpan={5}
+                          colSpan={9}
                           className="px-3 py-10 text-center"
                         >
                           <p className="text-sm font-medium text-[#333333]">
@@ -405,17 +446,33 @@ export default function EximHistoryPage() {
                         </TableCell>
                       </TableRow>
                     ) : (
-                      filtered.map((row) => (
+                      filtered.map((row) => {
+                        const detailHref = `/exim/history/${encodeURIComponent(row.code)}`;
+
+                        return (
                         <TableRow
-                          key={row.code}
+                          key={row.id}
                           className="h-12 hover:bg-[#FAFAFA]"
                         >
                           <TableCell className="whitespace-nowrap px-3 py-2 text-xs font-medium text-[#111111]">
-                            {row.code}
+                            <Link
+                              href={detailHref}
+                              className="hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green"
+                            >
+                              {row.code}
+                            </Link>
                           </TableCell>
 
                           <TableCell className="px-3 py-2 text-xs text-[#111111]">
                             {row.model}
+                          </TableCell>
+
+                          <TableCell className="whitespace-nowrap px-3 py-2 text-xs text-[#111111]">
+                            {row.projectNumber}
+                          </TableCell>
+
+                          <TableCell className="px-3 py-2 text-xs text-[#111111]">
+                            {row.task}
                           </TableCell>
 
                           <TableCell className="px-3 py-2">
@@ -429,23 +486,37 @@ export default function EximHistoryPage() {
                             </span>
                           </TableCell>
 
+                          <TableCell className="max-w-[260px] px-3 py-2 text-xs text-[#5F5F5E]">
+                            {row.notes}
+                          </TableCell>
+
+                          <TableCell className="whitespace-nowrap px-3 py-2 text-xs text-[#111111]">
+                            {row.submittedBy}
+                          </TableCell>
+
                           <TableCell className="whitespace-nowrap px-3 py-2 text-xs text-[#5F5F5E]">
                             {row.submittedAt}
                           </TableCell>
 
                           <TableCell className="px-3 py-2">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                console.log("View MO detail:", row.code)
-                              }
-                              className="whitespace-nowrap text-xs font-medium text-[#046A39] hover:underline"
+                            <Button
+                              asChild
+                              variant="outline"
+                              size="sm"
+                              className="h-8 gap-1.5 text-xs"
                             >
-                              {t("common.seeDetail")}
-                            </button>
+                              <Link
+                                href={detailHref}
+                                aria-label={`${t("history.viewDetail")}: ${row.code}`}
+                              >
+                                <Eye className="h-3.5 w-3.5" />
+                                {t("history.viewDetail")}
+                              </Link>
+                            </Button>
                           </TableCell>
                         </TableRow>
-                      ))
+                        );
+                      })
                     )}
                   </TableBody>
                 </Table>

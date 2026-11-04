@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ScanLine } from "lucide-react";
+import { createPortal } from "react-dom";
 
 import {
   primaryButton,
@@ -26,7 +27,7 @@ type Props = {
 };
 
 /**
- * Bottom sheet with one scan input (works with hardware scanners: Enter confirms).
+ * Centered modal with one scan input (hardware scanners confirm with Enter).
  * Mount it with a `key` per target so its input state resets.
  */
 export default function ScanSheet({
@@ -60,9 +61,11 @@ export default function ScanSheet({
     onConfirm();
   }
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 backdrop-blur-[2px] sm:items-center sm:p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4 backdrop-blur-[2px]"
       onClick={onClose}
     >
       <section
@@ -70,7 +73,7 @@ export default function ScanSheet({
         aria-modal="true"
         aria-labelledby="scan-sheet-title"
         onClick={(event) => event.stopPropagation()}
-        className="w-full max-w-[412px] rounded-t-3xl bg-backgroundbg-white px-5 max-md:px-4 pt-3 shadow-[0_8px_30px_rgba(0,0,0,0.18)] sm:rounded-3xl sm:pb-5"
+        className="w-full max-w-[412px] rounded-3xl bg-backgroundbg-white px-5 max-md:px-4 pt-3 shadow-[0_8px_30px_rgba(0,0,0,0.18)] sm:pb-5"
         style={{ paddingBottom: "max(20px, env(safe-area-inset-bottom, 0px))" }}
       >
         <div
@@ -151,6 +154,7 @@ export default function ScanSheet({
           </button>
         </div>
       </section>
-    </div>
+    </div>,
+    document.body,
   );
 }

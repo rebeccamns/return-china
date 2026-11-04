@@ -49,7 +49,7 @@ export default function MaterialInspectionList({
               <button
                 type="button"
                 onClick={() => onSelectMaterial(material)}
-                className="flex min-h-[60px] max-md:min-h-[52px] w-full items-center gap-3 px-4 py-2.5 max-md:px-3.5 max-md:py-2 text-left transition-colors active:bg-backgroundbg-gray"
+                className="flex min-h-[60px] max-md:min-h-[64px] w-full items-center gap-3 px-4 py-2.5 max-md:px-4 max-md:py-3 text-left transition-colors active:bg-backgroundbg-gray"
               >
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[13px] max-md:text-secondary font-semibold text-[#006B3C]">
                   {material.status === "PASS" ? (

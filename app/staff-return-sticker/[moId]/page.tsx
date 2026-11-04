@@ -7,6 +7,7 @@ import MobileHeader from "@/components/layout/mobile-header";
 import MobileBottomNav, {
   STAFF_RETURN_ITEMS,
 } from "@/components/layout/mobile-bottom-nav";
+import MobileCircleBackground from "@/components/layout/mobile-circle-background";
 import BackTitle from "@/components/layout/BackTitle";
 import StickyActionBar, {
   primaryButton,
@@ -76,14 +77,15 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
   }
 
   return (
-    <main className="relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray ">
+    <main className="mobile-body-copy relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray max-md:bg-white">
       <section
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-[255px] overflow-hidden"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[255px] overflow-hidden max-md:hidden"
       >
         <div className="absolute -left-[90px] -top-[80px] h-[270px] w-[620px] rounded-[50%] bg-[#d8f4e2]" />
         <div className="absolute -left-[100px] top-[80px] h-[190px] w-[620px] rounded-[50%] bg-[#effbf3]" />
       </section>
+      <MobileCircleBackground />
 
       <MobileHeader />
 
@@ -136,9 +138,9 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
               </div>
             )}
 
-            <p className="mt-4 max-md:mt-3 text-center text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
+            {/* <p className="mt-4 max-md:mt-3 text-center text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
               {t("staffReturnSticker.scanInstructions")}
-            </p>
+            </p> */}
           </div>
         )}
 

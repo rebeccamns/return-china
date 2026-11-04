@@ -45,7 +45,7 @@ export default function MobileBottomNav({
   return (
     <nav
       aria-label="Mobile navigation"
-      className="fixed inset-x-0 bottom-0 z-40 bg-white/70 pb-[calc(var(--bottom-nav-pad-b)+env(safe-area-inset-bottom,0px))] backdrop-blur-xl backdrop-saturate-150 before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-black/[0.06] supports-[not_(backdrop-filter:blur(1px))]:bg-white"
+      className="fixed inset-x-0 bottom-0 z-40 bg-white/70 pb-[calc(var(--bottom-nav-pad-b)+env(safe-area-inset-bottom,0px))] shadow-[0_-4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xl backdrop-saturate-150 supports-[not_(backdrop-filter:blur(1px))]:bg-white"
     >
       <div
         className="mx-auto flex h-[var(--bottom-nav-content-h)] w-full max-w-[412px] items-center px-2"

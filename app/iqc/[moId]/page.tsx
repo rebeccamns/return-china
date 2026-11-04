@@ -7,6 +7,7 @@ import BackTitle from "@/components/layout/BackTitle";
 import MobileBottomNav, {
   type MobileNavItem,
 } from "@/components/layout/mobile-bottom-nav";
+import MobileCircleBackground from "@/components/layout/mobile-circle-background";
 import MobileHeader from "@/components/layout/mobile-header";
 import { useI18n } from "@/i18n";
 
@@ -26,7 +27,7 @@ const INITIAL_MATERIALS: IQCMaterial[] = [
     englishName: "Camera Module",
     chinaName: "相机模组",
     qty: 10,
-    upnBarcode: "abcd",
+    upnBarcode: "721032000320",
     status: null,
     notes: "",
     photoName: "",
@@ -37,7 +38,7 @@ const INITIAL_MATERIALS: IQCMaterial[] = [
     englishName: "Battery cover AC175",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
-    upnBarcode: "abcd",
+    upnBarcode: "621032000320",
     status: null,
     notes: "",
     photoName: "",
@@ -48,7 +49,7 @@ const INITIAL_MATERIALS: IQCMaterial[] = [
     englishName: "Battery cover AC175",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
-    upnBarcode: "abc",
+    upnBarcode: "621032000320",
     status: null,
     notes: "",
     photoName: "",
@@ -59,7 +60,7 @@ const INITIAL_MATERIALS: IQCMaterial[] = [
     englishName: "Battery cover AC175",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
-    upnBarcode: "abc",
+    upnBarcode: "621032000320",
     status: null,
     notes: "",
     photoName: "",
@@ -70,7 +71,7 @@ const INITIAL_MATERIALS: IQCMaterial[] = [
     englishName: "Battery cover AC175",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
-    upnBarcode: "abc",
+    upnBarcode: "621032000320",
     status: null,
     notes: "",
     photoName: "",
@@ -81,7 +82,7 @@ const INITIAL_MATERIALS: IQCMaterial[] = [
     englishName: "Battery cover AC175",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
-    upnBarcode: "abc",
+    upnBarcode: "621032000320",
     status: null,
     notes: "",
     photoName: "",
@@ -163,15 +164,16 @@ export default function IQCPage({
   }
 
   return (
-    <main className="relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray antialiased">
-      {/* Decorative background */}
+    <main className="mobile-body-copy relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray antialiased max-md:bg-white">
+      {/* Desktop decorative background */}
       <section
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-[255px] overflow-hidden"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[255px] overflow-hidden max-md:hidden"
       >
         <div className="absolute -left-[90px] -top-[80px] h-[270px] w-[620px] rounded-[50%] bg-[#d8f4e2]" />
         <div className="absolute -left-[100px] top-[80px] h-[190px] w-[620px] rounded-[50%] bg-[#effbf3]" />
       </section>
+      <MobileCircleBackground />
 
       <MobileHeader />
 

@@ -39,12 +39,12 @@ export default function UserMenu() {
           type="button"
           variant="ghost"
           aria-label={t("account.label")}
-          className="h-9 gap-2 rounded-md px-2 hover:bg-slate-50"
+          className="h-9 gap-2 rounded-md px-2 text-black hover:bg-slate-50"
         >
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[linear-gradient(0deg,rgba(11,89,52,1)_0%,rgba(5,131,70,1)_100%)] text-white">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[#08783F]">
             <UserRound className="h-4 w-4" strokeWidth={1.5} aria-hidden="true" />
           </span>
-          <span className="max-w-[140px] truncate text-sm font-medium text-text-colortext-dark">
+          <span className="max-w-[140px] truncate text-xs font-medium text-black">
             {USER.name}
           </span>
         </Button>

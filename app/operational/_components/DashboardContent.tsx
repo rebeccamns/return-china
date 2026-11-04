@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AlertCircle, ChevronDown, Info, MoreHorizontal, Minus, Plus } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -64,6 +64,8 @@ type RevisionItem = {
   code: string;
   reflowFrom: string;
   reason: string;
+  submittedAt: string;
+  returnedAt: string;
   materials: Material[];
 };
 
@@ -83,6 +85,8 @@ const initialRevisionItems: RevisionItem[] = [
     code: "T2026090410261301048",
     reflowFrom: "PMC Entry",
     reason: "Staff Return",
+    submittedAt: "Sep 04, 10:26",
+    returnedAt: "Sep 22, 08:15",
     materials: [
       {
         code: "621032000320",
@@ -117,6 +121,8 @@ const initialRevisionItems: RevisionItem[] = [
     code: "T2026090410261301049",
     reflowFrom: "IQC Scan",
     reason: "Staff Return",
+    submittedAt: "Sep 04, 10:49",
+    returnedAt: "Sep 22, 09:12",
     materials: [],
   },
   {
@@ -124,6 +130,8 @@ const initialRevisionItems: RevisionItem[] = [
     code: "T2026090410261301050",
     reflowFrom: "Exim",
     reason: "Staff Return",
+    submittedAt: "Sep 04, 11:05",
+    returnedAt: "Sep 22, 10:30",
     materials: [],
   },
 ];
@@ -305,13 +313,15 @@ export function RevisionNotice() {
         <div className="min-h-0 overflow-hidden">
           <div className="border-t border-strokestroke-gray px-4 pb-4 pt-3">
             <div className="overflow-x-auto rounded-md border border-strokestroke-gray">
-              <Table className="min-w-[850px]">
+              <Table className="min-w-[1120px]">
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-12 px-3" />
                     <TableHead className="px-3">{t("common.moCode")}</TableHead>
                     <TableHead className="px-3">{t("dashboard.revision.reflowFrom")}</TableHead>
                     <TableHead className="px-3">{t("dashboard.revision.reason")}</TableHead>
+                    <TableHead className="px-3">{t("dashboard.revision.submittedAt")}</TableHead>
+                    <TableHead className="px-3">{t("dashboard.revision.returnedAt")}</TableHead>
                     <TableHead className="w-24 px-3 text-right">
                       {t("common.action")}
                     </TableHead>
@@ -347,6 +357,8 @@ export function RevisionNotice() {
                           <TableCell className="px-3 text-xs">{item.code}</TableCell>
                           <TableCell className="px-3 text-xs">{item.reflowFrom}</TableCell>
                           <TableCell className="px-3 text-xs">{item.reason}</TableCell>
+                          <TableCell className="whitespace-nowrap px-3 text-xs">{item.submittedAt}</TableCell>
+                          <TableCell className="whitespace-nowrap px-3 text-xs">{item.returnedAt}</TableCell>
                           <TableCell className="px-3 text-right">
                             {!isEditing && (
                               <Button
@@ -369,8 +381,8 @@ export function RevisionNotice() {
                             <TableRow className="hover:bg-[#F8F8F8]">
                               <TableHead className={cn(nestedHeadClass, "w-12")} />
                               <TableHead className={nestedHeadClass}>{t("common.materialCode")}</TableHead>
-                              <TableHead className={nestedHeadClass}>{t("common.englishName")}</TableHead>
-                              <TableHead className={nestedHeadClass}>{t("common.chinaName")}</TableHead>
+                              <TableHead colSpan={2} className={nestedHeadClass}>{t("common.englishName")}</TableHead>
+                              <TableHead colSpan={2} className={nestedHeadClass}>{t("common.chinaName")}</TableHead>
                               <TableHead className={nestedHeadClass}>{isEditing ? "Status" : ""}</TableHead>
                             </TableRow>
 
@@ -405,7 +417,7 @@ export function RevisionNotice() {
                                     </span>
                                   )}
                                 </TableCell>
-                                <TableCell className="px-3 py-2">
+                                <TableCell colSpan={2} className="px-3 py-2">
                                   {isEditing ? (
                                     <input
                                       type="text"
@@ -420,7 +432,7 @@ export function RevisionNotice() {
                                     <span className="text-xs">{material.englishName}</span>
                                   )}
                                 </TableCell>
-                                <TableCell className="px-3 py-2">
+                                <TableCell colSpan={2} className="px-3 py-2">
                                   {isEditing ? (
                                     <input
                                       type="text"
@@ -448,7 +460,7 @@ export function RevisionNotice() {
 
                             <TableRow className="hover:bg-transparent">
                               <TableCell />
-                              <TableCell colSpan={4} className="px-3 py-3">
+                              <TableCell colSpan={6} className="px-3 py-3">
                                 <div className="flex items-center justify-between gap-3">
                                   {isEditing ? (
                                     <Button
@@ -523,7 +535,7 @@ type MoRow = {
   code: string;
   model: string;
   step: string;
-  updated: string;
+  updatedTime: string;
   materials: Material[];
 };
 
@@ -533,7 +545,7 @@ const initialOngoingMoRows: MoRow[] = [
     code: "T2026090410261301048",
     model: "Latte-M",
     step: "Staff Return",
-    updated: "Sep 22, 08:15",
+    updatedTime: "08:15",
     materials: [
       {
         code: "621032000320",
@@ -567,7 +579,7 @@ const initialOngoingMoRows: MoRow[] = [
     code: "T2026090410261301049",
     model: "Latte-M",
     step: "Staff Return",
-    updated: "Sep 22, 08:15",
+    updatedTime: "08:15",
     materials: [],
   },
   {
@@ -575,16 +587,32 @@ const initialOngoingMoRows: MoRow[] = [
     code: "T2026090410261301050",
     model: "Latte-M",
     step: "Staff Return",
-    updated: "Sep 22, 08:15",
+    updatedTime: "08:15",
     materials: [],
   },
 ];
 
 function OngoingMoTable() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const [today, setToday] = useState<Date | null>(null);
   const [rows, setRows] = useState<MoRow[]>(initialOngoingMoRows);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const updateToday = () => setToday(new Date());
+    updateToday();
+    const intervalId = window.setInterval(updateToday, 60_000);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
+
+  const todayLabel = today
+    ? new Intl.DateTimeFormat(locale === "zh-CN" ? "zh-CN" : "en-US", {
+        month: "short",
+        day: "2-digit",
+      }).format(today)
+    : null;
 
   function startEdit(id: string) {
     setRows((prev) =>
@@ -720,7 +748,9 @@ function OngoingMoTable() {
 
                       <TableCell className="px-3 text-xs">{row.step}</TableCell>
                       <TableCell className="px-3 text-xs">
-                        {row.updated}
+                        {todayLabel
+                          ? `${todayLabel}, ${row.updatedTime}`
+                          : row.updatedTime}
                       </TableCell>
 
                       <TableCell className="px-3 text-center">

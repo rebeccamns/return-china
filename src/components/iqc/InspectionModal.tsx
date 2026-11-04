@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircle2, ClipboardCheck } from "lucide-react";
+import { createPortal } from "react-dom";
 
 import { primaryButton, secondaryButton } from "@/components/layout/StickyActionBar";
 import { useI18n } from "@/i18n";
@@ -15,7 +16,7 @@ type Props = {
   success?: boolean;
 };
 
-/** Bottom sheet on mobile, centered dialog from sm and up. */
+/** Centered dialog used for IQC confirmation and success states. */
 export default function InspectionModal({
   open,
   title,
@@ -27,7 +28,7 @@ export default function InspectionModal({
 }: Props) {
   const { t } = useI18n();
 
-  if (!open) return null;
+  if (!open || typeof document === "undefined") return null;
 
   const resolvedTitle = title ?? t("iqc.modal.defaultTitle");
   const resolvedDescription = description ?? t("iqc.modal.defaultDescription");
@@ -35,9 +36,9 @@ export default function InspectionModal({
 
   const Icon = success ? CheckCircle2 : ClipboardCheck;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center sm:p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
       onClick={onCancel}
     >
       <section
@@ -45,7 +46,7 @@ export default function InspectionModal({
         aria-modal="true"
         aria-labelledby="iqc-modal-title"
         onClick={(event) => event.stopPropagation()}
-        className="w-full max-w-[412px] rounded-t-3xl bg-backgroundbg-white px-5 max-md:px-4 pt-3 shadow-lg sm:rounded-3xl sm:pb-5"
+        className="w-full max-w-[412px] rounded-3xl bg-backgroundbg-white px-5 max-md:px-4 pt-3 shadow-lg sm:pb-5"
         style={{ paddingBottom: "max(20px, env(safe-area-inset-bottom, 0px))" }}
       >
         {/* Grabber */}
@@ -94,6 +95,7 @@ export default function InspectionModal({
           </button>
         </div>
       </section>
-    </div>
+    </div>,
+    document.body,
   );
 }

@@ -738,3 +738,29 @@ You can apply the theme on any DOM node, not just the `body`
       "calt" 1;
   }
 }
+
+@media (max-width: 767px) {
+  .mobile-body-copy .text-text-colortext-gray:not(svg) {
+    color: #262626;
+  }
+
+  .mobile-body-copy
+    .text-text-colortext-gray:not(svg):is(
+      .font-semibold,
+      [class~="max-md:font-semibold"],
+      .text-pill,
+      [class~="max-md:text-pill"]
+    ) {
+    font-weight: 500;
+  }
+
+  .mobile-body-copy
+    .text-text-colortext-gray:not(svg):is(
+      .font-medium,
+      [class~="max-md:font-medium"],
+      .text-caption,
+      [class~="max-md:text-caption"]
+    ) {
+    font-weight: 400;
+  }
+}

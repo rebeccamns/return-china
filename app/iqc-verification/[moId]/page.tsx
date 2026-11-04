@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import MobileBottomNav, {
   type MobileNavItem,
 } from "@/components/layout/mobile-bottom-nav";
+import MobileCircleBackground from "@/components/layout/mobile-circle-background";
 import MobileHeader from "@/components/layout/mobile-header";
 
 import VerificationFlow from "./_components/VerificationFlow";
@@ -39,15 +40,16 @@ export default function IQCVerificationPage({
       : "pb-[calc(var(--bottom-nav-h)+24px)] max-md:pb-[calc(var(--bottom-nav-h)+12px)]"; // nav only
 
   return (
-    <main className="relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray antialiased">
-      {/* Decorative background */}
+    <main className="mobile-body-copy relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray antialiased max-md:bg-white">
+      {/* Desktop decorative background */}
       <section
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-[255px] overflow-hidden"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[255px] overflow-hidden max-md:hidden"
       >
         <div className="absolute -left-[90px] -top-[80px] h-[270px] w-[620px] rounded-[50%] bg-[#d8f4e2]" />
         <div className="absolute -left-[100px] top-[80px] h-[190px] w-[620px] rounded-[50%] bg-[#effbf3]" />
       </section>
+      <MobileCircleBackground />
 
       <MobileHeader />
 

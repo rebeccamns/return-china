@@ -1,9 +1,40 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 import LanguageSwitcher from "./language-switcher";
 import UserMenu from "./user-menu";
-
-const topBarDetails = ["Mon, 22 Sep 2026", "10:24"];
+import { useI18n } from "@/i18n";
 
 const TopBarSection = (): JSX.Element => {
+  const { locale } = useI18n();
+  const [now, setNow] = useState<Date | null>(null);
+
+  useEffect(() => {
+    const updateTime = () => setNow(new Date());
+    updateTime();
+    const intervalId = window.setInterval(updateTime, 1000);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
+
+  const dateLocale = locale === "zh-CN" ? "zh-CN" : "en-US";
+  const topBarDetails = now
+    ? [
+        new Intl.DateTimeFormat(dateLocale, {
+          weekday: "short",
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }).format(now),
+        new Intl.DateTimeFormat(dateLocale, {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        }).format(now),
+      ]
+    : ["—", "--:--"];
+
   return (
     <header className="fixed top-0 left-[255px] right-0 z-[2] flex h-[52px] items-center border-b border-mode-app-border bg-white/70 pl-0 pr-6 backdrop-blur-xl backdrop-saturate-150 ">
       <div className="flex flex-1 self-stretch items-center justify-end gap-6 px-5">
@@ -12,7 +43,7 @@ const TopBarSection = (): JSX.Element => {
           {topBarDetails.map((detail) => (
             <span
               key={detail}
-              className="relative mt-[-1.00px] w-fit whitespace-nowrap font-inter-sm-medium-sm text-[length:var(--inter-sm-medium-sm-font-size)] font-[number:var(--inter-sm-medium-sm-font-weight)] leading-[var(--inter-sm-medium-sm-line-height)] tracking-[var(--inter-sm-medium-sm-letter-spacing)] text-text-colortext-dark [font-style:var(--inter-sm-medium-sm-font-style)]"
+              className="relative mt-[-1.00px] w-fit whitespace-nowrap text-xs font-medium leading-4 text-black"
             >
               {detail}
             </span>

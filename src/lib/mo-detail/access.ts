@@ -4,6 +4,7 @@ export const STAGE_VISIBILITY: Record<Role, StageKey[]> = {
   pmc: [...STAGE_KEYS],
   iqc: [...STAGE_KEYS],
   staff: [...STAGE_KEYS],
+  exim: [...STAGE_KEYS],
 };
 
 function isRole(role: string): role is Role {
@@ -19,4 +20,5 @@ export const HISTORY_BASE_PATH: Record<Role, string> = {
   pmc: "/operational/history",
   iqc: "/iqc-history",
   staff: "/staff-return-history",
+  exim: "/exim/history",
 };
