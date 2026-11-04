@@ -1,11 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { ClipboardList, Plus, Send } from "lucide-react";
+import { ClipboardList, FileUp, Plus, Send } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
@@ -25,6 +31,10 @@ import {
 import Sidebar from "@/components/layout/sidebar";
 import TopBar from "@/components/layout/topbar";
 import { useI18n } from "@/i18n";
+import {
+  getMaterialCodeOption,
+  MATERIAL_CODE_OPTIONS,
+} from "@/lib/mo-entry/material-options";
 import SubmitFlowDialog, { type SubmitStep } from "../_components/SubmitFlowDialog";
 
 type MaterialRow = {
@@ -32,25 +42,11 @@ type MaterialRow = {
   englishName: string;
   chinaName: string;
   qty: string;
+  category: string;
+  transportation: string;
+  locator: string;
+  projectCode: string;
 };
-
-const MATERIAL_CODE_OPTIONS = [
-  {
-    code: "621032000320",
-    englishName: "Battery cover AC175",
-    chinaName: "电池盖组件 AC175 绿",
-  },
-  {
-    code: "621032000321",
-    englishName: "Display Panel",
-    chinaName: "显示屏面板",
-  },
-  {
-    code: "621032000322",
-    englishName: "Camera Module",
-    chinaName: "相机模组",
-  },
-];
 
 const initialRows: MaterialRow[] = [
   {
@@ -58,30 +54,50 @@ const initialRows: MaterialRow[] = [
     englishName: "Battery cover AC175",
     chinaName: "电池盖组件 AC175 绿",
     qty: "5",
+    category: "Wait repair",
+    transportation: "Air",
+    locator: "110100",
+    projectCode: "9991028",
   },
   {
     code: "621032000320",
     englishName: "Display Panel",
     chinaName: "显示屏面板",
     qty: "10",
+    category: "Idle OK",
+    transportation: "Sea",
+    locator: "110101",
+    projectCode: "9991028",
   },
   {
     code: "621032000320",
     englishName: "Camera Module",
     chinaName: "相机模组",
     qty: "7",
+    category: "Idle OK",
+    transportation: "Air",
+    locator: "110102",
+    projectCode: "9991028",
   },
   {
     code: "621032000320",
     englishName: "Camera Module",
     chinaName: "相机模组",
     qty: "7",
+    category: "Wait repair",
+    transportation: "Sea",
+    locator: "110103",
+    projectCode: "9991028",
   },
   {
     code: "621032000320",
     englishName: "Display Panel",
     chinaName: "显示屏面板",
     qty: "10",
+    category: "Idle OK",
+    transportation: "Air",
+    locator: "110104",
+    projectCode: "9991028",
   },
 ];
 
@@ -104,7 +120,7 @@ export default function MoEntryPage() {
   }
 
   function handleCodeChange(index: number, code: string) {
-    const match = MATERIAL_CODE_OPTIONS.find((item) => item.code === code);
+    const match = getMaterialCodeOption(code);
 
     setRows((prev) =>
       prev.map((row, i) =>
@@ -152,7 +168,16 @@ export default function MoEntryPage() {
   function addRow() {
     setRows((prev) => [
       ...prev,
-      { code: "", englishName: "", chinaName: "", qty: "" },
+      {
+        code: "",
+        englishName: "",
+        chinaName: "",
+        qty: "",
+        category: "",
+        transportation: "",
+        locator: "",
+        projectCode: "",
+      },
     ]);
     setStatusMessage(t("moEntry.rowAdded"));
   }
@@ -342,15 +367,35 @@ export default function MoEntryPage() {
                   </div>
                 </div>
 
-                <Button
-                  type="button"
-                  variant="primary"
-                  onClick={createTask}
-                  className="h-9 shrink-0 gap-2 rounded-md px-4 text-xs font-semibold"
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                  {t("moEntry.createTask")}
-                </Button>
+                <div className="flex items-center gap-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        className="h-9 shrink-0 gap-2 rounded-md px-3 text-xs font-semibold"
+                      >
+                        <FileUp className="h-3.5 w-3.5" />
+                        {t("moEntry.importFile")}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>
+                        <FileUp className="mr-2 h-3.5 w-3.5" />
+                        {t("moEntry.importCsvExcel")}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <Button
+                    type="button"
+                    variant="primary"
+                    onClick={createTask}
+                    className="h-9 shrink-0 gap-2 rounded-md px-4 text-xs font-semibold"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    {t("moEntry.createTask")}
+                  </Button>
+                </div>
               </div>
             </div>
 
@@ -442,8 +487,8 @@ export default function MoEntryPage() {
                 </div>
               </div>
 
-              <div className="overflow-hidden rounded-md border border-strokestroke-gray">
-                <Table>
+              <div className="overflow-x-auto rounded-md border border-strokestroke-gray">
+                <Table className="min-w-[1450px]">
                   <TableHeader className="bg-[#F8F8F8]">
                     <TableRow className="hover:bg-[#F8F8F8]">
                       <TableHead className="w-12 px-3 text-xs" />
@@ -458,6 +503,18 @@ export default function MoEntryPage() {
                       </TableHead>
                       <TableHead className="px-3 text-xs">
                         {t("common.qtyPcs")}
+                      </TableHead>
+                      <TableHead className="px-3 text-xs">
+                        {t("common.category")}
+                      </TableHead>
+                      <TableHead className="px-3 text-xs">
+                        {t("common.transportation")}
+                      </TableHead>
+                      <TableHead className="px-3 text-xs">
+                        {t("common.locator")}
+                      </TableHead>
+                      <TableHead className="px-3 text-xs">
+                        {t("common.projectCode")}
                       </TableHead>
                       <TableHead className="w-20 px-3 text-xs" />
                     </TableRow>
@@ -539,6 +596,78 @@ export default function MoEntryPage() {
                               value={row.qty}
                               onChange={(e) =>
                                 updateRow(index, "qty", e.target.value)
+                              }
+                              className="h-8 rounded-md border-strokestroke-gray px-2 text-xs placeholder:text-[#A3A3A1]"
+                            />
+                          </TableCell>
+
+                          <TableCell className="px-3 py-2">
+                            <Select
+                              value={row.category || undefined}
+                              onValueChange={(value) =>
+                                updateRow(index, "category", value)
+                              }
+                            >
+                              <SelectTrigger
+                                className={`h-8 w-full text-xs ${
+                                  row.category === "Wait repair"
+                                    ? "border-amber-300 bg-yellow-100 text-yellow-800"
+                                    : row.category === "Idle OK"
+                                      ? "border-green-300 bg-green-100 text-green-800"
+                                      : "border-strokestroke-gray"
+                                }`}
+                              >
+                                <SelectValue placeholder={t("common.category")} />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Wait repair" className="text-xs">
+                                  {t("common.waitRepair")}
+                                </SelectItem>
+                                <SelectItem value="Idle OK" className="text-xs">
+                                  {t("common.idleOk")}
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </TableCell>
+
+                          <TableCell className="px-3 py-2">
+                            <Select
+                              value={row.transportation || undefined}
+                              onValueChange={(value) =>
+                                updateRow(index, "transportation", value)
+                              }
+                            >
+                              <SelectTrigger className="h-8 w-full border-strokestroke-gray text-xs">
+                                <SelectValue placeholder={t("common.transportation")} />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Air" className="text-xs">
+                                  {t("common.air")}
+                                </SelectItem>
+                                <SelectItem value="Sea" className="text-xs">
+                                  {t("common.sea")}
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </TableCell>
+
+                          <TableCell className="px-3 py-2">
+                            <Input
+                              placeholder="e.g. 110100"
+                              value={row.locator}
+                              onChange={(e) =>
+                                updateRow(index, "locator", e.target.value)
+                              }
+                              className="h-8 rounded-md border-strokestroke-gray px-2 text-xs placeholder:text-[#A3A3A1]"
+                            />
+                          </TableCell>
+
+                          <TableCell className="px-3 py-2">
+                            <Input
+                              placeholder="e.g. 9991028"
+                              value={row.projectCode}
+                              onChange={(e) =>
+                                updateRow(index, "projectCode", e.target.value)
                               }
                               className="h-8 rounded-md border-strokestroke-gray px-2 text-xs placeholder:text-[#A3A3A1]"
                             />

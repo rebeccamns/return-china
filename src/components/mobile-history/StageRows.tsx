@@ -11,7 +11,7 @@ import type {
   StageDetail,
 } from "@/lib/mo-detail/types";
 
-import { DetailValue, MoreDetails } from "./RowPrimitives";
+import { DetailValue, MaterialListTitle, MoreDetails } from "./RowPrimitives";
 
 const LIST_CLASS =
   "overflow-hidden rounded-2xl border border-strokestroke-gray bg-backgroundbg-white divide-y divide-strokestroke-gray";
@@ -110,15 +110,18 @@ function MaterialList({ materials }: { materials: MaterialInput[] }) {
   const { t } = useI18n();
 
   return (
-    <ul className={LIST_CLASS}>
-      {materials.map((material, index) => (
-        <Row
-          key={`${material.code}-${index}`}
-          title={material.code}
-          subtitle={`${materialName(material)} · ${t("iqcHistory.quantity", { count: material.quantity })}`}
-        />
-      ))}
-    </ul>
+    <>
+      <MaterialListTitle />
+      <ul className={LIST_CLASS}>
+        {materials.map((material, index) => (
+          <Row
+            key={`${material.code}-${index}`}
+            title={material.code}
+            subtitle={`${materialName(material)} · ${t("iqcHistory.quantity", { count: material.quantity })}`}
+          />
+        ))}
+      </ul>
+    </>
   );
 }
 
@@ -177,6 +180,7 @@ function StaffReturn({ data }: { data: StageDataMap["staffReturn"] }) {
             {carton.code} ·{" "}
             {t("history.detail.totalCartons", { count: carton.count })}
           </h3>
+          <MaterialListTitle />
           <ul className={LIST_CLASS}>
             {carton.materials.map((material, index) => (
               <Row
@@ -228,6 +232,7 @@ function Exim({ data }: { data: StageDataMap["exim"] }) {
           { label: t("common.brand"), value: data.brand },
         ]}
       />
+      <MaterialListTitle />
       <ul className={LIST_CLASS}>
         {data.materials.map((material, index) => (
           <Row

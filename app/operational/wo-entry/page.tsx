@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useState } from "react";
-import { Minus, Plus, Send } from "lucide-react";
+import { Minus, Plus, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -26,6 +26,11 @@ type Material = {
   code: string;
   englishName: string;
   chinaName: string;
+  qty: string;
+  category: "Wait repair" | "Idle OK";
+  transportation: "Air" | "Sea";
+  locator: string;
+  projectCode: string;
 };
 
 type WoRow = {
@@ -36,6 +41,110 @@ type WoRow = {
   materials: Material[];
 };
 
+type RemovableFileInputProps = {
+  name: string;
+  ariaLabel: string;
+  accept: string;
+  removeLabel: string;
+};
+
+function RemovableFileInput({
+  name,
+  ariaLabel,
+  accept,
+  removeLabel,
+}: RemovableFileInputProps) {
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const [hasFile, setHasFile] = useState(false);
+
+  function removeFile() {
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+    setHasFile(false);
+  }
+
+  return (
+    <div className="flex min-w-0 items-center gap-1">
+      <Input
+        ref={inputRef}
+        aria-label={ariaLabel}
+        name={name}
+        type="file"
+        accept={accept}
+        onChange={(event) =>
+          setHasFile(Boolean(event.currentTarget.files?.length))
+        }
+        className=" min-w-0 flex-1 rounded-md border-strokestroke-gray px-1.5 py-1 text-[11px] file:mr-1.5 file:rounded file:border-0 file:bg-[#F3F4F6] file:px-1.5 file:py-1 file:text-[11px] file:font-medium"
+      />
+      {hasFile && (
+        <button
+          type="button"
+          aria-label={removeLabel}
+          title={removeLabel}
+          onClick={removeFile}
+          className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[#666666] hover:bg-red-50 hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
+      )}
+    </div>
+  );
+}
+
+const initialMaterials: Material[] = [
+  {
+    code: "621032000320",
+    englishName: "Battery cover AC175",
+    chinaName: "电池盖组件 AC175 绿",
+    qty: "5",
+    category: "Wait repair",
+    transportation: "Air",
+    locator: "110100",
+    projectCode: "9991028",
+  },
+  {
+    code: "621032000320",
+    englishName: "Display Panel",
+    chinaName: "显示屏面板",
+    qty: "10",
+    category: "Idle OK",
+    transportation: "Sea",
+    locator: "110101",
+    projectCode: "9991028",
+  },
+  {
+    code: "621032000320",
+    englishName: "Camera Module",
+    chinaName: "相机模组",
+    qty: "7",
+    category: "Idle OK",
+    transportation: "Air",
+    locator: "110102",
+    projectCode: "9991028",
+  },
+  {
+    code: "621032000320",
+    englishName: "Camera Module",
+    chinaName: "相机模组",
+    qty: "7",
+    category: "Wait repair",
+    transportation: "Sea",
+    locator: "110103",
+    projectCode: "9991028",
+  },
+  {
+    code: "621032000320",
+    englishName: "Display Panel",
+    chinaName: "显示屏面板",
+    qty: "10",
+    category: "Idle OK",
+    transportation: "Air",
+    locator: "110104",
+    projectCode: "9991028",
+  },
+];
+
 // TODO: replace with real data from your API once it exists
 const initialRows: WoRow[] = [
   {
@@ -43,99 +152,21 @@ const initialRows: WoRow[] = [
     code: "T2026090410261301048",
     model: "Latte-M",
     iqcStatus: "Passed",
-    materials: [
-      {
-        code: "621032000320",
-        englishName: "Battery cover AC175",
-        chinaName: "电池盖组件 AC175 绿",
-      },
-      {
-        code: "621032000320",
-        englishName: "Display Panel",
-        chinaName: "显示屏面板",
-      },
-      {
-        code: "621032000320",
-        englishName: "Camera Module",
-        chinaName: "相机模组",
-      },
-      {
-        code: "621032000320",
-        englishName: "Camera Module",
-        chinaName: "相机模组",
-      },
-      {
-        code: "621032000320",
-        englishName: "Display Panel",
-        chinaName: "显示屏面板",
-      },
-    ],
+    materials: initialMaterials,
   },
   {
     id: "wo-2",
     code: "T2026090410261301049",
     model: "Latte-M",
     iqcStatus: "Passed",
-    materials: [
-      {
-        code: "621032000320",
-        englishName: "Battery cover AC175",
-        chinaName: "电池盖组件 AC175 绿",
-      },
-      {
-        code: "621032000320",
-        englishName: "Display Panel",
-        chinaName: "显示屏面板",
-      },
-      {
-        code: "621032000320",
-        englishName: "Camera Module",
-        chinaName: "相机模组",
-      },
-      {
-        code: "621032000320",
-        englishName: "Camera Module",
-        chinaName: "相机模组",
-      },
-      {
-        code: "621032000320",
-        englishName: "Display Panel",
-        chinaName: "显示屏面板",
-      },
-    ],
+    materials: initialMaterials,
   },
   {
     id: "wo-3",
     code: "T2026090410261301050",
     model: "Latte-M",
     iqcStatus: "Passed",
-    materials: [
-      {
-        code: "621032000320",
-        englishName: "Battery cover AC175",
-        chinaName: "电池盖组件 AC175 绿",
-      },
-      {
-        code: "621032000320",
-        englishName: "Display Panel",
-        chinaName: "显示屏面板",
-      },
-      {
-        code: "621032000320",
-        englishName: "Camera Module",
-        chinaName: "相机模组",
-      },
-      {
-        code: "621032000320",
-        englishName: "Camera Module",
-        chinaName: "相机模组",
-      },
-      {
-        code: "621032000320",
-        englishName: "Display Panel",
-        chinaName: "显示屏面板",
-      },
-    ],
+    materials: initialMaterials,
   },
 ];
 
@@ -215,16 +246,19 @@ export default function WoEntryPage() {
             <div className="border-t border-strokestroke-gray" />
 
             <div className="px-[18px] pb-[18px] pt-4">
-              <div className="overflow-hidden rounded-md border border-strokestroke-gray">
-                <Table>
+              <div className="overflow-x-auto rounded-md border border-strokestroke-gray">
+                <Table className="min-w-[1400px]">
                   <TableHeader className="bg-[#F8F8F8]">
                     <TableRow className="hover:bg-[#F8F8F8]">
                       <TableHead className="w-12 px-3 text-xs" />
-                      <TableHead className="px-3 text-xs">{t("common.moCode")}</TableHead>
+                      <TableHead className="min-w-[180px] px-3 text-xs">{t("common.moCode")}</TableHead>
                       <TableHead className="px-3 text-xs">{t("common.model")}</TableHead>
                       <TableHead className="px-3 text-xs">{t("woEntry.iqcStatus")}</TableHead>
                       <TableHead className="px-3 text-xs">{t("common.material")}</TableHead>
                       <TableHead className="px-3 text-xs">{t("common.wo")}</TableHead>
+                      <TableHead className="min-w-[250px] px-3 text-xs">{t("woEntry.bearingCost")}</TableHead>
+                      <TableHead className="w-[150px] min-w-[150px] px-2 text-xs">{t("woEntry.pdfFile")}</TableHead>
+                      <TableHead className="w-[150px] min-w-[150px] px-2 text-xs">{t("woEntry.ssPicture")}</TableHead>
                       <TableHead className="w-32 px-3 text-xs" />
                     </TableRow>
                   </TableHeader>
@@ -297,6 +331,33 @@ export default function WoEntryPage() {
                             </TableCell>
 
                             <TableCell className="px-3 py-2">
+                              <Input
+                                aria-label={t("woEntry.bearingCost")}
+                                name={`bearingCost-${row.id}`}
+                                placeholder={t("woEntry.bearingCostPlaceholder")}
+                                className="h-9 rounded-md border-strokestroke-gray px-3 text-xs placeholder:text-[#A3A3A1]"
+                              />
+                            </TableCell>
+
+                            <TableCell className="w-[150px] min-w-[150px] px-2 py-2">
+                              <RemovableFileInput
+                                ariaLabel={t("woEntry.pdfFile")}
+                                name={`pdfFile-${row.id}`}
+                                accept=".pdf,application/pdf"
+                                removeLabel={t("woEntry.removeFile")}
+                              />
+                            </TableCell>
+
+                            <TableCell className="w-[150px] min-w-[150px] px-2 py-2">
+                              <RemovableFileInput
+                                ariaLabel={t("woEntry.ssPicture")}
+                                name={`ssPicture-${row.id}`}
+                                accept="image/*"
+                                removeLabel={t("woEntry.removeFile")}
+                              />
+                            </TableCell>
+
+                            <TableCell className="px-3 py-2">
                               <Button
                                 type="button"
                                 variant="primary"
@@ -311,48 +372,90 @@ export default function WoEntryPage() {
                           </TableRow>
 
                           {isExpanded && (
-                            <>
-                              <TableRow
-                                key={`${row.id}-header`}
-                                className="hover:bg-[#F8F8F8]"
-                              >
-                                <TableHead
-                                  className={cn(nestedHeadClass, "w-12")}
-                                />
-                                <TableHead className={nestedHeadClass}>
-                                  {t("common.materialCode")}
-                                </TableHead>
-                                <TableHead
-                                  colSpan={2}
-                                  className={nestedHeadClass}
-                                >
-                                  {t("common.englishName")}
-                                </TableHead>
-                                <TableHead
-                                  colSpan={3}
-                                  className={nestedHeadClass}
-                                >
-                                  {t("common.chinaName")}
-                                </TableHead>
-                              </TableRow>
-                              {row.materials.map((material, i) => (
-                                <TableRow
-                                  key={`${row.id}-material-${i}`}
-                                  className="bg-white hover:bg-white"
-                                >
-                                  <TableCell />
-                                  <TableCell className="text-xs">
-                                    {material.code}
-                                  </TableCell>
-                                  <TableCell colSpan={2} className="text-xs">
-                                    {material.englishName}
-                                  </TableCell>
-                                  <TableCell colSpan={3} className="text-xs">
-                                    {material.chinaName}
-                                  </TableCell>
-                                </TableRow>
-                              ))}
-                            </>
+                            <TableRow
+                              key={`${row.id}-materials`}
+                              className="bg-white hover:bg-white"
+                            >
+                              <TableCell colSpan={10} className="p-0">
+                                <div className="overflow-x-auto border-t border-strokestroke-gray">
+                                  <Table className="min-w-[1050px]">
+                                    <TableHeader className="bg-[#F8F8F8]">
+                                      <TableRow className="hover:bg-[#F8F8F8]">
+                                        <TableHead className={nestedHeadClass}>
+                                          {t("common.materialCode")}
+                                        </TableHead>
+                                        <TableHead className={nestedHeadClass}>
+                                          {t("common.englishName")}
+                                        </TableHead>
+                                        <TableHead className={nestedHeadClass}>
+                                          {t("common.chinaName")}
+                                        </TableHead>
+                                        <TableHead className={nestedHeadClass}>
+                                          {t("common.qtyPcs")}
+                                        </TableHead>
+                                        <TableHead className={nestedHeadClass}>
+                                          {t("common.category")}
+                                        </TableHead>
+                                        <TableHead className={nestedHeadClass}>
+                                          {t("common.transportation")}
+                                        </TableHead>
+                                        <TableHead className={nestedHeadClass}>
+                                          {t("common.locator")}
+                                        </TableHead>
+                                        <TableHead className={nestedHeadClass}>
+                                          {t("common.projectCode")}
+                                        </TableHead>
+                                      </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                      {row.materials.map((material, i) => (
+                                        <TableRow
+                                          key={`${row.id}-material-${i}`}
+                                          className="bg-white hover:bg-white"
+                                        >
+                                          <TableCell className="text-xs">
+                                            {material.code}
+                                          </TableCell>
+                                          <TableCell className="text-xs">
+                                            {material.englishName}
+                                          </TableCell>
+                                          <TableCell className="text-xs">
+                                            {material.chinaName}
+                                          </TableCell>
+                                          <TableCell className="text-xs">
+                                            {material.qty}
+                                          </TableCell>
+                                          <TableCell>
+                                            <span
+                                              className={
+                                                material.category === "Wait repair"
+                                                  ? "inline-flex rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800"
+                                                  : "inline-flex rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800"
+                                              }
+                                            >
+                                              {material.category === "Wait repair"
+                                                ? t("common.waitRepair")
+                                                : t("common.idleOk")}
+                                            </span>
+                                          </TableCell>
+                                          <TableCell className="text-xs">
+                                            {material.transportation === "Air"
+                                              ? t("common.air")
+                                              : t("common.sea")}
+                                          </TableCell>
+                                          <TableCell className="text-xs">
+                                            {material.locator}
+                                          </TableCell>
+                                          <TableCell className="text-xs">
+                                            {material.projectCode}
+                                          </TableCell>
+                                        </TableRow>
+                                      ))}
+                                    </TableBody>
+                                  </Table>
+                                </div>
+                              </TableCell>
+                            </TableRow>
                           )}
                         </React.Fragment>
                       );

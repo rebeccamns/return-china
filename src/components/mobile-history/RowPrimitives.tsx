@@ -37,3 +37,13 @@ export function DetailValue({ label, value }: { label: string; value: string }) 
     </div>
   );
 }
+
+export function MaterialListTitle() {
+  const { t } = useI18n();
+
+  return (
+    <h3 className="mb-2 text-[13px] font-semibold leading-[18px] text-text-colortext-black">
+      {t("common.materialList")}
+    </h3>
+  );
+}

@@ -26,7 +26,11 @@ import type {
 } from "@/lib/mo-detail/types";
 
 import HistoryStatus from "./HistoryStatus";
-import { DetailValue, MoreDetails } from "./RowPrimitives";
+import {
+  DetailValue,
+  MaterialListTitle,
+  MoreDetails,
+} from "./RowPrimitives";
 import StageRows from "./StageRows";
 
 const STAGE_LABELS: Record<StageKey, TranslationKey> = {
@@ -205,6 +209,11 @@ function CartonRow({
             {t("iqcHistory.upnScanned")}:{" "}
             {t(carton.upnScanned ? "iqcHistory.verified" : "iqcHistory.notScanned")}
           </li>
+          {carton.materialsScanned > 0 && (
+            <li className="list-none">
+              <MaterialListTitle />
+            </li>
+          )}
           {materials.slice(0, carton.materialsScanned).map((material) => (
             <li
               key={material.code}
@@ -335,14 +344,17 @@ export default function StageDetailView({
       ) : (
         <section className="mt-3">
           {identity && (
-            <ul className="overflow-hidden rounded-2xl border border-strokestroke-gray bg-backgroundbg-white divide-y divide-strokestroke-gray">
-              {identity.materials.map((material, index) => (
-                <MaterialRow
-                  key={`${material.code}-${index}`}
-                  material={material}
-                />
-              ))}
-            </ul>
+            <>
+              <MaterialListTitle />
+              <ul className="overflow-hidden rounded-2xl border border-strokestroke-gray bg-backgroundbg-white divide-y divide-strokestroke-gray">
+                {identity.materials.map((material, index) => (
+                  <MaterialRow
+                    key={`${material.code}-${index}`}
+                    material={material}
+                  />
+                ))}
+              </ul>
+            </>
           )}
           {verification && (
             <ul className="overflow-hidden rounded-2xl border border-strokestroke-gray bg-backgroundbg-white divide-y divide-strokestroke-gray">

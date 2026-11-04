@@ -5,6 +5,8 @@ export const STAGE_VISIBILITY: Record<Role, StageKey[]> = {
   iqc: [...STAGE_KEYS],
   staff: [...STAGE_KEYS],
   exim: [...STAGE_KEYS],
+  superadmin: [...STAGE_KEYS],
+  warehouse: [...STAGE_KEYS],
 };
 
 function isRole(role: string): role is Role {
@@ -21,4 +23,6 @@ export const HISTORY_BASE_PATH: Record<Role, string> = {
   iqc: "/iqc-history",
   staff: "/staff-return-history",
   exim: "/exim/history",
+  superadmin: "/superadmin/history",
+  warehouse: "/warehouse/history",
 };

@@ -36,7 +36,7 @@ type NavGroup = {
 
 type NavItem = NavLink | NavGroup;
 
-export type SidebarVariant = "pmc" | "exim" | "superadmin";
+export type SidebarVariant = "pmc" | "exim" | "superadmin" | "warehouse";
 
 const NAV: Record<SidebarVariant, NavItem[]> = {
   pmc: [
@@ -96,6 +96,19 @@ const NAV: Record<SidebarVariant, NavItem[]> = {
       icon: History,
     },
   ],
+
+  warehouse: [
+    {
+      labelKey: "navigation.moList",
+      href: "/warehouse",
+      icon: ClipboardList,
+    },
+    {
+      labelKey: "navigation.history",
+      href: "/warehouse/history",
+      icon: History,
+    },
+  ],
 };
 
 // Dashboard/root routes must use exact matching.
@@ -103,6 +116,7 @@ const ROOT_ROUTES = [
   "/operational",
   "/exim",
   "/superadmin",
+  "/warehouse",
 ];
 
 export default function Sidebar({
@@ -219,12 +233,12 @@ export default function Sidebar({
             </span>
           </div>
         </div>
-
+{/* 
         <img
           className="h-[31px] w-[31px] shrink-0 object-cover"
           src="/ollie.png"
           alt="Ollie"
-        />
+        /> */}
       </header>
 
       {/* Navigation */}

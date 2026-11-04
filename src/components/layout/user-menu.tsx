@@ -16,6 +16,7 @@ import type { TranslationKey } from "@/i18n";
 const USER = { name: "Bagus Saputra", nik: "I0123456" };
 
 function roleKey(pathname: string): TranslationKey {
+  if (pathname.startsWith("/warehouse")) return "account.warehouse";
   if (pathname.startsWith("/exim")) return "account.exim";
   if (pathname.startsWith("/superadmin")) return "account.superadmin";
   return "account.pmc";

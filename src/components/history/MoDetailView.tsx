@@ -253,7 +253,9 @@ export default function MoDetailView({
       .map((stage) => stage.stageKey) ?? [];
   const entryHref = historyHref.replace(/\/history\/?$/, "");
   const sidebarVariant: SidebarVariant =
-    role === "exim" || role === "superadmin" ? role : "pmc";
+    role === "exim" || role === "superadmin" || role === "warehouse"
+      ? role
+      : "pmc";
 
   return (
     <main className="min-h-screen w-full bg-backgroundbg-gray">
@@ -271,7 +273,11 @@ export default function MoDetailView({
             >
               {historyHref === "/exim/history"
                 ? t("exim.title")
-                : t("navigation.entry")}
+                : role === "superadmin"
+                  ? t("superadmin.dashboard")
+                  : role === "warehouse"
+                    ? t("navigation.moList")
+                    : t("navigation.entry")}
             </Link>
             <span aria-hidden="true" className="text-[#B5B5B3]">
               ›

@@ -11,7 +11,7 @@ export const STAGE_KEYS = [
 ] as const;
 
 export type StageKey = (typeof STAGE_KEYS)[number];
-export type Role = "pmc" | "iqc" | "staff" | "exim";
+export type Role = "pmc" | "iqc" | "staff" | "exim" | "superadmin" | "warehouse";
 export type MOStatus = "Completed" | "In Progress" | "Rejected" | "Pending";
 export type StageStatus = "completed" | "in-progress" | "pending" | "rejected";
 export type IQCStatus = "PASS" | "REJECT";

@@ -20,10 +20,15 @@ const DEMO_ROUTES = [
     description: "Material & carton handling",
     href: "/staff-return/MO-321654987",
   },
+  // {
+  //   label: "Staff Return Sticker",
+  //   description: "Carton sticker scanning",
+  //   href: "/staff-return-sticker",
+  // },
   {
-    label: "Staff Return Sticker",
-    description: "Carton sticker scanning",
-    href: "/staff-return-sticker",
+    label: "Warehouse",
+    description: "Material readiness",
+    href: "/warehouse",
   },
   { label: "IQC", description: "Quality inspection", href: "/iqc" },
   {

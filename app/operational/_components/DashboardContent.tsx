@@ -21,18 +21,29 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import KpiCard from "@/components/ui/kpichart";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n";
+import {
+  getMaterialCodeOption,
+  MATERIAL_CODE_OPTIONS,
+} from "@/lib/mo-entry/material-options";
 import TaskProgressCard from "./TaskProgressCard";
 import SubmitFlowDialog, { type SubmitStep } from "./SubmitFlowDialog";
 
-const inputClass =
-  "h-7 w-full rounded-md border border-strokestroke-gray bg-white px-2 text-xs outline-none transition-colors focus:border-primaryprimary-green";
-
 const nestedHeadClass =
   "bg-[#F8F8F8] px-3 text-xs font-semibold text-slate-700";
+const materialInputClass =
+  "h-8 w-full rounded-md border border-strokestroke-gray px-2 text-xs placeholder:text-[#A3A3A1]";
 /* =========================================================
    PROGRESS BAR
 ========================================================= */
@@ -56,6 +67,11 @@ type Material = {
   code: string;
   englishName: string;
   chinaName: string;
+  qty?: string;
+  category?: string;
+  transportation?: string;
+  locator?: string;
+  projectCode?: string;
   isRejected?: boolean;
 };
 
@@ -69,11 +85,230 @@ type RevisionItem = {
   materials: Material[];
 };
 
+type EditableMaterialField = Exclude<keyof Material, "isRejected">;
+
 const blankMaterial: Material = {
   code: "",
   englishName: "",
   chinaName: "",
+  qty: "",
+  category: "",
+  transportation: "",
+  locator: "",
+  projectCode: "",
 };
+
+function MaterialTableHeader() {
+  const { t } = useI18n();
+
+  return (
+    <TableHeader>
+      <TableRow className="hover:bg-[#F8F8F8]">
+        <TableHead className={nestedHeadClass}>{t("common.materialCode")}</TableHead>
+        <TableHead className={nestedHeadClass}>{t("common.englishName")}</TableHead>
+        <TableHead className={nestedHeadClass}>{t("common.chinaName")}</TableHead>
+        <TableHead className={nestedHeadClass}>{t("common.qtyPcs")}</TableHead>
+        <TableHead className={nestedHeadClass}>{t("common.category")}</TableHead>
+        <TableHead className={nestedHeadClass}>{t("common.transportation")}</TableHead>
+        <TableHead className={nestedHeadClass}>{t("common.locator")}</TableHead>
+        <TableHead className={nestedHeadClass}>{t("common.projectCode")}</TableHead>
+      </TableRow>
+    </TableHeader>
+  );
+}
+
+function MaterialFields({
+  material,
+  isEditing,
+  isRejected,
+  onChange,
+  onCodeChange,
+}: {
+  material: Material;
+  isEditing: boolean;
+  isRejected?: boolean;
+  onChange: (field: EditableMaterialField, value: string) => void;
+  onCodeChange: (code: string) => void;
+}) {
+  const { t } = useI18n();
+
+  return (
+    <>
+      <TableCell className="px-3 py-2">
+        {isEditing ? (
+          <Select
+            value={material.code || undefined}
+            onValueChange={onCodeChange}
+          >
+            <SelectTrigger className="h-8 w-full rounded-md border-strokestroke-gray text-xs">
+              <SelectValue placeholder={t("moEntry.chooseMaterialCode")} />
+            </SelectTrigger>
+            <SelectContent>
+              {MATERIAL_CODE_OPTIONS.map((option) => (
+                <SelectItem
+                  key={option.code}
+                  value={option.code}
+                  className="text-xs"
+                >
+                  {option.code}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        ) : (
+          <span className="inline-flex items-center gap-2 text-xs">
+            {material.code || "—"}
+            {isRejected && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-1.5 py-0.5 text-[10px] font-medium text-red-700">
+                <AlertCircle className="h-3 w-3" />
+                Rejected
+              </span>
+            )}
+          </span>
+        )}
+      </TableCell>
+
+      <TableCell className="px-3 py-2">
+        {isEditing ? (
+          <Input
+            placeholder={t("moEntry.inputEnglishName")}
+            value={material.englishName}
+            onChange={(event) => onChange("englishName", event.target.value)}
+            className={cn(materialInputClass, isRejected && "border-red-400 focus:border-red-500")}
+          />
+        ) : (
+          <span className="text-xs">{material.englishName || "—"}</span>
+        )}
+      </TableCell>
+
+      <TableCell className="px-3 py-2">
+        {isEditing ? (
+          <Input
+            placeholder={t("moEntry.inputChinaName")}
+            value={material.chinaName}
+            onChange={(event) => onChange("chinaName", event.target.value)}
+            className={cn(materialInputClass, isRejected && "border-red-400 focus:border-red-500")}
+          />
+        ) : (
+          <span className="text-xs">{material.chinaName || "—"}</span>
+        )}
+      </TableCell>
+
+      <TableCell className="px-3 py-2">
+        {isEditing ? (
+          <Input
+            placeholder={t("moEntry.inputQuantity")}
+            type="number"
+            value={material.qty ?? ""}
+            onChange={(event) => onChange("qty", event.target.value)}
+            className={materialInputClass}
+          />
+        ) : (
+          <span className="text-xs">{material.qty || "—"}</span>
+        )}
+      </TableCell>
+
+      <TableCell className="px-3 py-2">
+        {isEditing ? (
+          <Select
+            value={material.category || undefined}
+            onValueChange={(value) => onChange("category", value)}
+          >
+            <SelectTrigger
+              className={cn(
+                "h-8 w-full rounded-md border text-xs",
+                material.category === "Wait repair"
+                  ? "border-amber-300 bg-yellow-100 text-yellow-800"
+                  : material.category === "Idle OK"
+                    ? "border-green-300 bg-green-100 text-green-800"
+                    : "border-strokestroke-gray",
+              )}
+            >
+              <SelectValue placeholder={t("common.category")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Wait repair" className="text-xs">
+                {t("common.waitRepair")}
+              </SelectItem>
+              <SelectItem value="Idle OK" className="text-xs">
+                {t("common.idleOk")}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        ) : material.category ? (
+          <span
+            className={cn(
+              "inline-flex rounded-full px-2 py-0.5 text-xs font-medium",
+              material.category === "Wait repair" && "bg-yellow-100 text-yellow-800",
+              material.category === "Idle OK" && "bg-green-100 text-green-800",
+            )}
+          >
+            {material.category === "Wait repair"
+              ? t("common.waitRepair")
+              : t("common.idleOk")}
+          </span>
+        ) : (
+          "—"
+        )}
+      </TableCell>
+
+      <TableCell className="px-3 py-2">
+        {isEditing ? (
+          <Select
+            value={material.transportation || undefined}
+            onValueChange={(value) => onChange("transportation", value)}
+          >
+            <SelectTrigger className="h-8 w-full rounded-md border-strokestroke-gray text-xs">
+              <SelectValue placeholder={t("common.transportation")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Air" className="text-xs">
+                {t("common.air")}
+              </SelectItem>
+              <SelectItem value="Sea" className="text-xs">
+                {t("common.sea")}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        ) : (
+          <span className="text-xs">
+            {material.transportation === "Air"
+              ? t("common.air")
+              : material.transportation === "Sea"
+                ? t("common.sea")
+                : "—"}
+          </span>
+        )}
+      </TableCell>
+
+      <TableCell className="px-3 py-2">
+        {isEditing ? (
+          <Input
+            placeholder="e.g. 110100"
+            value={material.locator ?? ""}
+            onChange={(event) => onChange("locator", event.target.value)}
+            className={materialInputClass}
+          />
+        ) : (
+          <span className="text-xs">{material.locator || "—"}</span>
+        )}
+      </TableCell>
+
+      <TableCell className="px-3 py-2">
+        {isEditing ? (
+          <Input
+            placeholder="e.g. 9991028"
+            value={material.projectCode ?? ""}
+            onChange={(event) => onChange("projectCode", event.target.value)}
+            className={materialInputClass}
+          />
+        ) : (
+          <span className="text-xs">{material.projectCode || "—"}</span>
+        )}
+      </TableCell>
+    </>
+  );
+}
 
 /* =========================================================
    REVISION DATA
@@ -92,27 +327,52 @@ const initialRevisionItems: RevisionItem[] = [
         code: "621032000320",
         englishName: "Battery cover AC175",
         chinaName: "电池盖组件 AC175 绿",
+        qty: "5",
+        category: "Wait repair",
+        transportation: "Air",
+        locator: "110100",
+        projectCode: "9991028",
         isRejected: true,
       },
       {
         code: "621032000320",
         englishName: "Display Panel",
         chinaName: "显示屏面板",
+        qty: "10",
+        category: "Idle OK",
+        transportation: "Sea",
+        locator: "110101",
+        projectCode: "9991028",
       },
       {
         code: "621032000320",
         englishName: "Camera Module",
         chinaName: "相机模组",
+        qty: "7",
+        category: "Idle OK",
+        transportation: "Air",
+        locator: "110102",
+        projectCode: "9991028",
       },
       {
         code: "621032000320",
         englishName: "Camera Module",
         chinaName: "相机模组",
+        qty: "7",
+        category: "Wait repair",
+        transportation: "Sea",
+        locator: "110103",
+        projectCode: "9991028",
       },
       {
         code: "621032000320",
         englishName: "Display Panel",
         chinaName: "显示屏面板",
+        qty: "10",
+        category: "Idle OK",
+        transportation: "Air",
+        locator: "110104",
+        projectCode: "9991028",
       },
     ],
   },
@@ -218,12 +478,29 @@ export function RevisionNotice() {
 
   function updateDraftMaterial(
     materialIndex: number,
-    field: keyof Material,
+    field: EditableMaterialField,
     value: string,
   ) {
     setDraftMaterials((prev) =>
       prev.map((material, index) =>
         index === materialIndex ? { ...material, [field]: value } : material,
+      ),
+    );
+  }
+
+  function updateDraftMaterialCode(materialIndex: number, code: string) {
+    const option = getMaterialCodeOption(code);
+
+    setDraftMaterials((prev) =>
+      prev.map((material, index) =>
+        index === materialIndex
+          ? {
+              ...material,
+              code,
+              englishName: option?.englishName ?? material.englishName,
+              chinaName: option?.chinaName ?? material.chinaName,
+            }
+          : material,
       ),
     );
   }
@@ -377,141 +654,96 @@ export function RevisionNotice() {
                         </TableRow>
 
                         {isExpanded && (
-                          <>
-                            <TableRow className="hover:bg-[#F8F8F8]">
-                              <TableHead className={cn(nestedHeadClass, "w-12")} />
-                              <TableHead className={nestedHeadClass}>{t("common.materialCode")}</TableHead>
-                              <TableHead colSpan={2} className={nestedHeadClass}>{t("common.englishName")}</TableHead>
-                              <TableHead colSpan={2} className={nestedHeadClass}>{t("common.chinaName")}</TableHead>
-                              <TableHead className={nestedHeadClass}>{isEditing ? "Status" : ""}</TableHead>
-                            </TableRow>
+                          <TableRow>
+                            <TableCell colSpan={7} className="bg-white p-3">
+                              <div className="overflow-x-auto">
+                                <Table className="min-w-[1450px]">
+                                  <MaterialTableHeader />
+                                  <TableBody>
+                                    {displayedMaterials.map((material, index) => (
+                                      <TableRow
+                                        key={`${item.id}-${index}`}
+                                        className={cn(
+                                          material.isRejected &&
+                                            "bg-red-50/50 hover:bg-red-50/70",
+                                        )}
+                                      >
+                                        <MaterialFields
+                                          material={material}
+                                          isEditing={isEditing}
+                                          isRejected={material.isRejected}
+                                          onChange={(field, value) =>
+                                            updateDraftMaterial(index, field, value)
+                                          }
+                                          onCodeChange={(code) =>
+                                            updateDraftMaterialCode(index, code)
+                                          }
+                                        />
+                                      </TableRow>
+                                    ))}
 
-                            {displayedMaterials.map((material, index) => (
-                              <TableRow
-                                key={`${item.id}-${index}`}
-                                className={cn(
-                                  material.isRejected && "bg-red-50/50 hover:bg-red-50/70",
-                                )}
-                              >
-                                <TableCell />
-                                <TableCell className="px-3 py-2">
-                                  {isEditing ? (
-                                    <input
-                                      type="text"
-                                      className={cn(
-                                        inputClass,
-                                        material.isRejected && "border-red-400 focus:border-red-500",
-                                      )}
-                                      value={material.code}
-                                      onChange={(event) => updateDraftMaterial(index, "code", event.target.value)}
-                                    />
-                                  ) : (
-                                    <span className="inline-flex items-center gap-2 text-xs">
-                                      {material.code}
-                                      {material.isRejected && (
-                                        <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-1.5 py-0.5 text-[10px] font-medium text-red-700">
-                                          <AlertCircle className="h-3 w-3" />
-                                          Rejected
-                                        </span>
-                                      )}
-                                    </span>
-                                  )}
-                                </TableCell>
-                                <TableCell colSpan={2} className="px-3 py-2">
-                                  {isEditing ? (
-                                    <input
-                                      type="text"
-                                      className={cn(
-                                        inputClass,
-                                        material.isRejected && "border-red-400 focus:border-red-500",
-                                      )}
-                                      value={material.englishName}
-                                      onChange={(event) => updateDraftMaterial(index, "englishName", event.target.value)}
-                                    />
-                                  ) : (
-                                    <span className="text-xs">{material.englishName}</span>
-                                  )}
-                                </TableCell>
-                                <TableCell colSpan={2} className="px-3 py-2">
-                                  {isEditing ? (
-                                    <input
-                                      type="text"
-                                      className={cn(
-                                        inputClass,
-                                        material.isRejected && "border-red-400 focus:border-red-500",
-                                      )}
-                                      value={material.chinaName}
-                                      onChange={(event) => updateDraftMaterial(index, "chinaName", event.target.value)}
-                                    />
-                                  ) : (
-                                    <span className="text-xs">{material.chinaName}</span>
-                                  )}
-                                </TableCell>
-                                <TableCell className="px-3 py-2 text-right">
-                                  {isEditing && material.isRejected && (
-                                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-red-600">
-                                      <AlertCircle className="h-3.5 w-3.5" />
-                                      Rejected
-                                    </span>
-                                  )}
-                                </TableCell>
-                              </TableRow>
-                            ))}
+                                    {isEditing && (
+                                      <TableRow>
+                                        <TableCell colSpan={8} className="py-3">
+                                          <Button
+                                            type="button"
+                                            variant="secondary"
+                                            className="h-7 rounded-md px-3 text-xs"
+                                            onClick={addDraftMaterial}
+                                          >
+                                            <Plus className="h-3.5 w-3.5" />
+                                            {t("dashboard.revision.addMaterial")}
+                                          </Button>
+                                        </TableCell>
+                                      </TableRow>
+                                    )}
+                                  </TableBody>
+                                </Table>
+                              </div>
 
-                            <TableRow className="hover:bg-transparent">
-                              <TableCell />
-                              <TableCell colSpan={6} className="px-3 py-3">
-                                <div className="flex items-center justify-between gap-3">
-                                  {isEditing ? (
+                              <div className="mt-3 flex items-center justify-between gap-3">
+                                {isEditing ? (
+                                  <div className="flex items-center gap-2">
                                     <Button
                                       type="button"
-                                      variant="secondary"
+                                      variant="ghost"
                                       className="h-7 rounded-md px-3 text-xs"
-                                      onClick={addDraftMaterial}
+                                      onClick={cancelEdit}
                                     >
-                                      <Plus className="h-3.5 w-3.5" />
-                                      {t("dashboard.revision.addMaterial")}
+                                      {t("common.cancel")}
                                     </Button>
-                                  ) : (
-                                    <span className="text-xs text-slate-500">Read-only view</span>
-                                  )}
-
-                                  <div className="flex items-center gap-2">
-                                    {isEditing && (
-                                      <>
-                                        <Button
-                                          type="button"
-                                          variant="ghost"
-                                          className="h-7 rounded-md px-3 text-xs"
-                                          onClick={cancelEdit}
-                                        >
-                                          {t("common.cancel")}
-                                        </Button>
-                                        <Button
-                                          type="button"
-                                          variant="primary"
-                                          className="h-7 rounded-md px-3 text-xs font-semibold"
-                                          onClick={saveEdit}
-                                        >
-                                          Save Changes
-                                        </Button>
-                                      </>
-                                    )}
                                     <Button
                                       type="button"
                                       variant="primary"
-                                      className="h-7 rounded-md px-4 text-xs font-semibold"
-                                      onClick={() => resubmit(item.id)}
-                                      disabled={isEditing}
-                                      title={isEditing ? "Save or cancel your changes before resubmitting" : undefined}
+                                      className="h-7 rounded-md px-3 text-xs font-semibold"
+                                      onClick={saveEdit}
                                     >
-                                      {t("dashboard.revision.resubmit")}
+                                      Save Changes
                                     </Button>
                                   </div>
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          </>
+                                ) : (
+                                  <span className="text-xs text-slate-500">
+                                    Read-only view
+                                  </span>
+                                )}
+
+                                <Button
+                                  type="button"
+                                  variant="primary"
+                                  className="h-7 rounded-md px-4 text-xs font-semibold"
+                                  onClick={() => resubmit(item.id)}
+                                  disabled={isEditing}
+                                  title={
+                                    isEditing
+                                      ? "Save or cancel your changes before resubmitting"
+                                      : undefined
+                                  }
+                                >
+                                  {t("dashboard.revision.resubmit")}
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
                         )}
                       </React.Fragment>
                     );
@@ -551,26 +783,51 @@ const initialOngoingMoRows: MoRow[] = [
         code: "621032000320",
         englishName: "Battery cover AC175",
         chinaName: "电池盖组件 AC175 绿",
+        qty: "5",
+        category: "Wait repair",
+        transportation: "Air",
+        locator: "110100",
+        projectCode: "9991028",
       },
       {
         code: "621032000320",
         englishName: "Display Panel",
         chinaName: "显示屏面板",
+        qty: "10",
+        category: "Idle OK",
+        transportation: "Sea",
+        locator: "110101",
+        projectCode: "9991028",
       },
       {
         code: "621032000320",
         englishName: "Camera Module",
         chinaName: "相机模组",
+        qty: "7",
+        category: "Idle OK",
+        transportation: "Air",
+        locator: "110102",
+        projectCode: "9991028",
       },
       {
         code: "621032000320",
         englishName: "Camera Module",
         chinaName: "相机模组",
+        qty: "7",
+        category: "Wait repair",
+        transportation: "Sea",
+        locator: "110103",
+        projectCode: "9991028",
       },
       {
         code: "621032000320",
         englishName: "Display Panel",
         chinaName: "显示屏面板",
+        qty: "10",
+        category: "Idle OK",
+        transportation: "Air",
+        locator: "110104",
+        projectCode: "9991028",
       },
     ],
   },
@@ -647,7 +904,7 @@ function OngoingMoTable() {
   function updateMaterial(
     rowId: string,
     materialIndex: number,
-    field: keyof Material,
+    field: EditableMaterialField,
     value: string,
   ) {
     setRows((prev) =>
@@ -666,6 +923,30 @@ function OngoingMoTable() {
     );
   }
 
+  function updateMaterialCode(rowId: string, materialIndex: number, code: string) {
+    const option = getMaterialCodeOption(code);
+
+    setRows((prev) =>
+      prev.map((row) =>
+        row.id !== rowId
+          ? row
+          : {
+              ...row,
+              materials: row.materials.map((material, index) =>
+                index === materialIndex
+                  ? {
+                      ...material,
+                      code,
+                      englishName: option?.englishName ?? material.englishName,
+                      chinaName: option?.chinaName ?? material.chinaName,
+                    }
+                  : material,
+              ),
+            },
+      ),
+    );
+  }
+
   function addMaterial(rowId: string) {
     setRows((prev) =>
       prev.map((row) =>
@@ -677,9 +958,6 @@ function OngoingMoTable() {
 
     setExpandedId(rowId);
   }
-
-  const cellInputClass =
-    "w-full rounded-md border border-strokestroke-gray px-2 py-1.5 text-xs focus:border-primaryprimary-green focus:outline-none";
 
   return (
     <Card className="overflow-hidden rounded-lg border-[var(--strokestroke-gray)]">
@@ -814,100 +1092,218 @@ function OngoingMoTable() {
                     </TableRow>
 
                     {isExpanded && (
-                      <>
-                        <TableRow className="hover:bg-[#F8F8F8]">
-                          <TableHead className={cn(nestedHeadClass, "w-12")} />
-                          <TableHead className={nestedHeadClass}>
-                            {t("common.materialCode")}
-                          </TableHead>
-                          <TableHead colSpan={2} className={nestedHeadClass}>
-                            {t("common.englishName")}
-                          </TableHead>
-                          <TableHead colSpan={3} className={nestedHeadClass}>
-                            {t("common.chinaName")}
-                          </TableHead>
+                        <TableRow>
+                          <TableCell colSpan={7} className="bg-white p-3">
+                            <div className="overflow-x-auto">
+                              <Table className="min-w-[1450px]">
+                                <MaterialTableHeader />
+                                <TableBody>
+                                  {row.materials.map((material, index) => (
+                                    <TableRow key={index}>
+                                      <TableCell className="px-3 py-2">
+                                        {isEditing ? (
+                                          <Select
+                                            value={material.code || undefined}
+                                            onValueChange={(value) =>
+                                              updateMaterialCode(row.id, index, value)
+                                            }
+                                          >
+                                            <SelectTrigger className="h-8 w-full rounded-md border-strokestroke-gray text-xs">
+                                              <SelectValue placeholder={t("moEntry.chooseMaterialCode")} />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              {MATERIAL_CODE_OPTIONS.map((option) => (
+                                                <SelectItem
+                                                  key={option.code}
+                                                  value={option.code}
+                                                  className="text-xs"
+                                                >
+                                                  {option.code}
+                                                </SelectItem>
+                                              ))}
+                                            </SelectContent>
+                                          </Select>
+                                        ) : (
+                                          material.code || "—"
+                                        )}
+                                      </TableCell>
+
+                                      <TableCell className="px-3 py-2">
+                                        {isEditing ? (
+                                          <Input
+                                            placeholder={t("moEntry.inputEnglishName")}
+                                            value={material.englishName}
+                                            onChange={(e) => updateMaterial(row.id, index, "englishName", e.target.value)}
+                                            className={materialInputClass}
+                                          />
+                                        ) : (
+                                          <span className="text-xs">{material.englishName || "—"}</span>
+                                        )}
+                                      </TableCell>
+
+                                      <TableCell className="px-3 py-2">
+                                        {isEditing ? (
+                                          <Input
+                                            placeholder={t("moEntry.inputChinaName")}
+                                            value={material.chinaName}
+                                            onChange={(e) => updateMaterial(row.id, index, "chinaName", e.target.value)}
+                                            className={materialInputClass}
+                                          />
+                                        ) : (
+                                          <span className="text-xs">{material.chinaName || "—"}</span>
+                                        )}
+                                      </TableCell>
+
+                                      <TableCell className="px-3 py-2">
+                                        {isEditing ? (
+                                          <Input
+                                            placeholder={t("moEntry.inputQuantity")}
+                                            type="number"
+                                            value={material.qty ?? ""}
+                                            onChange={(e) => updateMaterial(row.id, index, "qty", e.target.value)}
+                                            className={materialInputClass}
+                                          />
+                                        ) : (
+                                          <span className="text-xs">{material.qty || "—"}</span>
+                                        )}
+                                      </TableCell>
+
+                                      <TableCell className="px-3 py-2">
+                                        {isEditing ? (
+                                          <Select
+                                            value={material.category || undefined}
+                                            onValueChange={(value) =>
+                                              updateMaterial(
+                                                row.id,
+                                                index,
+                                                "category",
+                                                value,
+                                              )
+                                            }
+                                          >
+                                            <SelectTrigger
+                                              className={cn(
+                                                "h-8 w-full rounded-md border text-xs",
+                                                material.category === "Wait repair" &&
+                                                  "border-amber-300 bg-yellow-100 text-yellow-800",
+                                                material.category === "Idle OK" &&
+                                                  "border-green-300 bg-green-100 text-green-800",
+                                                !material.category &&
+                                                  "border-strokestroke-gray",
+                                              )}
+                                            >
+                                              <SelectValue placeholder={t("common.category")} />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              <SelectItem value="Wait repair">
+                                                {t("common.waitRepair")}
+                                              </SelectItem>
+                                              <SelectItem value="Idle OK">
+                                                {t("common.idleOk")}
+                                              </SelectItem>
+                                            </SelectContent>
+                                          </Select>
+                                        ) : material.category ? (
+                                          <span
+                                            className={cn(
+                                              "inline-flex rounded-full px-2 py-0.5 text-xs font-medium",
+                                              material.category === "Wait repair" &&
+                                                "bg-yellow-100 text-yellow-800",
+                                              material.category === "Idle OK" &&
+                                                "bg-green-100 text-green-800",
+                                            )}
+                                          >
+                                            {material.category === "Wait repair"
+                                              ? t("common.waitRepair")
+                                              : t("common.idleOk")}
+                                          </span>
+                                        ) : (
+                                          "—"
+                                        )}
+                                      </TableCell>
+
+                                      <TableCell className="px-3 py-2">
+                                        {isEditing ? (
+                                          <Select
+                                            value={material.transportation || undefined}
+                                            onValueChange={(value) =>
+                                              updateMaterial(
+                                                row.id,
+                                                index,
+                                                "transportation",
+                                                value,
+                                              )
+                                            }
+                                          >
+                                            <SelectTrigger className="h-8 w-full rounded-md border-strokestroke-gray text-xs">
+                                              <SelectValue placeholder={t("common.transportation")} />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              <SelectItem value="Air">
+                                                {t("common.air")}
+                                              </SelectItem>
+                                              <SelectItem value="Sea">
+                                                {t("common.sea")}
+                                              </SelectItem>
+                                            </SelectContent>
+                                          </Select>
+                                        ) : material.transportation === "Air" ? (
+                                          t("common.air")
+                                        ) : material.transportation === "Sea" ? (
+                                          t("common.sea")
+                                        ) : (
+                                          "—"
+                                        )}
+                                      </TableCell>
+
+                                      <TableCell className="px-3 py-2">
+                                        {isEditing ? (
+                                          <Input
+                                            placeholder="e.g. 110100"
+                                            value={material.locator ?? ""}
+                                            onChange={(e) => updateMaterial(row.id, index, "locator", e.target.value)}
+                                            className={materialInputClass}
+                                          />
+                                        ) : (
+                                          <span className="text-xs">{material.locator || "—"}</span>
+                                        )}
+                                      </TableCell>
+
+                                      <TableCell className="px-3 py-2">
+                                        {isEditing ? (
+                                          <Input
+                                            placeholder="e.g. 9991028"
+                                            value={material.projectCode ?? ""}
+                                            onChange={(e) => updateMaterial(row.id, index, "projectCode", e.target.value)}
+                                            className={materialInputClass}
+                                          />
+                                        ) : (
+                                          <span className="text-xs">{material.projectCode || "—"}</span>
+                                        )}
+                                      </TableCell>
+                                    </TableRow>
+                                  ))}
+
+                                  {isEditing && (
+                                    <TableRow>
+                                      <TableCell colSpan={8} className="py-3">
+                                        <Button
+                                          type="button"
+                                          variant="secondary"
+                                          className="h-7 rounded-md px-3 text-xs"
+                                          onClick={() => addMaterial(row.id)}
+                                        >
+                                          <Plus className="h-3.5 w-3.5" />
+                                          {t("dashboard.ongoingMo.addMaterial")}
+                                        </Button>
+                                      </TableCell>
+                                    </TableRow>
+                                  )}
+                                </TableBody>
+                              </Table>
+                            </div>
+                          </TableCell>
                         </TableRow>
-
-                        {row.materials.map((material, index) => (
-                          <TableRow key={index}>
-                            <TableCell />
-
-                            <TableCell className="text-xs">
-                              {isEditing ? (
-                                <input
-                                  className={cellInputClass}
-                                  value={material.code}
-                                  onChange={(e) =>
-                                    updateMaterial(
-                                      row.id,
-                                      index,
-                                      "code",
-                                      e.target.value,
-                                    )
-                                  }
-                                />
-                              ) : (
-                                material.code
-                              )}
-                            </TableCell>
-
-                            <TableCell colSpan={2} className="text-xs">
-                              {isEditing ? (
-                                <input
-                                  className={cellInputClass}
-                                  value={material.englishName}
-                                  onChange={(e) =>
-                                    updateMaterial(
-                                      row.id,
-                                      index,
-                                      "englishName",
-                                      e.target.value,
-                                    )
-                                  }
-                                />
-                              ) : (
-                                material.englishName
-                              )}
-                            </TableCell>
-
-                            <TableCell colSpan={3} className="text-xs">
-                              {isEditing ? (
-                                <input
-                                  className={cellInputClass}
-                                  value={material.chinaName}
-                                  onChange={(e) =>
-                                    updateMaterial(
-                                      row.id,
-                                      index,
-                                      "chinaName",
-                                      e.target.value,
-                                    )
-                                  }
-                                />
-                              ) : (
-                                material.chinaName
-                              )}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-
-                        {isEditing && (
-                          <TableRow>
-                            <TableCell />
-                            <TableCell colSpan={6} className="py-3">
-                              <Button
-                                type="button"
-                                variant="secondary"
-                                className="h-7 rounded-md px-3 text-xs"
-                                onClick={() => addMaterial(row.id)}
-                              >
-                                <Plus className="h-3.5 w-3.5" />
-                                {t("dashboard.ongoingMo.addMaterial")}
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        )}
-                      </>
                     )}
                   </React.Fragment>
                 );

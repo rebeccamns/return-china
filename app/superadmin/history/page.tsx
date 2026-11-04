@@ -1,5 +1,11 @@
-import ComingSoon from "../_components/ComingSoon";
+import MoHistoryPage from "@/components/history/MoHistoryPage";
+import { HISTORY_BASE_PATH } from "@/lib/mo-detail/access";
 
 export default function SuperadminHistoryPage() {
-  return <ComingSoon titleKey="navigation.history" />;
+  return (
+    <MoHistoryPage
+      sidebarVariant="superadmin"
+      historyHref={HISTORY_BASE_PATH.superadmin}
+    />
+  );
 }
