@@ -92,11 +92,10 @@ export default function MoEntryPage() {
   const [model, setModel] = useState("");
   const [projectNumber, setProjectNumber] = useState("");
   const [targetDeliveryDate, setTargetDeliveryDate] = useState("");
-  const [rows, setRows] = useState<MaterialRow[]>(initialRows);
+  const [rows, setRows] = useState<MaterialRow[]>([]);
   const [checkedRows, setCheckedRows] = useState<Set<number>>(new Set());
   const [statusMessage, setStatusMessage] = useState("");
   const [submitStep, setSubmitStep] = useState<SubmitStep>(null);
-  const [isSubmitted, setIsSubmitted] = useState(false);
 
   function updateRow(index: number, field: keyof MaterialRow, value: string) {
     setRows((prev) =>
@@ -186,8 +185,7 @@ export default function MoEntryPage() {
       return;
     }
 
-    if (isSubmitted) {
-      setIsSubmitted(false);
+    if (rows.length === 0) {
       setRows(initialRows);
     }
     setStatusMessage(
@@ -228,7 +226,6 @@ export default function MoEntryPage() {
     setModel("");
     setProjectNumber("");
     setTargetDeliveryDate("");
-    setIsSubmitted(true);
     setSubmitStep("success");
   }
 
@@ -365,7 +362,7 @@ export default function MoEntryPage() {
               </div>
             )}
 
-            {isSubmitted ? (
+            {rows.length === 0 ? (
               <div className="flex flex-col items-center px-[18px] py-12 text-center">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#E7F5EC] text-[#008348]">
                   <ClipboardList className="h-6 w-6" />

@@ -133,6 +133,9 @@ export const en = {
     title: "Dashboard",
     taskProgress: {
       title: "Task Progress",
+      allDates: "All dates",
+      clearDateFilter: "Clear date filter",
+      noTasksOnDate: "No tasks were created on this date.",
       viewTablist: "Task progress view",
       overall: "Overall",
       details: "Details",

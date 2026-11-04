@@ -12,7 +12,6 @@ type CardDef = {
   titleKey: string;
   color: {
     bg: string;
-    border: string;
     text: string;
     iconBg: string;
     iconColor: string;
@@ -26,7 +25,6 @@ const CARDS: CardDef[] = [
     titleKey: "moMonitoring.kpi.totalMo",
     color: {
       bg: "bg-white",
-      border: "border-l-indigo-400",
       text: "text-indigo-900",
       iconBg: "bg-indigo-100",
       iconColor: "text-indigo-500",
@@ -38,7 +36,6 @@ const CARDS: CardDef[] = [
     titleKey: "moMonitoring.kpi.moInProgress",
     color: {
       bg: "bg-white",
-      border: "border-l-yellow-400",
       text: "text-yellow-900",
       iconBg: "bg-yellow-100",
       iconColor: "text-yellow-500",
@@ -50,7 +47,6 @@ const CARDS: CardDef[] = [
     titleKey: "moMonitoring.kpi.moCompleted",
     color: {
       bg: "bg-white",
-      border: "border-l-green-500",
       text: "text-green-900",
       iconBg: "bg-green-100",
       iconColor: "text-green-600",
@@ -62,7 +58,6 @@ const CARDS: CardDef[] = [
     titleKey: "moMonitoring.kpi.needIntervene",
     color: {
       bg: "bg-white",
-      border: "border-l-red-400",
       text: "text-red-900",
       iconBg: "bg-red-100",
       iconColor: "text-red-500",
@@ -86,21 +81,21 @@ export default function MoKpiCards({ mos }: Props) {
         return (
           <div
             key={card.titleKey}
-            className={`flex min-h-[100px] items-center justify-between rounded-md border px-5 py-4 ${card.color.bg} ${card.color.border}`}
+            className={`flex min-h-[88px] items-center justify-between rounded-md border border-gray-200 px-4 py-3 ${card.color.bg}`}
           >
             <div className="flex flex-col gap-1">
-              <span className="text-sm font-medium text-gray-600">
+              <span className="text-xs font-medium text-gray-600">
                 {t(card.titleKey as Parameters<typeof t>[0])}
               </span>
-              <span className={`text-3xl font-bold ${card.color.text}`}>
+              <span className="text-2xl font-bold text-black">
                 {value}
               </span>
             </div>
             <span
-              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${card.color.iconBg}`}
+              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${card.color.iconBg}`}
             >
               <Icon
-                className={`h-5 w-5 ${card.color.iconColor}`}
+                className={`h-4 w-4 ${card.color.iconColor}`}
                 strokeWidth={1.75}
               />
             </span>
@@ -110,4 +105,3 @@ export default function MoKpiCards({ mos }: Props) {
     </section>
   );
 }
-

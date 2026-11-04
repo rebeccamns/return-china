@@ -141,7 +141,7 @@ const initialRows: WoRow[] = [
 
 export default function WoEntryPage() {
   const { t } = useI18n();
-  const [rows] = useState<WoRow[]>(initialRows);
+  const [rows, setRows] = useState<WoRow[]>(initialRows);
   const [woValues, setWoValues] = useState<Record<string, string>>({});
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [submitStep, setSubmitStep] = useState<SubmitStep>(null);
@@ -159,6 +159,15 @@ export default function WoEntryPage() {
 
   function confirmSubmitWo() {
     // TODO: send { moId: pendingId, wo: woValues[pendingId] } to your API here
+    if (pendingId) {
+      setRows((currentRows) => currentRows.filter((row) => row.id !== pendingId));
+      setWoValues((currentValues) => {
+        const nextValues = { ...currentValues };
+        delete nextValues[pendingId];
+        return nextValues;
+      });
+      setExpandedId((currentId) => (currentId === pendingId ? null : currentId));
+    }
     setSubmitStep("success");
   }
 

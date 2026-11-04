@@ -142,6 +142,9 @@ export const zhCN: Dictionary = {
     title: "仪表盘",
     taskProgress: {
       title: "任务进度",
+      allDates: "所有日期",
+      clearDateFilter: "清除日期筛选",
+      noTasksOnDate: "该日期没有创建任务。",
       viewTablist: "任务进度视图",
       overall: "总览",
       details: "详情",

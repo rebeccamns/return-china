@@ -44,7 +44,7 @@ const INITIAL_MATERIALS: IQCMaterial[] = [
   },
   {
     id: "3",
-    code: "621032003165",
+    code: "621032000320",
     englishName: "Battery cover AC175",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
@@ -55,7 +55,7 @@ const INITIAL_MATERIALS: IQCMaterial[] = [
   },
   {
     id: "4",
-    code: "621032003165",
+    code: "621032000320",
     englishName: "Battery cover AC175",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
@@ -66,7 +66,7 @@ const INITIAL_MATERIALS: IQCMaterial[] = [
   },
   {
     id: "5",
-    code: "621032003165",
+    code: "621032000320",
     englishName: "Battery cover AC175",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
@@ -77,7 +77,7 @@ const INITIAL_MATERIALS: IQCMaterial[] = [
   },
   {
     id: "6",
-    code: "621032003165",
+    code: "621032000320",
     englishName: "Battery cover AC175",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
