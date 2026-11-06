@@ -26,6 +26,7 @@ import { useI18n } from "@/i18n";
 import { canViewStageDetail } from "@/lib/mo-detail/access";
 import { getMoDetail } from "@/lib/mo-detail/data";
 import { STAGE_KEYS, type MOStatus, type StageDetail, type StageKey } from "@/lib/mo-detail/types";
+import MoExportButton from "./MoExportDialog";
 import StageDataContent from "./StageDataContent";
 
 const STAGE_LABEL_KEYS: Record<StageKey, `history.detail.stages.${StageKey}`> = {
@@ -305,12 +306,15 @@ export default function MoDetailView({
                 {t("history.detail.subtitle")}
               </p>
             </div>
-            <Button asChild variant="outline" className="gap-2">
-              <Link href={historyHref}>
-                <ArrowLeft aria-hidden="true" className="h-4 w-4" />
-                {t("history.detail.backToHistory")}
-              </Link>
-            </Button>
+            <div className="flex gap-2">
+              {mo?.overallStatus === "Completed" && <MoExportButton mo={mo} />}
+              <Button asChild variant="outline" className="gap-2">
+                <Link href={historyHref}>
+                  <ArrowLeft aria-hidden="true" className="h-4 w-4" />
+                  {t("history.detail.backToHistory")}
+                </Link>
+              </Button>
+            </div>
           </header>
 
           {!mo ? (
