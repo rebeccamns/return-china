@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import { useState } from "react";
@@ -17,6 +17,7 @@ import Sidebar from "@/components/layout/sidebar";
 import TopBar from "@/components/layout/topbar";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n";
+import { DEMO, demoMoNumber } from "@/lib/demo-data";
 import SubmitFlowDialog, { type SubmitStep } from "../_components/SubmitFlowDialog";
 
 const nestedHeadClass =
@@ -94,54 +95,54 @@ function RemovableFileInput({
 
 const initialMaterials: Material[] = [
   {
-    code: "621032000320",
-    englishName: "Battery cover AC175",
+    code: DEMO.materialCodes.batteryCover,
+    englishName: "Battery cover Lychee F4",
     chinaName: "电池盖组件 AC175 绿",
     qty: "5",
     category: "Wait repair",
     transportation: "Air",
     locator: "110100",
-    projectCode: "9991028",
+    projectCode: DEMO.projectCode,
   },
   {
-    code: "621032000320",
-    englishName: "Display Panel",
+    code: DEMO.materialCodes.displayPanel,
+    englishName: "Display Panel Lychee F4",
     chinaName: "显示屏面板",
     qty: "10",
     category: "Idle OK",
     transportation: "Sea",
     locator: "110101",
-    projectCode: "9991028",
+    projectCode: DEMO.projectCode,
   },
   {
-    code: "621032000320",
-    englishName: "Camera Module",
+    code: DEMO.materialCodes.cameraModule,
+    englishName: "Camera Module Lychee F4",
     chinaName: "相机模组",
     qty: "7",
     category: "Idle OK",
     transportation: "Air",
     locator: "110102",
-    projectCode: "9991028",
+    projectCode: DEMO.projectCode,
   },
   {
-    code: "621032000320",
-    englishName: "Camera Module",
+    code: DEMO.materialCodes.cameraModule,
+    englishName: "Camera Module Lychee F4",
     chinaName: "相机模组",
     qty: "7",
     category: "Wait repair",
     transportation: "Sea",
     locator: "110103",
-    projectCode: "9991028",
+    projectCode: DEMO.projectCode,
   },
   {
-    code: "621032000320",
-    englishName: "Display Panel",
+    code: DEMO.materialCodes.displayPanel,
+    englishName: "Display Panel Lychee F4",
     chinaName: "显示屏面板",
     qty: "10",
     category: "Idle OK",
     transportation: "Air",
     locator: "110104",
-    projectCode: "9991028",
+    projectCode: DEMO.projectCode,
   },
 ];
 
@@ -149,22 +150,22 @@ const initialMaterials: Material[] = [
 const initialRows: WoRow[] = [
   {
     id: "wo-1",
-    code: "T2026090410261301048",
-    model: "Latte-M",
+    code: demoMoNumber(0),
+    model: DEMO.model,
     iqcStatus: "Passed",
     materials: initialMaterials,
   },
   {
     id: "wo-2",
-    code: "T2026090410261301049",
-    model: "Latte-M",
+    code: demoMoNumber(1),
+    model: DEMO.model,
     iqcStatus: "Passed",
     materials: initialMaterials,
   },
   {
     id: "wo-3",
-    code: "T2026090410261301050",
-    model: "Latte-M",
+    code: demoMoNumber(2),
+    model: DEMO.model,
     iqcStatus: "Passed",
     materials: initialMaterials,
   },
@@ -173,7 +174,11 @@ const initialRows: WoRow[] = [
 export default function WoEntryPage() {
   const { t } = useI18n();
   const [rows, setRows] = useState<WoRow[]>(initialRows);
-  const [woValues, setWoValues] = useState<Record<string, string>>({});
+  const [woValues, setWoValues] = useState<Record<string, string>>({
+    "wo-1": DEMO.workOrder,
+    "wo-2": DEMO.workOrder,
+    "wo-3": DEMO.workOrder,
+  });
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [submitStep, setSubmitStep] = useState<SubmitStep>(null);
   const [pendingId, setPendingId] = useState<string | null>(null);
@@ -228,7 +233,7 @@ export default function WoEntryPage() {
         <div className="mt-[52px] w-full px-[18px] py-5">
           <nav className="mb-4 flex items-center gap-2 text-xs">
             <span className="text-text-colortext-gray">{t("woEntry.breadcrumbSection")}</span>
-            <span className="text-[#B5B5B3]">›</span>
+            <span className="text-[#B5B5B3]">â€º</span>
             <span className="font-medium text-text-colortext-dark">
               {t("woEntry.title")}
             </span>

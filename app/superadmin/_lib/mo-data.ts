@@ -13,6 +13,7 @@ import type {
   StepName,
   TimelineStep,
 } from "./types";
+import { DEMO, demoMoNumber } from "@/lib/demo-data";
 
 // TODO(backend): replace with real auth/role check
 export const currentRole = "superadmin";
@@ -83,8 +84,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 01 ── Reference MO from the spec ──────────────────────────────────
   {
-    moCode: "T20260904102613010 48".replace(" ",""),
-    model: "Latte-M",
+    moCode: demoMoNumber(0),
+    model: DEMO.model,
     currentStep: "Exim",
     completedSteps: 4,
     status: "In Progress",
@@ -113,8 +114,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 02 ──────────────────────────────────────────────────────────────
   {
-    moCode: "T20260922100001001",
-    model: "Latte-M",
+    moCode: demoMoNumber(1),
+    model: DEMO.model,
     currentStep: "IQC",
     completedSteps: 1,
     status: "Pending",
@@ -137,8 +138,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 03 ──────────────────────────────────────────────────────────────
   {
-    moCode: "T20260922100002001",
-    model: "Latte-M",
+    moCode: demoMoNumber(2),
+    model: DEMO.model,
     currentStep: "Staff Return",
     completedSteps: 2,
     status: "In Progress",
@@ -163,8 +164,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 04 ──────────────────────────────────────────────────────────────
   {
-    moCode: "T20260922100003001",
-    model: "Latte-M",
+    moCode: demoMoNumber(3),
+    model: DEMO.model,
     currentStep: "Staff Return",
     completedSteps: 2,
     status: "In Progress",
@@ -189,8 +190,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 05 ──────────────────────────────────────────────────────────────
   {
-    moCode: "T20260922100004001",
-    model: "Latte-S",
+    moCode: demoMoNumber(4),
+    model: DEMO.model,
     currentStep: "Exim",
     completedSteps: 4,
     status: "In Progress",
@@ -217,8 +218,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 06 ──────────────────────────────────────────────────────────────
   {
-    moCode: "T20260922100005001",
-    model: "Latte-M",
+    moCode: demoMoNumber(5),
+    model: DEMO.model,
     currentStep: "Staff Return",
     completedSteps: 2,
     status: "Pending",
@@ -242,8 +243,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 07 ──────────────────────────────────────────────────────────────
   {
-    moCode: "T20260922100006001",
-    model: "Latte-M",
+    moCode: demoMoNumber(6),
+    model: DEMO.model,
     currentStep: "Staff Return 2",
     completedSteps: 5,
     status: "In Progress",
@@ -271,8 +272,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 08 ─ Blocked ───────────────────────────────────────────────────
   {
-    moCode: "T20260922100007001",
-    model: "Latte-M",
+    moCode: demoMoNumber(7),
+    model: DEMO.model,
     currentStep: "Staff Return",
     completedSteps: 2,
     status: "Blocked",
@@ -297,8 +298,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 09 ──────────────────────────────────────────────────────────────
   {
-    moCode: "T20260922100008001",
-    model: "Latte-M",
+    moCode: demoMoNumber(8),
+    model: DEMO.model,
     currentStep: "Staff Return",
     completedSteps: 2,
     status: "In Progress",
@@ -323,8 +324,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 10 ──────────────────────────────────────────────────────────────
   {
-    moCode: "T20260922100009001",
-    model: "Latte-M",
+    moCode: demoMoNumber(9),
+    model: DEMO.model,
     currentStep: "Staff Return",
     completedSteps: 2,
     status: "Pending",
@@ -348,8 +349,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 11 ─ Completed ─────────────────────────────────────────────────
   {
-    moCode: "T20260921100001001",
-    model: "Latte-S",
+    moCode: demoMoNumber(10),
+    model: DEMO.model,
     currentStep: "IQC QA Pass",
     completedSteps: 7,
     status: "Completed",
@@ -378,8 +379,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 12 ─ Completed ─────────────────────────────────────────────────
   {
-    moCode: "T20260921100002001",
-    model: "Mocha-X",
+    moCode: demoMoNumber(11),
+    model: DEMO.model,
     currentStep: "IQC QA Pass",
     completedSteps: 7,
     status: "Completed",
@@ -410,8 +411,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 13 ─ Completed ─────────────────────────────────────────────────
   {
-    moCode: "T20260921100003001",
-    model: "Latte-M",
+    moCode: demoMoNumber(12),
+    model: DEMO.model,
     currentStep: "IQC QA Pass",
     completedSteps: 7,
     status: "Completed",
@@ -440,8 +441,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 14 ─ Completed ─────────────────────────────────────────────────
   {
-    moCode: "T20260920100001001",
-    model: "Latte-S",
+    moCode: demoMoNumber(13),
+    model: DEMO.model,
     currentStep: "IQC QA Pass",
     completedSteps: 7,
     status: "Completed",
@@ -470,8 +471,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 15 ─ Completed ─────────────────────────────────────────────────
   {
-    moCode: "T20260920100002001",
-    model: "Mocha-X",
+    moCode: demoMoNumber(14),
+    model: DEMO.model,
     currentStep: "IQC QA Pass",
     completedSteps: 7,
     status: "Completed",
@@ -501,8 +502,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 16 ─ Completed ─────────────────────────────────────────────────
   {
-    moCode: "T20260919100001001",
-    model: "Latte-M",
+    moCode: demoMoNumber(15),
+    model: DEMO.model,
     currentStep: "IQC QA Pass",
     completedSteps: 7,
     status: "Completed",
@@ -531,8 +532,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 17 ─ Completed ─────────────────────────────────────────────────
   {
-    moCode: "T20260919100002001",
-    model: "Latte-S",
+    moCode: demoMoNumber(16),
+    model: DEMO.model,
     currentStep: "IQC QA Pass",
     completedSteps: 7,
     status: "Completed",
@@ -561,8 +562,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 18 ─ Completed ─────────────────────────────────────────────────
   {
-    moCode: "T20260918100001001",
-    model: "Mocha-X",
+    moCode: demoMoNumber(17),
+    model: DEMO.model,
     currentStep: "IQC QA Pass",
     completedSteps: 7,
     status: "Completed",
@@ -591,8 +592,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 19 ─ Completed ─────────────────────────────────────────────────
   {
-    moCode: "T20260918100002001",
-    model: "Latte-M",
+    moCode: demoMoNumber(18),
+    model: DEMO.model,
     currentStep: "IQC QA Pass",
     completedSteps: 7,
     status: "Completed",
@@ -621,8 +622,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 20 ─ Completed ─────────────────────────────────────────────────
   {
-    moCode: "T20260917100001001",
-    model: "Latte-S",
+    moCode: demoMoNumber(19),
+    model: DEMO.model,
     currentStep: "IQC QA Pass",
     completedSteps: 7,
     status: "Completed",
@@ -651,8 +652,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 21 ─ Completed ─────────────────────────────────────────────────
   {
-    moCode: "T20260917100002001",
-    model: "Mocha-X",
+    moCode: demoMoNumber(20),
+    model: DEMO.model,
     currentStep: "IQC QA Pass",
     completedSteps: 7,
     status: "Completed",
@@ -681,8 +682,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 22 ─ Completed ─────────────────────────────────────────────────
   {
-    moCode: "T20260916100001001",
-    model: "Latte-M",
+    moCode: demoMoNumber(21),
+    model: DEMO.model,
     currentStep: "IQC QA Pass",
     completedSteps: 7,
     status: "Completed",
@@ -712,8 +713,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 23 ─ Completed ─────────────────────────────────────────────────
   {
-    moCode: "T20260916100002001",
-    model: "Latte-S",
+    moCode: demoMoNumber(22),
+    model: DEMO.model,
     currentStep: "IQC QA Pass",
     completedSteps: 7,
     status: "Completed",
@@ -742,8 +743,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 24 ─ In Progress, deep ──────────────────────────────────────────
   {
-    moCode: "T20260915100001001",
-    model: "Mocha-X",
+    moCode: demoMoNumber(23),
+    model: DEMO.model,
     currentStep: "Staff Return 2",
     completedSteps: 5,
     status: "In Progress",
@@ -771,8 +772,8 @@ const RAW_MOS: MoRecord[] = [
 
   // ── MO 25 ─ Pending, early stage ──────────────────────────────────────
   {
-    moCode: "T20260915100002001",
-    model: "Latte-M",
+    moCode: demoMoNumber(24),
+    model: DEMO.model,
     currentStep: "PMC Entry",
     completedSteps: 0,
     status: "Pending",
@@ -857,4 +858,3 @@ export function getStatusOptions(): MoStatus[] {
 export function getStepOptions(): StepName[] {
   return [...MO_STEPS];
 }
-

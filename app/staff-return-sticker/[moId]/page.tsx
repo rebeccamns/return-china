@@ -14,6 +14,7 @@ import StickyActionBar, {
   secondaryButton,
 } from "@/components/layout/StickyActionBar";
 import { useI18n } from "@/i18n";
+import { resolveDemoMoNumber } from "@/lib/demo-data";
 import MoSummaryCard from "./_components/MoSummaryCard";
 
 import StickerCartonList, {
@@ -36,6 +37,7 @@ const INITIAL_CARTONS: StickerCarton[] = [
 
 export default function StaffReturnStickerPage({ params }: PageProps) {
   const { moId } = use(params);
+  const moNumber = resolveDemoMoNumber(moId);
   const { t } = useI18n();
 
   const [cartons, setCartons] = useState(INITIAL_CARTONS);
@@ -97,7 +99,7 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
         </div>
 
         <MoSummaryCard
-          moNumber={moId || "MO-321654987"}
+          moNumber={moNumber}
           scannedCount={scannedCount}
           totalCartons={cartons.length}
           showScanProgress
@@ -164,7 +166,7 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
         onNavigate={(item) => {
           switch (item) {
             case "packing-list":
-              window.location.href = `/staff-return/${moId}`;
+              window.location.href = `/staff-return/${moNumber}`;
               break;
             case "history":
               window.location.href = "/staff-return-history";
@@ -258,7 +260,7 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
             </h2>
 
             <p className="mt-2 text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-dark">
-              {t("staffReturnSticker.success.description", { mo: moId || "MO-321654987" })}
+              {t("staffReturnSticker.success.description", { mo: moNumber })}
             </p>
 
             <button

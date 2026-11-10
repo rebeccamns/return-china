@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Check, ChevronDown, ChevronRight } from "lucide-react";
 
 import { primaryButton } from "@/components/layout/StickyActionBar";
+import { DEMO } from "@/lib/demo-data";
 import { useI18n } from "@/i18n";
 
 type MoSummaryCardProps = {
@@ -23,11 +24,11 @@ type MoSummaryCardProps = {
 };
 
 export default function MoSummaryCard({
-  moNumber = "MO-321654987",
+  moNumber = DEMO.moNumber,
   submittedAt = "2026-09-02 09:05",
   returnId = "RC-20260831-002",
-  model = "Latte-M",
-  wo = "ABC-XY12400YZ",
+  model = DEMO.model,
+  wo = DEMO.workOrder,
   scannedCount = 0,
   totalCartons = 6,
   showScanProgress = false,

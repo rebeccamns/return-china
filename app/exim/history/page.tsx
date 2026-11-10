@@ -18,6 +18,7 @@ import Sidebar from "@/components/layout/sidebar";
 import TopBar from "@/components/layout/topbar";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n";
+import { DEMO, demoMoNumber } from "@/lib/demo-data";
 import type { TranslationKey } from "@/i18n";
 
 type Status = "Completed" | "Rejected" | "Resubmitted";
@@ -54,10 +55,10 @@ const headClass =
 const rows: HistoryRow[] = [
   {
     id: "h-1",
-    code: "T2026090410261301048",
-    model: "Latte-M",
-    projectNumber: "9991028",
-    task: "BATCH202609 - Return Idle Latte M",
+    code: DEMO.moNumber,
+    model: DEMO.eximModelDimension,
+    projectNumber: DEMO.projectNumber,
+    task: "BATCH202609 - Return Idle Lychee F4",
     status: "Completed",
     notes: "-",
     submittedBy: "Bagus Saputra",
@@ -65,10 +66,10 @@ const rows: HistoryRow[] = [
   },
   {
     id: "h-2",
-    code: "T2026090410261301041",
-    model: "A58",
-    projectNumber: "9991027",
-    task: "BATCH202609 - Receive Material A58",
+    code: demoMoNumber(1),
+    model: DEMO.eximModelDimension,
+    projectNumber: DEMO.projectNumber,
+    task: "BATCH202609 - Receive Material Lychee F4",
     status: "Rejected",
     notes: "Quantity mismatch on Camera Module (expected 7, received 5)",
     submittedBy: "Bagus Saputra",
@@ -76,10 +77,10 @@ const rows: HistoryRow[] = [
   },
   {
     id: "h-3",
-    code: "T2026090410261301039",
-    model: "A77",
-    projectNumber: "9991026",
-    task: "BATCH202608 - Verify Material A77",
+    code: demoMoNumber(2),
+    model: DEMO.eximModelDimension,
+    projectNumber: DEMO.projectNumber,
+    task: "BATCH202608 - Verify Material Lychee F4",
     status: "Resubmitted",
     notes: "Previously rejected: wrong material code on Display Panel",
     submittedBy: "Bagus Saputra",
@@ -87,10 +88,10 @@ const rows: HistoryRow[] = [
   },
   {
     id: "h-4",
-    code: "T2026090410261301033",
-    model: "Latte-M",
-    projectNumber: "9991025",
-    task: "BATCH202608 - Return Idle Latte M",
+    code: demoMoNumber(3),
+    model: DEMO.eximModelDimension,
+    projectNumber: DEMO.projectNumber,
+    task: "BATCH202608 - Return Idle Lychee F4",
     status: "Completed",
     notes: "-",
     submittedBy: "Bagus Saputra",
@@ -98,10 +99,10 @@ const rows: HistoryRow[] = [
   },
   {
     id: "h-5",
-    code: "T2026090410261301028",
-    model: "A98",
-    projectNumber: "9991024",
-    task: "BATCH202608 - Receive Material A98",
+    code: demoMoNumber(4),
+    model: DEMO.eximModelDimension,
+    projectNumber: DEMO.projectNumber,
+    task: "BATCH202608 - Receive Material Lychee F4",
     status: "Rejected",
     notes: "China name does not match the master list",
     submittedBy: "Bagus Saputra",

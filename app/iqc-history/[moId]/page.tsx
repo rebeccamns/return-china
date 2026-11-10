@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import BackTitle from "@/components/layout/BackTitle";
 import type { MobileNavItem } from "@/components/layout/mobile-bottom-nav";
 import { useI18n } from "@/i18n";
+import { DEMO, resolveDemoMoNumber } from "@/lib/demo-data";
 import { getMoDetail } from "@/lib/mo-detail/data";
 import type { StageDetail, StageKey } from "@/lib/mo-detail/types";
 
@@ -14,7 +15,7 @@ import HistoryLoading from "@/components/mobile-history/HistoryLoading";
 import MoTimeline from "@/components/mobile-history/MoTimeline";
 import StageDetailView from "@/components/mobile-history/StageDetailView";
 
-const DEFAULT_MO_ID = "20260831002";
+const DEFAULT_MO_ID = DEMO.moNumber;
 
 export default function IQCHistoryDetailPage({
   params,
@@ -43,10 +44,10 @@ export default function IQCHistoryDetailPage({
   function navigate(item: MobileNavItem) {
     switch (item) {
       case "identity":
-        router.push(`/iqc/${moId || DEFAULT_MO_ID}`);
+        router.push(`/iqc/${resolveDemoMoNumber(moId || DEFAULT_MO_ID)}`);
         break;
       case "verification":
-        router.push(`/iqc-verification/${moId || DEFAULT_MO_ID}`);
+        router.push(`/iqc-verification/${resolveDemoMoNumber(moId || DEFAULT_MO_ID)}`);
         break;
       case "history":
         router.push("/iqc-history");

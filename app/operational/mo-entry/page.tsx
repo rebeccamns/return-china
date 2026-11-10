@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { ClipboardList, FileUp, Plus, Send } from "lucide-react";
@@ -31,6 +31,7 @@ import {
 import Sidebar from "@/components/layout/sidebar";
 import TopBar from "@/components/layout/topbar";
 import { useI18n } from "@/i18n";
+import { DEMO } from "@/lib/demo-data";
 import {
   getMaterialCodeOption,
   MATERIAL_CODE_OPTIONS,
@@ -50,63 +51,65 @@ type MaterialRow = {
 
 const initialRows: MaterialRow[] = [
   {
-    code: "621032000320",
-    englishName: "Battery cover AC175",
+    code: DEMO.materialCodes.batteryCover,
+    englishName: "Battery cover Lychee F4",
     chinaName: "电池盖组件 AC175 绿",
     qty: "5",
     category: "Wait repair",
     transportation: "Air",
     locator: "110100",
-    projectCode: "9991028",
+    projectCode: DEMO.projectCode,
   },
   {
-    code: "621032000320",
-    englishName: "Display Panel",
+    code: DEMO.materialCodes.displayPanel,
+    englishName: "Display Panel Lychee F4",
     chinaName: "显示屏面板",
     qty: "10",
     category: "Idle OK",
     transportation: "Sea",
     locator: "110101",
-    projectCode: "9991028",
+    projectCode: DEMO.projectCode,
   },
   {
-    code: "621032000320",
-    englishName: "Camera Module",
+    code: DEMO.materialCodes.cameraModule,
+    englishName: "Camera Module Lychee F4",
     chinaName: "相机模组",
     qty: "7",
     category: "Idle OK",
     transportation: "Air",
     locator: "110102",
-    projectCode: "9991028",
+    projectCode: DEMO.projectCode,
   },
   {
-    code: "621032000320",
-    englishName: "Camera Module",
+    code: DEMO.materialCodes.cameraModule,
+    englishName: "Camera Module Lychee F4",
     chinaName: "相机模组",
     qty: "7",
     category: "Wait repair",
     transportation: "Sea",
     locator: "110103",
-    projectCode: "9991028",
+    projectCode: DEMO.projectCode,
   },
   {
-    code: "621032000320",
-    englishName: "Display Panel",
+    code: DEMO.materialCodes.displayPanel,
+    englishName: "Display Panel Lychee F4",
     chinaName: "显示屏面板",
     qty: "10",
     category: "Idle OK",
     transportation: "Air",
     locator: "110104",
-    projectCode: "9991028",
+    projectCode: DEMO.projectCode,
   },
 ];
 
 export default function MoEntryPage() {
   const { t } = useI18n();
 
-  const [moNumber, setMoNumber] = useState("");
-  const [model, setModel] = useState("");
-  const [projectNumber, setProjectNumber] = useState("");
+  const [moNumber, setMoNumber] = useState<string>(DEMO.moNumber);
+  const [model, setModel] = useState<string>(DEMO.model);
+  const [projectNumber, setProjectNumber] = useState<string>(
+    DEMO.projectNumber,
+  );
   const [targetDeliveryDate, setTargetDeliveryDate] = useState("");
   const [rows, setRows] = useState<MaterialRow[]>([]);
   const [checkedRows, setCheckedRows] = useState<Set<number>>(new Set());
@@ -214,7 +217,7 @@ export default function MoEntryPage() {
       setRows(initialRows);
     }
     setStatusMessage(
-      `Task created for MO ${moNumber.trim()} · Model ${model.trim()} · Project ${projectNumber.trim()}.`,
+      `Task created for MO ${moNumber.trim()} Â· Model ${model.trim()} Â· Project ${projectNumber.trim()}.`,
     );
   }
 
@@ -275,7 +278,7 @@ export default function MoEntryPage() {
             <span className="text-text-colortext-gray">
               {t("moEntry.breadcrumbSection")}
             </span>
-            <span className="text-[#B5B5B3]">›</span>
+            <span className="text-[#B5B5B3]">â€º</span>
             <span className="font-medium text-text-colortext-dark">
               {t("moEntry.title")}
             </span>
@@ -319,7 +322,7 @@ export default function MoEntryPage() {
                     Project Number <span className="text-red-500">*</span>
                   </label>
                   <Input
-                    placeholder="e.g. 9991028"
+                    placeholder={DEMO.projectNumber}
                     value={projectNumber}
                     onChange={(e) => setProjectNumber(e.target.value)}
                     className="h-9 rounded-md border-strokestroke-gray px-3 text-xs placeholder:text-[#A3A3A1]"
@@ -434,7 +437,7 @@ export default function MoEntryPage() {
                       {t("common.mo")}
                     </span>
                     <span className="ml-2 truncate font-medium text-[#111111]">
-                      {moNumber.trim() || "—"}
+                      {moNumber.trim() || "â€”"}
                     </span>
                   </div>
 
@@ -443,14 +446,14 @@ export default function MoEntryPage() {
                       {t("moEntry.modelLabel")}
                     </span>
                     <span className="ml-2 truncate font-medium text-[#111111]">
-                      {model.trim() || "—"}
+                      {model.trim() || "â€”"}
                     </span>
                   </div>
 
                   <div className="flex h-8 max-w-[220px] items-center rounded-full bg-[#F8F8F8] px-3 text-xs">
                     <span className="shrink-0 text-[#8F8F8E]">Project No.</span>
                     <span className="ml-2 truncate font-medium text-[#111111]">
-                      {projectNumber.trim() || "—"}
+                      {projectNumber.trim() || "â€”"}
                     </span>
                   </div>
                 </div>
@@ -664,7 +667,7 @@ export default function MoEntryPage() {
 
                           <TableCell className="px-3 py-2">
                             <Input
-                              placeholder="e.g. 9991028"
+                              placeholder="e.g. 9992026"
                               value={row.projectCode}
                               onChange={(e) =>
                                 updateRow(index, "projectCode", e.target.value)

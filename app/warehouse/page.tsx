@@ -23,6 +23,7 @@ import {
 import Sidebar from "@/components/layout/sidebar";
 import TopBar from "@/components/layout/topbar";
 import { useI18n } from "@/i18n";
+import { DEMO, demoMoNumber } from "@/lib/demo-data";
 
 type WarehouseMaterial = {
   id: string;
@@ -49,54 +50,54 @@ type WarehouseMo = {
 
 const materialTemplates: Omit<WarehouseMaterial, "id" | "ready">[] = [
   {
-    code: "621032000320",
-    englishName: "Battery cover AC175",
+    code: DEMO.materialCodes.batteryCover,
+    englishName: "Battery cover Lychee F4",
     chinaName: "电池盖组件 AC175 绿",
     qty: "5",
     category: "Wait repair",
     transportation: "Air",
     locator: "110100",
-    projectCode: "9991028",
+    projectCode: DEMO.projectCode,
   },
   {
-    code: "621032000320",
-    englishName: "Display Panel",
+    code: DEMO.materialCodes.displayPanel,
+    englishName: "Display Panel Lychee F4",
     chinaName: "显示屏面板",
     qty: "10",
     category: "Idle OK",
     transportation: "Sea",
     locator: "110101",
-    projectCode: "9991028",
+    projectCode: DEMO.projectCode,
   },
   {
-    code: "621032000320",
-    englishName: "Camera Module",
+    code: DEMO.materialCodes.cameraModule,
+    englishName: "Camera Module Lychee F4",
     chinaName: "相机模组",
     qty: "7",
     category: "Idle OK",
     transportation: "Air",
     locator: "110102",
-    projectCode: "9991028",
+    projectCode: DEMO.projectCode,
   },
   {
-    code: "621032000320",
-    englishName: "Camera Module",
+    code: DEMO.materialCodes.cameraModule,
+    englishName: "Camera Module Lychee F4",
     chinaName: "相机模组",
     qty: "7",
     category: "Wait repair",
     transportation: "Sea",
     locator: "110103",
-    projectCode: "9991028",
+    projectCode: DEMO.projectCode,
   },
   {
-    code: "621032000320",
-    englishName: "Display Panel",
+    code: DEMO.materialCodes.displayPanel,
+    englishName: "Display Panel Lychee F4",
     chinaName: "显示屏面板",
     qty: "10",
     category: "Idle OK",
     transportation: "Air",
     locator: "110104",
-    projectCode: "9991028",
+    projectCode: DEMO.projectCode,
   },
 ];
 
@@ -111,30 +112,30 @@ function createMaterials(moId: string): WarehouseMaterial[] {
 const initialMos: WarehouseMo[] = [
   {
     id: "warehouse-mo-1",
-    moCode: "T2026090410261301048",
-    model: "Latte-M",
+    moCode: demoMoNumber(0),
+    model: DEMO.model,
     iqcStatus: "Passed",
-    wo: "WO-2026090410261301048",
+    wo: DEMO.workOrder,
     bearingCost:
       "集成交付部 · Integrated Delivery Department · 314156 · 王晓亮 (Leon)",
     materials: createMaterials("warehouse-mo-1"),
   },
   {
     id: "warehouse-mo-2",
-    moCode: "T2026090410261301049",
-    model: "Latte-M",
+    moCode: demoMoNumber(1),
+    model: DEMO.model,
     iqcStatus: "Passed",
-    wo: "WO-2026090410261301049",
+    wo: DEMO.workOrder,
     bearingCost:
       "集成交付部 · Integrated Delivery Department · 314156 · 王晓亮 (Leon)",
     materials: createMaterials("warehouse-mo-2"),
   },
   {
     id: "warehouse-mo-3",
-    moCode: "T2026090410261301050",
-    model: "Latte-M",
+    moCode: demoMoNumber(2),
+    model: DEMO.model,
     iqcStatus: "Passed",
-    wo: "WO-2026090410261301050",
+    wo: DEMO.workOrder,
     bearingCost:
       "集成交付部 · Integrated Delivery Department · 314156 · 王晓亮 (Leon)",
     materials: createMaterials("warehouse-mo-3"),

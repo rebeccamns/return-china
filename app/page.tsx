@@ -12,13 +12,15 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
+import { DEMO } from "@/lib/demo-data";
+
 const DEMO_ROUTES = [
   { label: "Operational", description: "PMC Entry & WO", href: "/operational" },
   { label: "Exim", description: "Export processing", href: "/exim" },
   {
     label: "Staff Return",
     description: "Material & carton handling",
-    href: "/staff-return/MO-321654987",
+    href: `/staff-return/${DEMO.moNumber}`,
   },
   // {
   //   label: "Staff Return Sticker",

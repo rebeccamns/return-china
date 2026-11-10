@@ -7,6 +7,7 @@ import {
   type StageKey,
   type StageRecord,
 } from "./types";
+import { DEMO, demoMoNumber } from "@/lib/demo-data";
 
 const COMPLETION_MESSAGE_KEYS: Record<StageKey, `history.detail.completionMessages.${StageKey}`> = {
   pmcEntry: "history.detail.completionMessages.pmcEntry",
@@ -19,22 +20,22 @@ const COMPLETION_MESSAGE_KEYS: Record<StageKey, `history.detail.completionMessag
 };
 
 const cameraModule: MaterialInput = {
-  code: "721032000320",
-  englishName: "Camera Module",
+  code: DEMO.materialCodes.cameraModule,
+  englishName: "Camera Module Lychee F4",
   chinaName: "相机模组",
   quantity: 7,
 };
 
 const batteryCover: MaterialInput = {
-  code: "621032000320",
-  englishName: "Battery cover AC175",
+  code: DEMO.materialCodes.batteryCover,
+  englishName: "Battery cover Lychee F4",
   chinaName: "电池盖组件 AC175 绿",
   quantity: 5,
 };
 
 const displayPanel: MaterialInput = {
-  code: "621032000321",
-  englishName: "Display Panel",
+  code: DEMO.materialCodes.displayPanel,
+  englishName: "Display Panel Lychee F4",
   chinaName: "显示屏面板",
   quantity: 10,
 };
@@ -75,7 +76,7 @@ function completedStages(returnId: string, workOrder: string) {
       length: 220,
       width: 180,
       height: 140,
-      upnBarcode: "UPN721032000320001",
+      upnBarcode: DEMO.upnCode,
       photos: photoInputs,
     },
     {
@@ -86,15 +87,15 @@ function completedStages(returnId: string, workOrder: string) {
       length: 220,
       width: 180,
       height: 140,
-      upnBarcode: "UPN621032000320001",
+      upnBarcode: DEMO.upnCode,
       photos: photoInputs,
     },
   ];
 
   return [
     stage("pmcEntry", {
-      model: "Latte-M",
-      projectNumber: "9991028",
+      model: DEMO.model,
+      projectNumber: DEMO.projectNumber,
       targetDeliveryDate: "2026-10-15",
       materials: [cameraModule, batteryCover],
     }),
@@ -102,14 +103,14 @@ function completedStages(returnId: string, workOrder: string) {
       materials: [
         {
           ...cameraModule,
-          upnBarcode: "UPN721032000320001",
+          upnBarcode: DEMO.upnCode,
           upnPhoto: "/ollie.png",
           status: "PASS",
           notes: "",
         },
         {
           ...batteryCover,
-          upnBarcode: "UPN621032000320001",
+          upnBarcode: DEMO.upnCode,
           upnPhoto: "/ollie.png",
           status: "PASS",
           notes: "",
@@ -128,7 +129,7 @@ function completedStages(returnId: string, workOrder: string) {
       ],
     }),
     stage("exim", {
-      model: "Latte-M",
+      model: DEMO.eximModelDimension,
       brand: "OPPO",
       materials: [
         {
@@ -137,7 +138,7 @@ function completedStages(returnId: string, workOrder: string) {
           netWeight: 0.0875,
           grossWeight: 0.12,
           volume: "500×420×290",
-          upnBarcode: "UPN721032000320001",
+          upnBarcode: DEMO.upnCode,
           photos: photoInputs,
         },
         {
@@ -146,7 +147,7 @@ function completedStages(returnId: string, workOrder: string) {
           netWeight: 0.09,
           grossWeight: 0.13,
           volume: "500×420×290",
-          upnBarcode: "UPN621032000320001",
+          upnBarcode: DEMO.upnCode,
           photos: photoInputs,
         },
       ],
@@ -184,26 +185,26 @@ function pendingStage(stage: StageDetail): StageDetail {
 }
 
 const completed: MoDetail = {
-  moCode: "T2026090410261301048",
+  moCode: DEMO.moNumber,
   returnId: "RC-20260831-002",
   batchNumber: "BATCH202609",
-  productDescription: "Return Idle Latte M",
+  productDescription: "Return Idle Lychee F4",
   overallStatus: "Completed",
-  model: "Latte-M",
-  projectNumber: "9991028",
+  model: DEMO.model,
+  projectNumber: DEMO.projectNumber,
   submittedBy: "Bagus Saputra",
   submittedAt: "Sep 20, 2026 14:32",
-  stages: completedStages("RC-20260831-002", "WO-20260920-001"),
+  stages: completedStages("RC-20260831-002", DEMO.workOrder),
 };
 
 const inProgress: MoDetail = {
-  moCode: "T2026090410261301039",
+  moCode: demoMoNumber(2),
   returnId: completed.returnId,
   batchNumber: "BATCH202608",
-  productDescription: "Verify Material A77",
+  productDescription: "Verify Material Lychee F4",
   overallStatus: "In Progress",
-  model: "A77",
-  projectNumber: "9991026",
+  model: DEMO.model,
+  projectNumber: DEMO.projectNumber,
   submittedBy: "Bagus Saputra",
   submittedAt: "Sep 18, 2026 16:48",
   stages: completed.stages.map((currentStage, index) => {
@@ -215,7 +216,7 @@ const inProgress: MoDetail = {
         timestamp: "Sep 18, 2026 16:48",
         completionMessage: null,
         rejectionReason:
-          "Previously rejected: wrong material code on Display Panel",
+          "Previously rejected: wrong material code on Display Panel Lychee F4",
       };
     }
     return pendingStage(currentStage);
@@ -224,12 +225,12 @@ const inProgress: MoDetail = {
 
 const rejected: MoDetail = {
   ...completed,
-  moCode: "T2026090410261301041",
+  moCode: demoMoNumber(1),
   batchNumber: "BATCH202609",
-  productDescription: "Receive Material A58",
+  productDescription: "Receive Material Lychee F4",
   overallStatus: "Rejected",
-  model: "A58",
-  projectNumber: "9991027",
+  model: DEMO.model,
+  projectNumber: DEMO.projectNumber,
   submittedAt: "Sep 19, 2026 09:15",
   stages: completed.stages.map((currentStage, index) => {
     if (index === 0) return currentStage;
@@ -238,7 +239,7 @@ const rejected: MoDetail = {
         ...currentStage,
         status: "rejected" as const,
         rejectionReason:
-          "Quantity mismatch on Camera Module (expected 7, received 5)",
+          "Quantity mismatch on Camera Module Lychee F4 (expected 7, received 5)",
       };
     }
     return pendingStage(currentStage);
@@ -247,20 +248,20 @@ const rejected: MoDetail = {
 
 const olderCompleted: MoDetail = {
   ...completed,
-  moCode: "T2026090410261301033",
+  moCode: demoMoNumber(3),
   batchNumber: "BATCH202608",
-  productDescription: "Return Idle Latte M",
-  projectNumber: "9991025",
+  productDescription: "Return Idle Lychee F4",
+  projectNumber: DEMO.projectNumber,
   submittedAt: "Sep 17, 2026 11:02",
 };
 
 const olderRejected: MoDetail = {
   ...rejected,
-  moCode: "T2026090410261301028",
+  moCode: demoMoNumber(4),
   batchNumber: "BATCH202608",
-  productDescription: "Receive Material A98",
-  model: "A98",
-  projectNumber: "9991024",
+  productDescription: "Receive Material Lychee F4",
+  model: DEMO.model,
+  projectNumber: DEMO.projectNumber,
   submittedAt: "Sep 16, 2026 08:40",
   stages: rejected.stages.map((currentStage, index) =>
     index === 1 && currentStage.stageKey === "iqcScan"

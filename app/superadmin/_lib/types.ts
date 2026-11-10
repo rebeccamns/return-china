@@ -37,7 +37,7 @@ export type ActivityLogEntry = {
 
 export type MoRecord = {
   moCode: string;
-  model: "Latte-M" | "Latte-S" | "Mocha-X";
+  model: "Lychee F4";
   currentStep: StepName;
   /** Number of steps completed out of 7 */
   completedSteps: number;

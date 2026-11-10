@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Sidebar from "@/components/layout/sidebar";
 import TopBar from "@/components/layout/topbar";
 import { useI18n } from "@/i18n";
+import { DEMO } from "@/lib/demo-data";
 
 import MoKpiCards from "./_components/MoKpiCards";
 import MoTable from "./_components/MoTable";
@@ -27,7 +28,7 @@ export default function MoMonitoringPage() {
 
   // TODO(backend): load the real PMC Entry materials; falls back to the demo MO data
   const stageData =
-    getStageData(interveneTarget?.moCode ?? "") ?? getStageData("T2026090410261301048");
+    getStageData(interveneTarget?.moCode ?? "") ?? getStageData(DEMO.moNumber);
   const interveneItems = (
     stageData?.stages.find((s) => s.stageKey === "pmcEntry")?.data as
       | { materials?: { code: string; englishName: string }[] }

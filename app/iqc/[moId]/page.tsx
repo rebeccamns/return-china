@@ -10,6 +10,7 @@ import MobileBottomNav, {
 import MobileCircleBackground from "@/components/layout/mobile-circle-background";
 import MobileHeader from "@/components/layout/mobile-header";
 import { useI18n } from "@/i18n";
+import { DEMO, resolveDemoMoNumber } from "@/lib/demo-data";
 
 import InspectionModal from "@/components/iqc/InspectionModal";
 import MaterialInspectionForm from "./_components/MaterialInspectionForm";
@@ -23,66 +24,66 @@ type Step = "overview" | "material-list" | "material-detail";
 const INITIAL_MATERIALS: IQCMaterial[] = [
   {
     id: "1",
-    code: "721032000320",
-    englishName: "Camera Module",
+    code: DEMO.materialCodes.cameraModule,
+    englishName: "Camera Module Lychee F4",
     chinaName: "相机模组",
     qty: 10,
-    upnBarcode: "721032000320",
+    upnBarcode: DEMO.upnCode,
     status: null,
     notes: "",
     photoName: "",
   },
   {
     id: "2",
-    code: "621032000320",
-    englishName: "Battery cover AC175",
+    code: DEMO.materialCodes.batteryCover,
+    englishName: "Battery cover Lychee F4",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
-    upnBarcode: "621032000320",
+    upnBarcode: DEMO.upnCode,
     status: null,
     notes: "",
     photoName: "",
   },
   {
     id: "3",
-    code: "621032000320",
-    englishName: "Battery cover AC175",
+    code: DEMO.materialCodes.batteryCover,
+    englishName: "Battery cover Lychee F4",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
-    upnBarcode: "621032000320",
+    upnBarcode: DEMO.upnCode,
     status: null,
     notes: "",
     photoName: "",
   },
   {
     id: "4",
-    code: "621032000320",
-    englishName: "Battery cover AC175",
+    code: DEMO.materialCodes.batteryCover,
+    englishName: "Battery cover Lychee F4",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
-    upnBarcode: "621032000320",
+    upnBarcode: DEMO.upnCode,
     status: null,
     notes: "",
     photoName: "",
   },
   {
     id: "5",
-    code: "621032000320",
-    englishName: "Battery cover AC175",
+    code: DEMO.materialCodes.batteryCover,
+    englishName: "Battery cover Lychee F4",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
-    upnBarcode: "621032000320",
+    upnBarcode: DEMO.upnCode,
     status: null,
     notes: "",
     photoName: "",
   },
   {
     id: "6",
-    code: "621032000320",
-    englishName: "Battery cover AC175",
+    code: DEMO.materialCodes.batteryCover,
+    englishName: "Battery cover Lychee F4",
     chinaName: "电池盖组件 AC175 绿",
     qty: 10,
-    upnBarcode: "621032000320",
+    upnBarcode: DEMO.upnCode,
     status: null,
     notes: "",
     photoName: "",
@@ -109,10 +110,10 @@ export default function IQCPage({
   const [submitted, setSubmitted] = useState(false);
 
   const moData = {
-    moNumber: moId || "MO-321654987",
+    moNumber: resolveDemoMoNumber(moId),
     submittedAt: "2026-09-02 09:05",
     returnId: "RC-20260831-002",
-    model: "Latte-M",
+    model: DEMO.model,
     totalMaterials: materials.length,
   };
 
@@ -285,7 +286,7 @@ export default function IQCPage({
                 break;
 
               case "verification":
-                router.push(`/iqc-verification/${moId}`);
+                router.push(`/iqc-verification/${moData.moNumber}`);
                 break;
 
               case "history":

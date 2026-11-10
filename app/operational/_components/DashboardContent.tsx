@@ -33,6 +33,7 @@ import {
 import KpiCard from "@/components/ui/kpichart";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n";
+import { DEMO, demoMoNumber } from "@/lib/demo-data";
 import {
   getMaterialCodeOption,
   MATERIAL_CODE_OPTIONS,
@@ -297,7 +298,7 @@ function MaterialFields({
       <TableCell className="px-3 py-2">
         {isEditing ? (
           <Input
-            placeholder="e.g. 9991028"
+            placeholder={DEMO.projectCode}
             value={material.projectCode ?? ""}
             onChange={(event) => onChange("projectCode", event.target.value)}
             className={materialInputClass}
@@ -317,68 +318,68 @@ function MaterialFields({
 const initialRevisionItems: RevisionItem[] = [
   {
     id: "rev-1",
-    code: "T2026090410261301048",
+    code: demoMoNumber(0),
     reflowFrom: "PMC Entry",
     reason: "Staff Return",
     submittedAt: "Sep 04, 10:26",
     returnedAt: "Sep 22, 08:15",
     materials: [
       {
-        code: "621032000320",
-        englishName: "Battery cover AC175",
+        code: DEMO.materialCodes.batteryCover,
+        englishName: "Battery cover Lychee F4",
         chinaName: "电池盖组件 AC175 绿",
         qty: "5",
         category: "Wait repair",
         transportation: "Air",
         locator: "110100",
-        projectCode: "9991028",
+        projectCode: DEMO.projectCode,
         isRejected: true,
       },
       {
-        code: "621032000320",
-        englishName: "Display Panel",
+        code: DEMO.materialCodes.displayPanel,
+        englishName: "Display Panel Lychee F4",
         chinaName: "显示屏面板",
         qty: "10",
         category: "Idle OK",
         transportation: "Sea",
         locator: "110101",
-        projectCode: "9991028",
+        projectCode: DEMO.projectCode,
       },
       {
-        code: "621032000320",
-        englishName: "Camera Module",
+        code: DEMO.materialCodes.cameraModule,
+        englishName: "Camera Module Lychee F4",
         chinaName: "相机模组",
         qty: "7",
         category: "Idle OK",
         transportation: "Air",
         locator: "110102",
-        projectCode: "9991028",
+        projectCode: DEMO.projectCode,
       },
       {
-        code: "621032000320",
-        englishName: "Camera Module",
+        code: DEMO.materialCodes.cameraModule,
+        englishName: "Camera Module Lychee F4",
         chinaName: "相机模组",
         qty: "7",
         category: "Wait repair",
         transportation: "Sea",
         locator: "110103",
-        projectCode: "9991028",
+        projectCode: DEMO.projectCode,
       },
       {
-        code: "621032000320",
-        englishName: "Display Panel",
+        code: DEMO.materialCodes.displayPanel,
+        englishName: "Display Panel Lychee F4",
         chinaName: "显示屏面板",
         qty: "10",
         category: "Idle OK",
         transportation: "Air",
         locator: "110104",
-        projectCode: "9991028",
+        projectCode: DEMO.projectCode,
       },
     ],
   },
   {
     id: "rev-2",
-    code: "T2026090410261301049",
+    code: demoMoNumber(1),
     reflowFrom: "IQC Scan",
     reason: "Staff Return",
     submittedAt: "Sep 04, 10:49",
@@ -387,7 +388,7 @@ const initialRevisionItems: RevisionItem[] = [
   },
   {
     id: "rev-3",
-    code: "T2026090410261301050",
+    code: demoMoNumber(2),
     reflowFrom: "Exim",
     reason: "Staff Return",
     submittedAt: "Sep 04, 11:05",
@@ -774,75 +775,75 @@ type MoRow = {
 const initialOngoingMoRows: MoRow[] = [
   {
     id: "mo-1",
-    code: "T2026090410261301048",
-    model: "Latte-M",
+    code: demoMoNumber(0),
+    model: DEMO.model,
     step: "Staff Return",
     updatedTime: "08:15",
     materials: [
       {
-        code: "621032000320",
-        englishName: "Battery cover AC175",
+        code: DEMO.materialCodes.batteryCover,
+        englishName: "Battery cover Lychee F4",
         chinaName: "电池盖组件 AC175 绿",
         qty: "5",
         category: "Wait repair",
         transportation: "Air",
         locator: "110100",
-        projectCode: "9991028",
+        projectCode: DEMO.projectCode,
       },
       {
-        code: "621032000320",
-        englishName: "Display Panel",
+        code: DEMO.materialCodes.displayPanel,
+        englishName: "Display Panel Lychee F4",
         chinaName: "显示屏面板",
         qty: "10",
         category: "Idle OK",
         transportation: "Sea",
         locator: "110101",
-        projectCode: "9991028",
+        projectCode: DEMO.projectCode,
       },
       {
-        code: "621032000320",
-        englishName: "Camera Module",
+        code: DEMO.materialCodes.cameraModule,
+        englishName: "Camera Module Lychee F4",
         chinaName: "相机模组",
         qty: "7",
         category: "Idle OK",
         transportation: "Air",
         locator: "110102",
-        projectCode: "9991028",
+        projectCode: DEMO.projectCode,
       },
       {
-        code: "621032000320",
-        englishName: "Camera Module",
+        code: DEMO.materialCodes.cameraModule,
+        englishName: "Camera Module Lychee F4",
         chinaName: "相机模组",
         qty: "7",
         category: "Wait repair",
         transportation: "Sea",
         locator: "110103",
-        projectCode: "9991028",
+        projectCode: DEMO.projectCode,
       },
       {
-        code: "621032000320",
-        englishName: "Display Panel",
+        code: DEMO.materialCodes.displayPanel,
+        englishName: "Display Panel Lychee F4",
         chinaName: "显示屏面板",
         qty: "10",
         category: "Idle OK",
         transportation: "Air",
         locator: "110104",
-        projectCode: "9991028",
+        projectCode: DEMO.projectCode,
       },
     ],
   },
   {
     id: "mo-2",
-    code: "T2026090410261301049",
-    model: "Latte-M",
+    code: demoMoNumber(1),
+    model: DEMO.model,
     step: "Staff Return",
     updatedTime: "08:15",
     materials: [],
   },
   {
     id: "mo-3",
-    code: "T2026090410261301050",
-    model: "Latte-M",
+    code: demoMoNumber(2),
+    model: DEMO.model,
     step: "Staff Return",
     updatedTime: "08:15",
     materials: [],
@@ -1272,7 +1273,7 @@ function OngoingMoTable() {
                                       <TableCell className="px-3 py-2">
                                         {isEditing ? (
                                           <Input
-                                            placeholder="e.g. 9991028"
+                                            placeholder={DEMO.projectCode}
                                             value={material.projectCode ?? ""}
                                             onChange={(e) => updateMaterial(row.id, index, "projectCode", e.target.value)}
                                             className={materialInputClass}

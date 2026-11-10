@@ -1,17 +1,19 @@
+import { DEMO } from "@/lib/demo-data";
+
 export const MATERIAL_CODE_OPTIONS = [
   {
-    code: "621032000320",
-    englishName: "Battery cover AC175",
+    code: DEMO.materialCodes.batteryCover,
+    englishName: "Battery cover Lychee F4",
     chinaName: "电池盖组件 AC175 绿",
   },
   {
-    code: "621032000321",
-    englishName: "Display Panel",
+    code: DEMO.materialCodes.displayPanel,
+    englishName: "Display Panel Lychee F4",
     chinaName: "显示屏面板",
   },
   {
-    code: "621032000322",
-    englishName: "Camera Module",
+    code: DEMO.materialCodes.cameraModule,
+    englishName: "Camera Module Lychee F4",
     chinaName: "相机模组",
   },
 ] as const;

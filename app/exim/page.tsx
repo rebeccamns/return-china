@@ -26,6 +26,7 @@ import Sidebar from "@/components/layout/sidebar";
 import TopBar from "@/components/layout/topbar";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n";
+import { DEMO } from "@/lib/demo-data";
 
 import EximMaterialTable from "./_components/EximMaterialTable";
 import { pendingMos, type EximMo, type EximRow } from "./_lib/data";
@@ -73,7 +74,7 @@ export default function EximPage() {
           ? expanded.rows
           : mo.materials.map((material) => ({
               ...material,
-              model: "",
+              model: DEMO.eximModelDimension,
               brand: "",
             })),
     });

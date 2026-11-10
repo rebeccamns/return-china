@@ -8,8 +8,9 @@ import HistoryList from "@/components/mobile-history/HistoryList";
 import HistoryLoading from "@/components/mobile-history/HistoryLoading";
 import HistoryShell from "@/components/mobile-history/HistoryShell";
 import { listMoSummaries } from "@/lib/mo-detail/data";
+import { DEMO } from "@/lib/demo-data";
 
-const DEFAULT_MO_ID = "M01234";
+const DEFAULT_MO_ID = DEMO.moNumber;
 
 export default function StaffReturnHistoryPage() {
   const [ready, setReady] = useState(false);

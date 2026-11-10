@@ -1,4 +1,5 @@
 import { useI18n } from "@/i18n";
+import { DEMO } from "@/lib/demo-data";
 
 import { primaryButton } from "./StickyActionBar";
 
@@ -10,11 +11,11 @@ type MoSummaryCardProps = {
 };
 
 const mo = {
-  code: "MO-321654987",
+  code: DEMO.moNumber,
   submittedAt: "2026-09-02 09:05",
   returnId: "RC-20260831-002",
-  model: "Latte-M",
-  wo: "ABC-XY12400YZ",
+  model: DEMO.model,
+  wo: DEMO.workOrder,
 };
 
 export default function MoSummaryCard({

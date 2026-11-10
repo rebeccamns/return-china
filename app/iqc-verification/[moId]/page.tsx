@@ -8,6 +8,7 @@ import MobileBottomNav, {
 } from "@/components/layout/mobile-bottom-nav";
 import MobileCircleBackground from "@/components/layout/mobile-circle-background";
 import MobileHeader from "@/components/layout/mobile-header";
+import { DEMO, resolveDemoMoNumber } from "@/lib/demo-data";
 
 import VerificationFlow from "./_components/VerificationFlow";
 import type { VerificationStep } from "./_components/verification-types";
@@ -24,10 +25,10 @@ export default function IQCVerificationPage({
   const activeNav: MobileNavItem = "verification";
 
   const moData = {
-    moNumber: moId || "MO-321654987",
+    moNumber: resolveDemoMoNumber(moId),
     submittedAt: "2026-09-02 09:05",
     returnId: "RC-20260831-002",
-    model: "Latte-M",
+    model: DEMO.model,
   };
 
   /** Carton detail is a full-screen flow, so the nav is hidden there. */
@@ -71,7 +72,7 @@ export default function IQCVerificationPage({
           onNavigate={(item) => {
             switch (item) {
               case "identity":
-                router.push(`/iqc/${moId}`);
+                router.push(`/iqc/${moData.moNumber}`);
                 break;
 
               case "verification":

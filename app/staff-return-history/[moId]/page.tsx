@@ -7,6 +7,7 @@ import BackTitle from "@/components/layout/BackTitle";
 import { STAFF_RETURN_ITEMS } from "@/components/layout/mobile-bottom-nav";
 import type { MobileNavItem } from "@/components/layout/mobile-bottom-nav";
 import { useI18n } from "@/i18n";
+import { DEMO, resolveDemoMoNumber } from "@/lib/demo-data";
 import { getMoDetail } from "@/lib/mo-detail/data";
 import type { StageDetail, StageKey } from "@/lib/mo-detail/types";
 
@@ -15,7 +16,7 @@ import HistoryLoading from "@/components/mobile-history/HistoryLoading";
 import MoTimeline from "@/components/mobile-history/MoTimeline";
 import StageDetailView from "@/components/mobile-history/StageDetailView";
 
-const DEFAULT_MO_ID = "M01234";
+const DEFAULT_MO_ID = DEMO.moNumber;
 
 export default function StaffReturnHistoryDetailPage({
   params,
@@ -44,10 +45,10 @@ export default function StaffReturnHistoryDetailPage({
   function navigate(item: MobileNavItem) {
     switch (item) {
       case "packing-list":
-        window.location.href = `/staff-return/${DEFAULT_MO_ID}`;
+        window.location.href = `/staff-return/${resolveDemoMoNumber(moId || DEFAULT_MO_ID)}`;
         break;
       case "carton-sticker":
-        window.location.href = `/staff-return-sticker/${DEFAULT_MO_ID}`;
+        window.location.href = `/staff-return-sticker/${resolveDemoMoNumber(moId || DEFAULT_MO_ID)}`;
         break;
       case "history":
         router.push("/staff-return-history");
@@ -100,4 +101,3 @@ export default function StaffReturnHistoryDetailPage({
     </HistoryShell>
   );
 }
-

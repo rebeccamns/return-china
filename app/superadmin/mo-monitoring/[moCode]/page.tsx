@@ -8,6 +8,7 @@ import Link from "next/link";
 import Sidebar from "@/components/layout/sidebar";
 import TopBar from "@/components/layout/topbar";
 import { useI18n } from "@/i18n";
+import { DEMO } from "@/lib/demo-data";
 
 import StatusBadge from "../_components/StatusBadge";
 import Timeline from "./_components/Timeline";
@@ -58,7 +59,7 @@ export default function MoDetailPage() {
 
   // TODO(backend): load the real stage data for this MO; falls back to the demo MO data
   const stageData =
-    getStageData(moCode) ?? getStageData("T2026090410261301048");
+    getStageData(moCode) ?? getStageData(DEMO.moNumber);
   const selectedStage =
     showStageDetail && selectedStep
       ? (stageData?.stages.find((s) => s.stageKey === STAGE_KEY_BY_STEP[selectedStep]) ?? null)
@@ -263,4 +264,3 @@ export default function MoDetailPage() {
     </main>
   );
 }
-

@@ -10,6 +10,7 @@ import MobileBottomNav, {
   type MobileNavItem,
 } from "@/components/layout/mobile-bottom-nav";
 import { useI18n } from "@/i18n";
+import { DEMO } from "@/lib/demo-data";
 
 import CartonList from "./_components/CartonList";
 import MaterialDetailForm from "./_components/MaterialDetailForm";
@@ -33,20 +34,20 @@ type Step = "landing" | "carton-list" | "material-list" | "material-detail";
 const MATERIAL_OPTIONS: Material[] = [
   {
     id: "1",
-    code: "721032000320",
-    englishName: "Camera Module",
+    code: DEMO.materialCodes.cameraModule,
+    englishName: "Camera Module Lychee F4",
     chinaName: "相机模组",
   },
   {
     id: "2",
-    code: "621032000320",
-    englishName: "battery cover AC175",
+    code: DEMO.materialCodes.batteryCover,
+    englishName: "Battery cover Lychee F4",
     chinaName: "电池盖组件 AC175 绿",
   },
   {
     id: "3",
-    code: "621032000321",
-    englishName: "Display Panel",
+    code: DEMO.materialCodes.displayPanel,
+    englishName: "Display Panel Lychee F4",
     chinaName: "显示屏面板",
   },
 ];
@@ -364,7 +365,7 @@ export default function StaffReturnPage({
                 break;
 
               case "carton-sticker":
-                window.location.href = "/staff-return-sticker/M01234";
+                window.location.href = `/staff-return-sticker/${DEMO.moNumber}`;
                 break;
 
               case "history":

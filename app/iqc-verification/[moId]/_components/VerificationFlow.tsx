@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import BackTitle from "@/components/layout/BackTitle";
 import { useI18n } from "@/i18n";
+import { DEMO } from "@/lib/demo-data";
 
 import InspectionModal from "@/components/iqc/InspectionModal";
 import MoCompactCard from "@/components/iqc/MoCompactCard";
@@ -44,9 +45,9 @@ const INITIAL_CARTONS: VerificationCarton[] = [
     scannedSticker: "",
     verified: false,
     materials: [
-      m("1-1", "721032000320", "Camera Module", "相机模组"),
-      m("1-2", "621032000320", "Battery cover AC175", "电池盖组件 AC175 绿"),
-      m("1-3", "621032003165", "Battery cover AC175", "电池盖组件 AC175 绿"),
+      m("1-1", DEMO.materialCodes.cameraModule, "Camera Module Lychee F4", "相机模组"),
+      m("1-2", DEMO.materialCodes.batteryCover, "Battery cover Lychee F4", "电池盖组件 AC175 绿"),
+      m("1-3", DEMO.materialCodes.batteryCover, "Battery cover Lychee F4", "电池盖组件 AC175 绿"),
     ],
   },
   {
@@ -55,8 +56,8 @@ const INITIAL_CARTONS: VerificationCarton[] = [
     scannedSticker: "",
     verified: false,
     materials: [
-      m("2-1", "721032000320", "Camera Module", "相机模组"),
-      m("2-2", "621032000321", "Display Panel", "显示屏面板"),
+      m("2-1", DEMO.materialCodes.cameraModule, "Camera Module Lychee F4", "相机模组"),
+      m("2-2", DEMO.materialCodes.displayPanel, "Display Panel Lychee F4", "显示屏面板"),
     ],
   },
   {
@@ -65,9 +66,9 @@ const INITIAL_CARTONS: VerificationCarton[] = [
     scannedSticker: "",
     verified: false,
     materials: [
-      m("3-1", "621032000320", "Battery cover AC175", "电池盖组件 AC175 绿"),
-      m("3-2", "621032000321", "Display Panel", "显示屏面板"),
-      m("3-3", "621032003165", "Battery cover AC175", "电池盖组件 AC175 绿"),
+      m("3-1", DEMO.materialCodes.batteryCover, "Battery cover Lychee F4", "电池盖组件 AC175 绿"),
+      m("3-2", DEMO.materialCodes.displayPanel, "Display Panel Lychee F4", "显示屏面板"),
+      m("3-3", DEMO.materialCodes.batteryCover, "Battery cover Lychee F4", "电池盖组件 AC175 绿"),
     ],
   },
 ];
@@ -145,7 +146,7 @@ export default function VerificationFlow({
       verified: false, // changed → must be completed again
       materials: carton.materials.map((item) =>
         item.id === scanMaterial.id
-          ? { ...item, scannedUpn: item.code }
+          ? { ...item, scannedUpn: DEMO.upnCode }
           : item,
       ),
     }));

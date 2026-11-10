@@ -1,3 +1,5 @@
+import { demoMaterialCode, demoMoNumber } from "@/lib/demo-data";
+
 export type EximMaterial = {
   id: string;
   code: string; // PMC Entry
@@ -31,7 +33,7 @@ function makeMaterials(prefix: string, count: number): EximMaterial[] {
 
     return {
       id: `${prefix}-${i + 1}`,
-      code: String(621032000320 + i),
+      code: demoMaterialCode(i),
       englishName: "Screen and upper cover assembly AA641 Deep purple",
       chinaName: "屏与上盖组件 AA641 深紫色",
       qty,
@@ -48,7 +50,7 @@ function makeMaterials(prefix: string, count: number): EximMaterial[] {
 
 // TODO: replace with MOs that Staff Return has submitted (from your API)
 export const pendingMos: EximMo[] = [
-  { code: "T2026090410261301048", materials: makeMaterials("a", 11) },
-  { code: "T2026090410261301049", materials: makeMaterials("b", 5) },
-  { code: "T2026090410261301050", materials: makeMaterials("c", 3) },
+  { code: demoMoNumber(0), materials: makeMaterials("a", 11) },
+  { code: demoMoNumber(1), materials: makeMaterials("b", 5) },
+  { code: demoMoNumber(2), materials: makeMaterials("c", 3) },
 ];
