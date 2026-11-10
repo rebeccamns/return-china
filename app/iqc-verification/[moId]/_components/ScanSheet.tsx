@@ -11,6 +11,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useI18n } from "@/i18n";
 
+import { matchesScan } from "../_lib/scan-match";
+
 type Props = {
   title: string;
   /** Main line of the "what to scan" card (code). */
@@ -53,7 +55,7 @@ export default function ScanSheet({
       return;
     }
 
-    if (scanned.toLowerCase() !== expected.trim().toLowerCase()) {
+    if (!matchesScan(scanned, expected)) {
       setError(mismatchError);
       return;
     }

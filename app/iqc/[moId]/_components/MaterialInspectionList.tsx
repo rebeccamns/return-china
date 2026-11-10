@@ -11,6 +11,7 @@ import type { IQCMaterial } from "./iqc-types";
 
 type Props = {
   materials: IQCMaterial[];
+  allInspected: boolean;
   onSelectMaterial: (material: IQCMaterial) => void;
   onSubmit: () => void;
   submitted: boolean;
@@ -18,15 +19,14 @@ type Props = {
 
 export default function MaterialInspectionList({
   materials,
+  allInspected,
   onSelectMaterial,
   onSubmit,
   submitted,
 }: Props) {
   const { t } = useI18n();
 
-  const inspectedCount = materials.filter((m) => m.status !== null).length;
   const total = materials.length;
-  const allInspected = total > 0 && inspectedCount === total;
 
   return (
     <div>

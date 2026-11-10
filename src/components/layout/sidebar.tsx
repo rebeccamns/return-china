@@ -18,11 +18,13 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/i18n";
 import type { TranslationKey } from "@/i18n";
+import { DEMO } from "@/lib/demo-data";
 
 type NavLink = {
   labelKey: TranslationKey;
   href: string;
   icon: LucideIcon;
+  match?: string;
 };
 
 type NavGroup = {
@@ -36,7 +38,12 @@ type NavGroup = {
 
 type NavItem = NavLink | NavGroup;
 
-export type SidebarVariant = "pmc" | "exim" | "superadmin" | "warehouse";
+export type SidebarVariant =
+  | "pmc"
+  | "exim"
+  | "superadmin"
+  | "warehouse"
+  | "iqc";
 
 const NAV: Record<SidebarVariant, NavItem[]> = {
   pmc: [
@@ -109,6 +116,27 @@ const NAV: Record<SidebarVariant, NavItem[]> = {
       icon: History,
     },
   ],
+
+  iqc: [
+    {
+      labelKey: "navigation.iqcIdentity",
+      href: "/iqc",
+      match: "/iqc/",
+      icon: ClipboardList,
+    },
+    {
+      labelKey: "navigation.iqcVerification",
+      href: `/iqc-verification/${DEMO.moNumber}`,
+      match: "/iqc-verification/",
+      icon: MonitorCheck,
+    },
+    {
+      labelKey: "navigation.history",
+      href: "/iqc-history",
+      match: "/iqc-history",
+      icon: History,
+    },
+  ],
 };
 
 // Dashboard/root routes must use exact matching.
@@ -167,7 +195,11 @@ export default function Sidebar({
   }, [pathname, variant]);
 
   // Determine whether a navigation link is active.
-  const isLinkActive = (href: string) => {
+  const isLinkActive = (href: string, match?: string) => {
+    if (match) {
+      return pathname.startsWith(match);
+    }
+
     if (ROOT_ROUTES.includes(href)) {
       return pathname === href;
     }
@@ -178,8 +210,8 @@ export default function Sidebar({
     );
   };
 
-  const linkClass = (href: string) => {
-    const isActive = isLinkActive(href);
+  const linkClass = (href: string, match?: string) => {
+    const isActive = isLinkActive(href, match);
 
     return `flex h-10 items-center rounded px-2 transition-colors ${
       isActive
@@ -327,7 +359,7 @@ hasActiveChild
             return (
               <Link
                 key={item.href}
-                className={linkClass(item.href)}
+                className={linkClass(item.href, item.match)}
                 href={item.href}
               >
                 <Icon

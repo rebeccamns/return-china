@@ -1,0 +1,228 @@
+"use client";
+
+import Link from "next/link";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useI18n, type TranslationKey } from "@/i18n";
+import { cn } from "@/lib/utils";
+import type { MOStatus, MoSummary } from "@/lib/mo-detail/types";
+
+export type StatusFilter = "All" | MOStatus;
+
+const STATUS_FILTERS: { value: StatusFilter; labelKey: TranslationKey }[] = [
+  { value: "All", labelKey: "iqcHistory.all" },
+  { value: "Completed", labelKey: "iqcHistory.completed" },
+  { value: "In Progress", labelKey: "iqcHistory.inProgress" },
+  { value: "Rejected", labelKey: "iqcHistory.rejected" },
+  { value: "Pending", labelKey: "status.notStarted" },
+];
+
+const STATUS_LABEL_KEYS: Record<MOStatus, TranslationKey> = {
+  Completed: "status.completed",
+  "In Progress": "status.inProgress",
+  Rejected: "status.rejected",
+  Pending: "status.notStarted",
+};
+
+const STATUS_STYLES: Record<MOStatus, string> = {
+  Completed: "bg-[#E6F4EA] text-[#0B5934]",
+  "In Progress": "bg-amber-50 text-amber-700",
+  Rejected: "bg-red-50 text-red-600",
+  Pending: "bg-slate-100 text-slate-600",
+};
+
+const headClass =
+  "h-10 whitespace-nowrap bg-[#F8F8F8] px-3 text-xs font-medium text-slate-700";
+
+const filterClass =
+  "h-9 w-[180px] rounded-md border border-strokestroke-gray bg-white px-3 text-xs text-[#333333] outline-none focus:border-[#046A39] focus:ring-1 focus:ring-[#046A39]/20";
+
+type Props = {
+  summaries: MoSummary[];
+  filteredSummaries: MoSummary[];
+  statusFilter: StatusFilter;
+  onStatusFilterChange: (filter: StatusFilter) => void;
+};
+
+function parseStatusFilter(value: string): StatusFilter {
+  switch (value) {
+    case "Completed":
+    case "In Progress":
+    case "Rejected":
+    case "Pending":
+      return value;
+    default:
+      return "All";
+  }
+}
+
+function StatusBadge({ status }: { status: MOStatus }) {
+  const { t } = useI18n();
+
+  return (
+    <span
+      className={cn(
+        "inline-flex shrink-0 items-center rounded-md px-2.5 py-1 text-xs font-semibold",
+        STATUS_STYLES[status],
+      )}
+    >
+      {t(STATUS_LABEL_KEYS[status])}
+    </span>
+  );
+}
+
+export default function IqcHistoryTable({
+  summaries,
+  filteredSummaries,
+  statusFilter,
+  onStatusFilterChange,
+}: Props) {
+  const { t } = useI18n();
+
+  return (
+    <section className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
+      <div className="flex flex-wrap items-end justify-between gap-4 border-b border-strokestroke-gray px-[18px] py-4">
+        <div>
+          <h2 className="text-sm font-semibold text-[#111111]">
+            {t("history.submittedMo")}
+          </h2>
+          <p className="mt-1 text-xs text-[#8F8F8E]">
+            {t("history.showingRecords", {
+              shown: filteredSummaries.length,
+              total: summaries.length,
+            })}
+          </p>
+        </div>
+
+        <div>
+          <label
+            htmlFor="iqc-history-status"
+            className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+          >
+            {t("history.statusLabel")}
+          </label>
+          <select
+            id="iqc-history-status"
+            value={statusFilter}
+            onChange={(event) =>
+              onStatusFilterChange(parseStatusFilter(event.target.value))
+            }
+            className={filterClass}
+          >
+            {STATUS_FILTERS.map((filter) => (
+              <option key={filter.value} value={filter.value}>
+                {t(filter.labelKey)}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="overflow-x-auto">
+        <Table className="min-w-[1020px]">
+          <TableHeader>
+            <TableRow className="hover:bg-[#F8F8F8]">
+              <TableHead className={headClass}>{t("common.moCode")}</TableHead>
+              <TableHead className={headClass}>
+                {t("common.returnId")}
+              </TableHead>
+              <TableHead className={headClass}>{t("common.model")}</TableHead>
+              <TableHead className={headClass}>
+                {t("history.dateSubmitted")}
+              </TableHead>
+              <TableHead className={headClass}>
+                {t("iqcHistory.stagesDone")}
+              </TableHead>
+              <TableHead className={headClass}>{t("common.status")}</TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {filteredSummaries.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={6}
+                  className="px-3 py-10 text-center text-sm text-[#5F5F5E]"
+                >
+                  {summaries.length === 0
+                    ? t("iqcHistory.empty")
+                    : t("iqcHistory.noResults")}
+                </TableCell>
+              </TableRow>
+            ) : (
+              filteredSummaries.map((summary) => {
+                const href = `/iqc-history/${encodeURIComponent(summary.moCode)}`;
+
+                return (
+                  <TableRow
+                    key={summary.moCode}
+                    className="h-12 hover:bg-[#FAFAFA]"
+                  >
+                    <TableCell className="p-0">
+                      <Link
+                        href={href}
+                        className="flex h-12 w-full items-center px-3 py-2 text-xs font-medium text-[#111111] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primaryprimary-green"
+                      >
+                        {summary.moCode}
+                      </Link>
+                    </TableCell>
+                    <TableCell className="p-0">
+                      <Link
+                        href={href}
+                        className="flex h-12 w-full items-center whitespace-nowrap px-3 py-2 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primaryprimary-green"
+                      >
+                        {summary.returnId}
+                      </Link>
+                    </TableCell>
+                    <TableCell className="p-0">
+                      <Link
+                        href={href}
+                        className="flex h-12 w-full items-center px-3 py-2 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primaryprimary-green"
+                      >
+                        {summary.model}
+                      </Link>
+                    </TableCell>
+                    <TableCell className="p-0">
+                      <Link
+                        href={href}
+                        className="flex h-12 w-full items-center whitespace-nowrap px-3 py-2 text-xs text-[#5F5F5E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primaryprimary-green"
+                      >
+                        {summary.submittedAt}
+                      </Link>
+                    </TableCell>
+                    <TableCell className="p-0">
+                      <Link
+                        href={href}
+                        className="flex h-12 w-full items-center whitespace-nowrap px-3 py-2 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primaryprimary-green"
+                      >
+                        {t("iqcHistory.stagesCompleted", {
+                          completed: summary.completedStages,
+                          total: summary.totalStages,
+                        })}
+                      </Link>
+                    </TableCell>
+                    <TableCell className="p-0">
+                      <Link
+                        href={href}
+                        className="flex h-12 w-full items-center px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primaryprimary-green"
+                      >
+                        <StatusBadge status={summary.overallStatus} />
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </section>
+  );
+}

@@ -11,6 +11,7 @@ type MoInspectionCardProps = {
   model: string;
   inspectedCount: number;
   totalMaterials: number;
+  progressPercent: number;
   onClick: () => void;
 };
 
@@ -21,13 +22,10 @@ export default function MoInspectionCard({
   model,
   inspectedCount,
   totalMaterials,
+  progressPercent,
   onClick,
 }: MoInspectionCardProps) {
   const { t } = useI18n();
-  const progress =
-    totalMaterials > 0
-      ? Math.round((inspectedCount / totalMaterials) * 100)
-      : 0;
 
   return (
     <button
@@ -85,14 +83,14 @@ export default function MoInspectionCard({
           </p>
 
           <p className="text-[13px] max-md:text-secondary font-semibold leading-[18px] text-text-colortext-black">
-            {progress}%
+            {progressPercent}%
           </p>
         </div>
 
         <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#E6E6E6]">
           <div
             className="h-full rounded-full bg-[#008348] transition-all duration-300"
-            style={{ width: `${progress}%` }}
+            style={{ width: `${progressPercent}%` }}
           />
         </div>
       </div>

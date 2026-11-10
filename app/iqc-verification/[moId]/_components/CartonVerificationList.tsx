@@ -11,6 +11,7 @@ import { type VerificationCarton, scannedCount } from "./verification-types";
 
 type Props = {
   cartons: VerificationCarton[];
+  allVerified: boolean;
   onOpenCarton: (carton: VerificationCarton) => void;
   onSubmit: () => void;
   submitted: boolean;
@@ -18,15 +19,12 @@ type Props = {
 
 export default function CartonVerificationList({
   cartons,
+  allVerified,
   onOpenCarton,
   onSubmit,
   submitted,
 }: Props) {
   const { t } = useI18n();
-
-  const total = cartons.length;
-  const verifiedCount = cartons.filter((c) => c.verified).length;
-  const allVerified = total > 0 && verifiedCount === total;
 
   return (
     <div>

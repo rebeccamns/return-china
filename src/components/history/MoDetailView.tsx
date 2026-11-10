@@ -229,10 +229,12 @@ export default function MoDetailView({
   moId,
   role,
   historyHref,
+  sidebarVariant: sidebarVariantOverride,
 }: {
   moId: string;
   role: string;
   historyHref: string;
+  sidebarVariant?: SidebarVariant;
 }) {
   const { t } = useI18n();
   const mo = getMoDetail(moId);
@@ -252,11 +254,23 @@ export default function MoDetailView({
           stage.data !== null,
       )
       .map((stage) => stage.stageKey) ?? [];
-  const entryHref = historyHref.replace(/\/history\/?$/, "");
+  const entryHref =
+    role === "iqc" ? "/iqc" : historyHref.replace(/\/history\/?$/, "");
   const sidebarVariant: SidebarVariant =
-    role === "exim" || role === "superadmin" || role === "warehouse"
+    sidebarVariantOverride ??
+    (role === "exim" || role === "superadmin" || role === "warehouse"
       ? role
-      : "pmc";
+      : "pmc");
+  const entryLabel =
+    historyHref === "/exim/history"
+      ? t("exim.title")
+      : role === "iqc"
+        ? t("iqc.title")
+        : role === "superadmin"
+          ? t("superadmin.dashboard")
+          : role === "warehouse"
+            ? t("navigation.moList")
+            : t("navigation.entry");
 
   return (
     <main className="min-h-screen w-full bg-backgroundbg-gray">
@@ -272,13 +286,7 @@ export default function MoDetailView({
               href={entryHref}
               className="text-text-colortext-gray hover:text-black"
             >
-              {historyHref === "/exim/history"
-                ? t("exim.title")
-                : role === "superadmin"
-                  ? t("superadmin.dashboard")
-                  : role === "warehouse"
-                    ? t("navigation.moList")
-                    : t("navigation.entry")}
+              {entryLabel}
             </Link>
             <span aria-hidden="true" className="text-[#B5B5B3]">
               ›

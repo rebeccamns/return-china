@@ -4,119 +4,62 @@ import { useEffect, useState } from "react";
 
 import BackTitle from "@/components/layout/BackTitle";
 import { useI18n } from "@/i18n";
-import { DEMO } from "@/lib/demo-data";
 
-import InspectionModal from "@/components/iqc/InspectionModal";
 import MoCompactCard from "@/components/iqc/MoCompactCard";
 import CartonVerificationDetail from "./CartonVerificationDetail";
 import CartonVerificationList from "./CartonVerificationList";
 import MoVerificationCard from "./MoVerificationCard";
 import ScanSheet from "./ScanSheet";
+import type { UseIqcVerificationReturn } from "../_hooks/useIqcVerification";
 import {
   type DetailStep,
   type ScanTarget,
   type VerificationCarton,
-  type VerificationMaterial,
   type VerificationStep,
   isMaterialScanned,
 } from "./verification-types";
+import VerificationSubmitDialogs from "./mobile/VerificationSubmitDialogs";
 
 type Props = {
   moNumber: string;
   submittedAt: string;
   returnId: string;
   model: string;
+  verification: UseIqcVerificationReturn;
   /** Lets the page pick the right bottom padding / hide the nav. */
   onStepChange: (step: VerificationStep) => void;
 };
-
-const m = (
-  id: string,
-  code: string,
-  englishName: string,
-  chinaName: string,
-): VerificationMaterial => ({ id, code, englishName, chinaName, scannedUpn: "" });
-
-// TODO: replace with the cartons from the packing list (API).
-const INITIAL_CARTONS: VerificationCarton[] = [
-  {
-    id: "carton-1",
-    code: "CT0001",
-    scannedSticker: "",
-    verified: false,
-    materials: [
-      m("1-1", DEMO.materialCodes.cameraModule, "Camera Module Lychee F4", "相机模组"),
-      m("1-2", DEMO.materialCodes.batteryCover, "Battery cover Lychee F4", "电池盖组件 AC175 绿"),
-      m("1-3", DEMO.materialCodes.batteryCover, "Battery cover Lychee F4", "电池盖组件 AC175 绿"),
-    ],
-  },
-  {
-    id: "carton-2",
-    code: "CT0002",
-    scannedSticker: "",
-    verified: false,
-    materials: [
-      m("2-1", DEMO.materialCodes.cameraModule, "Camera Module Lychee F4", "相机模组"),
-      m("2-2", DEMO.materialCodes.displayPanel, "Display Panel Lychee F4", "显示屏面板"),
-    ],
-  },
-  {
-    id: "carton-3",
-    code: "CT0003",
-    scannedSticker: "",
-    verified: false,
-    materials: [
-      m("3-1", DEMO.materialCodes.batteryCover, "Battery cover Lychee F4", "电池盖组件 AC175 绿"),
-      m("3-2", DEMO.materialCodes.displayPanel, "Display Panel Lychee F4", "显示屏面板"),
-      m("3-3", DEMO.materialCodes.batteryCover, "Battery cover Lychee F4", "电池盖组件 AC175 绿"),
-    ],
-  },
-];
 
 export default function VerificationFlow({
   moNumber,
   submittedAt,
   returnId,
   model,
+  verification,
   onStepChange,
 }: Props) {
   const { t } = useI18n();
 
   const [step, setStep] = useState<VerificationStep>("landing");
   const [detailStep, setDetailStep] = useState<DetailStep>("materials");
-  const [cartons, setCartons] = useState<VerificationCarton[]>(INITIAL_CARTONS);
   const [selectedCartonId, setSelectedCartonId] = useState<string | null>(null);
   const [scanTarget, setScanTarget] = useState<ScanTarget | null>(null);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     onStepChange(step);
   }, [step, onStepChange]);
 
+  const { cartons, verifiedCount, progressPercent, submitted } = verification;
   const selectedCarton =
     cartons.find((carton) => carton.id === selectedCartonId) ?? null;
-
-  const verifiedCount = cartons.filter((carton) => carton.verified).length;
 
   const scanMaterial =
     scanTarget?.kind === "material" && selectedCarton
       ? (selectedCarton.materials.find((x) => x.id === scanTarget.materialId) ??
         null)
       : null;
-
-  /* ---------- helpers ---------- */
-
-  function updateSelectedCarton(
-    updater: (carton: VerificationCarton) => VerificationCarton,
-  ) {
-    setCartons((prev) =>
-      prev.map((carton) =>
-        carton.id === selectedCartonId ? updater(carton) : carton,
-      ),
-    );
-  }
 
   /* ---------- navigation ---------- */
 
@@ -141,15 +84,7 @@ export default function VerificationFlow({
   function handleConfirmMaterialScan() {
     if (!selectedCarton || !scanMaterial) return;
 
-    updateSelectedCarton((carton) => ({
-      ...carton,
-      verified: false, // changed → must be completed again
-      materials: carton.materials.map((item) =>
-        item.id === scanMaterial.id
-          ? { ...item, scannedUpn: DEMO.upnCode }
-          : item,
-      ),
-    }));
+    verification.scanMaterial(selectedCarton.id, scanMaterial.id);
 
     // Keep scanning: jump to the next material that is not scanned yet.
     const next = selectedCarton.materials.find(
@@ -162,15 +97,14 @@ export default function VerificationFlow({
   function handleConfirmStickerScan() {
     if (!selectedCarton) return;
 
-    updateSelectedCarton((carton) => ({
-      ...carton,
-      scannedSticker: carton.code,
-    }));
+    verification.scanSticker(selectedCarton.id);
     setScanTarget(null);
   }
 
   function handleCompleteCarton() {
-    updateSelectedCarton((carton) => ({ ...carton, verified: true }));
+    if (!selectedCarton) return;
+
+    verification.completeCarton(selectedCarton.id);
     setSelectedCartonId(null);
     setDetailStep("materials");
     setStep("carton-list");
@@ -179,7 +113,7 @@ export default function VerificationFlow({
   /* ---------- submit ---------- */
 
   function handleConfirmSubmit() {
-    setSubmitted(true);
+    verification.submit();
     setShowSubmitModal(false);
     setShowSuccessModal(true);
   }
@@ -200,6 +134,7 @@ export default function VerificationFlow({
             model={model}
             verifiedCount={verifiedCount}
             totalCartons={cartons.length}
+            progressPercent={progressPercent}
             onClick={() => setStep("carton-list")}
           />
         </>
@@ -224,10 +159,7 @@ export default function VerificationFlow({
                   verified: verifiedCount,
                   total: cartons.length,
                 }),
-                percent:
-                  cartons.length > 0
-                    ? Math.round((verifiedCount / cartons.length) * 100)
-                    : 0,
+                percent: progressPercent,
               }}
             />
           </div>
@@ -235,6 +167,7 @@ export default function VerificationFlow({
           <div className="mt-4 max-md:mt-3">
             <CartonVerificationList
               cartons={cartons}
+              allVerified={verification.allVerified}
               onOpenCarton={handleOpenCarton}
               onSubmit={() => setShowSubmitModal(true)}
               submitted={submitted}
@@ -292,26 +225,14 @@ export default function VerificationFlow({
         />
       )}
 
-      {/* Submit modals */}
-      <InspectionModal
+      <VerificationSubmitDialogs
         open={showSubmitModal}
-        title={t("iqc.verify.submitTitle")}
-        description={t("iqc.verify.submitDescription", {
-          count: cartons.length,
-          mo: moNumber,
-        })}
-        confirmLabel={t("common.submit")}
-        onCancel={() => setShowSubmitModal(false)}
-        onConfirm={handleConfirmSubmit}
-      />
-
-      <InspectionModal
-        open={showSuccessModal}
-        title={t("iqc.modal.successTitle")}
-        description={t("iqc.modal.successDescription")}
-        onCancel={() => setShowSuccessModal(false)}
-        onConfirm={() => setShowSuccessModal(false)}
-        success
+        successOpen={showSuccessModal}
+        cartonCount={cartons.length}
+        moNumber={moNumber}
+        onCancelSubmit={() => setShowSubmitModal(false)}
+        onConfirmSubmit={handleConfirmSubmit}
+        onDismissSuccess={() => setShowSuccessModal(false)}
       />
     </>
   );
