@@ -1,8 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CalendarDays, X } from "lucide-react";
+import { X } from "lucide-react";
 
+import { CalendarPickerModal } from "@/components/history/CalendarPickerModal";
+import {
+  ALL_CALENDAR_RANGE,
+  isWithinHistoryDateRange,
+  type CalendarRange,
+} from "@/components/history/date-range";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -226,62 +232,47 @@ export default function TaskProgressCard({
   tasks?: Task[];
 }) {
   const { t } = useI18n();
-  const [selectedDate, setSelectedDate] = useState("");
+  const [dateRange, setDateRange] = useState<CalendarRange>(ALL_CALENDAR_RANGE);
 
-  const filteredTasks = useMemo(
-    () =>
-      selectedDate
-        ? tasks.filter((task) => task.createdDate === selectedDate)
-        : tasks,
-    [tasks, selectedDate],
+  const dateFilteredTasks = useMemo(
+    () => tasks.filter((task) => isWithinHistoryDateRange(task.createdDate, dateRange)),
+    [tasks, dateRange],
   );
 
   // Ongoing tasks first, completed ones last
   const sorted = useMemo(
     () =>
-      [...filteredTasks].sort(
+      [...dateFilteredTasks].sort(
         (a, b) => Number(isComplete(a)) - Number(isComplete(b)),
       ),
-    [filteredTasks],
+    [dateFilteredTasks],
   );
 
-  const completed = filteredTasks.filter(isComplete).length;
-  const ongoing = filteredTasks.length - completed;
-  const taskPercent = filteredTasks.length
-    ? Math.round((completed / filteredTasks.length) * 100)
+  const completed = dateFilteredTasks.filter(isComplete).length;
+  const ongoing = dateFilteredTasks.length - completed;
+  const taskPercent = dateFilteredTasks.length
+    ? Math.round((completed / dateFilteredTasks.length) * 100)
     : 0;
-  const moDone = filteredTasks.reduce((sum, t) => sum + t.done, 0);
-  const moTotal = filteredTasks.reduce((sum, t) => sum + t.total, 0);
+  const moDone = dateFilteredTasks.reduce((sum, t) => sum + t.done, 0);
+  const moTotal = dateFilteredTasks.reduce((sum, t) => sum + t.total, 0);
 
   return (
     <Card className="min-w-0 flex-1 overflow-hidden rounded-lg border-slate-200">
       <CardHeader className="flex flex-row items-center justify-between gap-4 border-b px-4 py-3">
         <CardTitle className="text-sm font-semibold">{t("dashboard.taskProgress.title")}</CardTitle>
         <div className="flex items-center gap-1">
-          <label className="relative">
-            <Button
-              variant="outline"
-              className="h-8 gap-2 px-3 text-xs font-normal"
-              type="button"
-              tabIndex={-1}
-            >
-              <CalendarDays className="h-3.5 w-3.5" />
-              {selectedDate || t("dashboard.taskProgress.allDates")}
-            </Button>
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={(event) => setSelectedDate(event.target.value)}
-              aria-label={t("iqcHistory.dateFilterLabel")}
-              className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-            />
-          </label>
-          {selectedDate && (
+          <CalendarPickerModal
+            value={dateRange}
+            onChange={setDateRange}
+            ariaLabel={t("iqcHistory.dateFilterLabel")}
+            buttonClassName="h-8 text-xs"
+          />
+          {dateRange.type !== "all" && (
             <Button
               variant="ghost"
               className="h-8 w-8 p-0 text-slate-500"
               type="button"
-              onClick={() => setSelectedDate("")}
+              onClick={() => setDateRange(ALL_CALENDAR_RANGE)}
               aria-label={t("dashboard.taskProgress.clearDateFilter")}
             >
               <X className="h-3.5 w-3.5" />
@@ -291,9 +282,9 @@ export default function TaskProgressCard({
       </CardHeader>
 
       <CardContent className="space-y-4 px-4 py-3">
-        {filteredTasks.length === 0 ? (
+        {dateFilteredTasks.length === 0 ? (
           <div className="rounded-md border border-dashed border-slate-200 bg-slate-50 p-4 text-center text-xs text-slate-500">
-            {selectedDate
+            {dateRange.type !== "all"
               ? t("dashboard.taskProgress.noTasksOnDate")
               : t("dashboard.taskProgress.noTasks")}
           </div>
@@ -302,7 +293,7 @@ export default function TaskProgressCard({
             <section className="space-y-2">
               <div className="flex items-end gap-1">
                 <strong className="text-2xl leading-6">
-                  {completed}/{filteredTasks.length}
+                  {completed}/{dateFilteredTasks.length}
                 </strong>
                 <span className="text-xs text-slate-500">{t("dashboard.taskProgress.taskComplete")}</span>
               </div>
@@ -330,38 +321,38 @@ export default function TaskProgressCard({
               </div>
 
               <ul className="max-h-[6.25rem] divide-y divide-slate-200 overflow-y-auto overscroll-contain">
-                {sorted.map((task) => {
-                  const complete = isComplete(task);
-                  return (
-                    <li
-                      key={task.id}
-                      className="flex items-center gap-3 py-2 text-xs"
-                    >
-                      <span
-                        className={cn(
-                          "min-w-0 flex-1 truncate",
-                          complete && "text-slate-500",
-                        )}
+                  {sorted.map((task) => {
+                    const complete = isComplete(task);
+                    return (
+                      <li
+                        key={task.id}
+                        className="flex items-center gap-3 py-2 text-xs"
                       >
-                        {taskName(task)}
-                      </span>
-
-                      <span className="flex shrink-0 items-center gap-2">
-                        <Bar value={percent(task)} className="w-16" />
                         <span
                           className={cn(
-                            "w-9 text-right",
-                            complete
-                              ? "font-medium text-[#0b5934]"
-                              : "text-slate-600",
+                            "min-w-0 flex-1 truncate",
+                            complete && "text-slate-500",
                           )}
                         >
-                          {task.done}/{task.total}
+                          {taskName(task)}
                         </span>
-                      </span>
-                    </li>
-                  );
-                })}
+
+                        <span className="flex shrink-0 items-center gap-2">
+                          <Bar value={percent(task)} className="w-16" />
+                          <span
+                            className={cn(
+                              "w-9 text-right",
+                              complete
+                                ? "font-medium text-[#0b5934]"
+                                : "text-slate-600",
+                            )}
+                          >
+                            {task.done}/{task.total}
+                          </span>
+                        </span>
+                      </li>
+                    );
+                  })}
               </ul>
             </section>
           </>

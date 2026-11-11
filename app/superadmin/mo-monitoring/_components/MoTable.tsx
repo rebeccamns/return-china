@@ -9,7 +9,6 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Calendar,
   ChevronLeft,
   ChevronRight,
   Download,
@@ -22,6 +21,11 @@ import {
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n";
 import { Button } from "@/components/ui/button";
+import { CalendarPickerModal } from "@/components/history/CalendarPickerModal";
+import {
+  isWithinHistoryDateRange,
+  type CalendarRange,
+} from "@/components/history/date-range";
 import {
   Table,
   TableBody,
@@ -46,16 +50,6 @@ import { exportMoCsv } from "../../_lib/export";
 // ─── helpers ────────────────────────────────────────────────────────────────
 
 const TODAY = new Date(2026, 8, 22); // Sep 22 2026
-
-function daysAgo(n: number): Date {
-  return new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate() - n);
-}
-
-const DATE_RANGE_OPTIONS = [
-  { value: "7", label: "Last 7 days" },
-  { value: "30", label: "Last 30 days" },
-  { value: "all", label: "All time" },
-];
 
 const ROWS_OPTIONS = [10, 20, 50];
 
@@ -249,7 +243,10 @@ export default function MoTable({ mos, onIntervene }: Props) {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [stepFilter, setStepFilter] = useState<string>("all");
   const [modelFilter, setModelFilter] = useState<string>("all");
-  const [dateRange, setDateRange] = useState<string>("7");
+  const [dateRange, setDateRange] = useState<CalendarRange>({
+    type: "lastDays",
+    days: 7,
+  });
 
   // ── pagination ──
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -264,11 +261,6 @@ export default function MoTable({ mos, onIntervene }: Props) {
 
   // ── derived filtered list ──
   const filtered = useMemo(() => {
-    const cutoff =
-      dateRange === "all"
-        ? null
-        : daysAgo(Number(dateRange));
-
     return mos.filter((m) => {
       if (
         search.trim() &&
@@ -281,8 +273,7 @@ export default function MoTable({ mos, onIntervene }: Props) {
       if (statusFilter !== "all" && m.status !== statusFilter) return false;
       if (stepFilter !== "all" && m.currentStep !== stepFilter) return false;
       if (modelFilter !== "all" && m.model !== modelFilter) return false;
-      if (cutoff && m.lastUpdatedDate < cutoff) return false;
-      return true;
+      return isWithinHistoryDateRange(m.lastUpdatedDate, dateRange, TODAY);
     });
   }, [mos, search, statusFilter, stepFilter, modelFilter, dateRange]);
 
@@ -386,19 +377,13 @@ export default function MoTable({ mos, onIntervene }: Props) {
             </SelectContent>
           </Select>
 
-          {/* Date range */}
-          <Select value={dateRange} onValueChange={setDateRange}>
-            <SelectTrigger className="h-9 w-auto min-w-[160px] text-sm">
-              <Calendar className="mr-1.5 h-3.5 w-3.5 shrink-0 text-gray-400" />
-              <span className="text-gray-500 mr-1">{t("moMonitoring.dateRangeLabel")}:</span>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {DATE_RANGE_OPTIONS.map((opt) => (
-                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <CalendarPickerModal
+            value={dateRange}
+            onChange={setDateRange}
+            referenceDate={TODAY}
+            ariaLabel={t("moMonitoring.dateRangeLabel")}
+            buttonClassName="h-9 min-w-[180px] text-sm"
+          />
 
           {/* Export */}
           <Button

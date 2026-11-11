@@ -1,17 +1,21 @@
 "use client";
 
 import * as React from "react";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import {
   CheckCircle2,
+  ChevronDown,
+  ChevronRight,
   ClipboardList,
   Minus,
   Plus,
+  Search,
   Send,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -22,8 +26,10 @@ import {
 } from "@/components/ui/table";
 import Sidebar from "@/components/layout/sidebar";
 import TopBar from "@/components/layout/topbar";
+import MoDeadline from "@/components/history/MoDeadline";
 import { useI18n } from "@/i18n";
 import { DEMO, demoMoNumber } from "@/lib/demo-data";
+import { formatDateTime, isSameLocalDay } from "@/lib/date-utils";
 
 type WarehouseMaterial = {
   id: string;
@@ -46,7 +52,44 @@ type WarehouseMo = {
   wo: string;
   bearingCost: string;
   materials: WarehouseMaterial[];
+  submittedAt?: number;
 };
+
+type ReadinessFilter = "all" | "ready" | "notReady";
+type IqcStatusFilter = "All" | "Passed" | "Failed";
+
+const EMPTY_SUBMISSIONS: WarehouseMo[] = [];
+let submittedWarehouseMos = EMPTY_SUBMISSIONS;
+const submissionListeners = new Set<() => void>();
+
+function subscribeToSubmissions(listener: () => void) {
+  submissionListeners.add(listener);
+  return () => submissionListeners.delete(listener);
+}
+
+function getSubmissionSnapshot() {
+  return submittedWarehouseMos;
+}
+
+function useSubmittedWarehouseMos() {
+  return useSyncExternalStore(
+    subscribeToSubmissions,
+    getSubmissionSnapshot,
+    () => EMPTY_SUBMISSIONS,
+  );
+}
+
+function recordWarehouseSubmission(mo: WarehouseMo) {
+  submittedWarehouseMos = [
+    {
+      ...mo,
+      submittedAt: Date.now(),
+      materials: mo.materials.map((material) => ({ ...material })),
+    },
+    ...submittedWarehouseMos.filter((item) => item.id !== mo.id),
+  ];
+  submissionListeners.forEach((listener) => listener());
+}
 
 const materialTemplates: Omit<WarehouseMaterial, "id" | "ready">[] = [
   {
@@ -146,10 +189,62 @@ const nestedHeadClass =
   "whitespace-nowrap bg-[#F8F8F8] px-3 text-xs font-semibold text-slate-700";
 
 export default function WarehousePage() {
-  const { t } = useI18n();
-  const [mos, setMos] = useState(initialMos);
+  const { t, locale } = useI18n();
+  const [mos, setMos] = useState(() =>
+    initialMos.filter(
+      (mo) => !submittedWarehouseMos.some((submitted) => submitted.id === mo.id),
+    ),
+  );
+  const submittedMos = useSubmittedWarehouseMos();
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedSubmittedId, setExpandedSubmittedId] = useState<string | null>(
+    null,
+  );
   const [notice, setNotice] = useState<string | null>(null);
+  const [listSearch, setListSearch] = useState("");
+  const [iqcStatusFilter, setIqcStatusFilter] =
+    useState<IqcStatusFilter>("All");
+  const [readinessFilter, setReadinessFilter] =
+    useState<ReadinessFilter>("all");
+
+  function matchesListFilters(mo: WarehouseMo) {
+    const query = listSearch.trim().toLowerCase();
+    const ready =
+      mo.materials.length > 0 &&
+      mo.materials.every((material) => material.ready);
+    const matchesStatus =
+      iqcStatusFilter === "All" || mo.iqcStatus === iqcStatusFilter;
+    const matchesReadiness =
+      readinessFilter === "all" ||
+      (readinessFilter === "ready" && ready) ||
+      (readinessFilter === "notReady" && !ready);
+    const searchableText = [
+      mo.moCode,
+      mo.model,
+      mo.iqcStatus,
+      mo.wo,
+      mo.bearingCost,
+      ...mo.materials.flatMap((material) => [
+        material.code,
+        material.englishName,
+        material.chinaName,
+      ]),
+    ]
+      .join(" ")
+      .toLowerCase();
+
+    return (
+      matchesStatus &&
+      matchesReadiness &&
+      (!query || searchableText.includes(query))
+    );
+  }
+
+  const filteredMos = mos.filter(matchesListFilters);
+  const filteredSubmittedMos = submittedMos.filter(matchesListFilters);
+  const submittedTodayCount = submittedMos.filter(
+    (mo) => mo.submittedAt !== undefined && isSameLocalDay(mo.submittedAt),
+  ).length;
 
   function toggleMaterialReady(
     moId: string,
@@ -179,6 +274,7 @@ export default function WarehousePage() {
       return;
     }
 
+    recordWarehouseSubmission(mo);
     setMos((current) => current.filter((item) => item.id !== moId));
     setExpandedId((current) => (current === moId ? null : current));
     setNotice(t("warehouse.submitSuccess", { code: mo.moCode }));
@@ -215,11 +311,96 @@ export default function WarehousePage() {
           )}
 
           <section className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
-            <div className="flex items-center gap-2 border-b border-strokestroke-gray px-[18px] py-4">
-              <ClipboardList className="h-4 w-4 text-[#0B5934]" />
-              <h2 className="text-sm font-semibold text-[#111111]">
-                {t("warehouse.title")}
-              </h2>
+            <div className="flex items-center justify-between gap-3 border-b border-strokestroke-gray px-[18px] py-4">
+              <div className="flex items-center gap-2">
+                <ClipboardList className="h-4 w-4 text-[#0B5934]" />
+                <h2 className="text-sm font-semibold text-[#111111]">
+                  {t("warehouse.title")}
+                </h2>
+              </div>
+              <span className="shrink-0 text-xs text-[#777775]">
+                {t("common.pendingMos")}: {mos.length}
+              </span>
+            </div>
+
+            <div className="flex flex-wrap items-end gap-3 border-b border-strokestroke-gray px-[18px] py-4">
+              <div className="w-full sm:w-[280px]">
+                <label
+                  htmlFor="warehouse-list-search"
+                  className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+                >
+                  {t("history.searchLabel")}
+                </label>
+                <div className="relative">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#A3A3A1]" />
+                  <Input
+                    id="warehouse-list-search"
+                    value={listSearch}
+                    onChange={(event) => setListSearch(event.target.value)}
+                    placeholder={t("warehouse.searchPlaceholder")}
+                    className="h-9 rounded-md border-strokestroke-gray pl-9 text-xs placeholder:text-[#A3A3A1]"
+                  />
+                </div>
+              </div>
+              <div>
+                <label
+                  htmlFor="warehouse-iqc-filter"
+                  className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+                >
+                  {t("woEntry.iqcStatus")}
+                </label>
+                <select
+                  id="warehouse-iqc-filter"
+                  value={iqcStatusFilter}
+                  onChange={(event) =>
+                    setIqcStatusFilter(
+                      event.target.value as IqcStatusFilter,
+                    )
+                  }
+                  className="h-9 w-[150px] rounded-md border border-strokestroke-gray bg-white px-3 text-xs text-[#333333]"
+                >
+                  <option value="All">{t("history.allStatuses")}</option>
+                  <option value="Passed">{t("status.passed")}</option>
+                  <option value="Failed">{t("status.failed")}</option>
+                </select>
+              </div>
+              <div>
+                <label
+                  htmlFor="warehouse-readiness-filter"
+                  className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+                >
+                  {t("warehouse.readinessFilter")}
+                </label>
+                <select
+                  id="warehouse-readiness-filter"
+                  value={readinessFilter}
+                  onChange={(event) =>
+                    setReadinessFilter(
+                      event.target.value as ReadinessFilter,
+                    )
+                  }
+                  className="h-9 w-[160px] rounded-md border border-strokestroke-gray bg-white px-3 text-xs text-[#333333]"
+                >
+                  <option value="all">{t("warehouse.allReadiness")}</option>
+                  <option value="ready">{t("warehouse.readyOnly")}</option>
+                  <option value="notReady">{t("warehouse.notReady")}</option>
+                </select>
+              </div>
+              {(listSearch ||
+                iqcStatusFilter !== "All" ||
+                readinessFilter !== "all") && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setListSearch("");
+                    setIqcStatusFilter("All");
+                    setReadinessFilter("all");
+                  }}
+                  className="h-9 text-xs font-medium text-[#046A39] hover:underline"
+                >
+                  {t("history.clearFilters")}
+                </button>
+              )}
             </div>
 
             <div className="p-[18px]">
@@ -253,7 +434,7 @@ export default function WarehousePage() {
                   </TableHeader>
 
                   <TableBody>
-                    {mos.map((mo) => {
+                    {filteredMos.map((mo) => {
                       const readyCount = mo.materials.filter(
                         (material) => material.ready,
                       ).length;
@@ -288,7 +469,8 @@ export default function WarehousePage() {
                               </Button>
                             </TableCell>
                             <TableCell className="px-3 py-2 text-xs font-medium text-[#111111]">
-                              {mo.moCode}
+                              <span className="block">{mo.moCode}</span>
+                              <MoDeadline moCode={mo.moCode} />
                             </TableCell>
                             <TableCell className="px-3 py-2 text-xs text-[#111111]">
                               {mo.model}
@@ -456,13 +638,15 @@ export default function WarehousePage() {
                       );
                     })}
 
-                    {mos.length === 0 && (
+                    {filteredMos.length === 0 && (
                       <TableRow>
                         <TableCell
                           colSpan={8}
                           className="py-12 text-center text-sm text-[#777777]"
                         >
-                          {t("warehouse.noPendingMos")}
+                          {mos.length === 0
+                            ? t("warehouse.noPendingMos")
+                            : t("history.noMatchingRecords")}
                         </TableCell>
                       </TableRow>
                     )}
@@ -470,6 +654,188 @@ export default function WarehousePage() {
                 </Table>
               </div>
             </div>
+          </section>
+
+          <section className="mt-5 overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-strokestroke-gray px-[18px] py-4">
+              <h2 className="text-sm font-semibold text-[#111111]">
+                {t("common.moSubmitted")}
+              </h2>
+              <div className="flex items-center gap-3 text-xs text-[#8F8F8E]">
+                <span>
+                  {t("common.submittedTodayCount", {
+                    count: submittedTodayCount,
+                  })}
+                </span>
+                <span>{submittedMos.length}</span>
+              </div>
+            </div>
+            {submittedMos.length === 0 ? (
+              <p className="px-[18px] py-6 text-sm text-[#8F8F8E]">
+                {t("common.noSubmittedMos")}
+              </p>
+            ) : filteredSubmittedMos.length === 0 ? (
+              <p className="px-[18px] py-6 text-sm text-[#8F8F8E]">
+                {t("history.noMatchingRecords")}
+              </p>
+            ) : (
+              <div className="divide-y divide-strokestroke-gray">
+                {filteredSubmittedMos.map((mo) => {
+                  const isExpanded = expandedSubmittedId === mo.id;
+
+                  return (
+                    <div key={mo.id}>
+                      <button
+                        type="button"
+                        aria-expanded={isExpanded}
+                        onClick={() =>
+                          setExpandedSubmittedId(isExpanded ? null : mo.id)
+                        }
+                        className="flex w-full items-center gap-4 bg-white px-[18px] py-4 text-left transition-colors hover:bg-slate-50"
+                      >
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#EAF6EE]">
+                          <ClipboardList className="h-5 w-5 text-[#0B5934]" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-semibold text-[#111111]">
+                            {mo.moCode}
+                          </p>
+                          <p className="mt-1 text-xs text-[#8F8F8E]">
+                            {mo.model} ·{" "}
+                            {t("common.materialPlural", {
+                              count: mo.materials.length,
+                            })}
+                          </p>
+                          <MoDeadline moCode={mo.moCode} />
+                          {mo.submittedAt !== undefined && (
+                            <p className="mt-1 text-[11px] text-[#8F8F8E]">
+                              {formatDateTime(mo.submittedAt, locale)}
+                            </p>
+                          )}
+                        </div>
+                        <span className="hidden text-xs text-[#0B5934] sm:block">
+                          {t("common.viewSubmittedDetails")}
+                        </span>
+                        {isExpanded ? (
+                          <ChevronDown className="h-4 w-4 text-[#0B5934]" />
+                        ) : (
+                          <ChevronRight className="h-4 w-4 text-[#737373]" />
+                        )}
+                      </button>
+
+                      {isExpanded && (
+                        <div className="border-t border-strokestroke-gray px-[18px] py-5">
+                          <dl className="mb-4 grid gap-3 text-xs sm:grid-cols-2">
+                            <div>
+                              <dt className="text-[#8F8F8E]">
+                                {t("common.wo")}
+                              </dt>
+                              <dd className="mt-1 font-medium text-[#111111]">
+                                {mo.wo}
+                              </dd>
+                            </div>
+                            <div>
+                              <dt className="text-[#8F8F8E]">
+                                {t("woEntry.bearingCost")}
+                              </dt>
+                              <dd className="mt-1 font-medium text-[#111111]">
+                                {mo.bearingCost}
+                              </dd>
+                            </div>
+                          </dl>
+                          <div className="overflow-x-auto rounded-md border border-strokestroke-gray">
+                            <Table className="min-w-[1150px]">
+                              <TableHeader className="bg-[#F8F8F8]">
+                                <TableRow className="hover:bg-[#F8F8F8]">
+                                  <TableHead className={nestedHeadClass}>
+                                    {t("common.materialCode")}
+                                  </TableHead>
+                                  <TableHead className={nestedHeadClass}>
+                                    {t("common.englishName")}
+                                  </TableHead>
+                                  <TableHead className={nestedHeadClass}>
+                                    {t("common.chinaName")}
+                                  </TableHead>
+                                  <TableHead className={nestedHeadClass}>
+                                    {t("common.qtyPcs")}
+                                  </TableHead>
+                                  <TableHead className={nestedHeadClass}>
+                                    {t("common.category")}
+                                  </TableHead>
+                                  <TableHead className={nestedHeadClass}>
+                                    {t("common.transportation")}
+                                  </TableHead>
+                                  <TableHead className={nestedHeadClass}>
+                                    {t("common.locator")}
+                                  </TableHead>
+                                  <TableHead className={nestedHeadClass}>
+                                    {t("common.projectCode")}
+                                  </TableHead>
+                                  <TableHead className={nestedHeadClass}>
+                                    {t("warehouse.ready")}
+                                  </TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                {mo.materials.map((material) => (
+                                  <TableRow
+                                    key={material.id}
+                                    className="bg-white hover:bg-white"
+                                  >
+                                    <TableCell className="text-xs">
+                                      {material.code}
+                                    </TableCell>
+                                    <TableCell className="text-xs">
+                                      {material.englishName}
+                                    </TableCell>
+                                    <TableCell className="text-xs">
+                                      {material.chinaName}
+                                    </TableCell>
+                                    <TableCell className="text-xs">
+                                      {material.qty}
+                                    </TableCell>
+                                    <TableCell>
+                                      <span
+                                        className={
+                                          material.category === "Wait repair"
+                                            ? "inline-flex whitespace-nowrap rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800"
+                                            : "inline-flex whitespace-nowrap rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800"
+                                        }
+                                      >
+                                        {material.category === "Wait repair"
+                                          ? t("common.waitRepair")
+                                          : t("common.idleOk")}
+                                      </span>
+                                    </TableCell>
+                                    <TableCell className="text-xs">
+                                      {material.transportation === "Air"
+                                        ? t("common.air")
+                                        : t("common.sea")}
+                                    </TableCell>
+                                    <TableCell className="text-xs">
+                                      {material.locator}
+                                    </TableCell>
+                                    <TableCell className="text-xs">
+                                      {material.projectCode}
+                                    </TableCell>
+                                    <TableCell className="text-xs">
+                                      <span className="inline-flex items-center gap-1 text-[#0B5934]">
+                                        <CheckCircle2 className="h-4 w-4" />
+                                        {t("warehouse.ready")}
+                                      </span>
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </section>
         </div>
       </div>

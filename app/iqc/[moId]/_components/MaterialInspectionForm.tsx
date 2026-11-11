@@ -20,6 +20,7 @@ type Props = {
   moNumber: string;
   model: string;
   returnId: string;
+  readOnly?: boolean;
   onBack: () => void;
   onSave: (updatedMaterial: IQCMaterial) => void;
 };
@@ -32,6 +33,7 @@ export default function MaterialInspectionForm({
   moNumber,
   model,
   returnId,
+  readOnly = false,
   onBack,
   onSave,
 }: Props) {
@@ -99,20 +101,22 @@ export default function MaterialInspectionForm({
             {t("iqc.form.quantity", { qty: material.qty })}
           </p>
           <p className="text-[12px] max-md:text-caption leading-4 text-text-colortext-gray">
-            {t("iqc.form.requiredFields")}
+            {t(readOnly ? "common.submitted" : "iqc.form.requiredFields")}
           </p>
         </div>
 
         {/* UPN barcode */}
         <div className="mt-5 max-md:mt-3">
           <label htmlFor="iqc-upn-barcode" className={labelClass}>
-            {t("common.scanUpnBarcode")} <span className="text-red-500">*</span>
+            {t("common.scanUpnBarcode")}{" "}
+            {!readOnly && <span className="text-red-500">*</span>}
           </label>
 
           <div className="relative">
             <Input
               id="iqc-upn-barcode"
               value={upnBarcode}
+              disabled={readOnly}
               onChange={(event) => {
                 setUpnBarcode(event.target.value);
                 setError("");
@@ -130,11 +134,14 @@ export default function MaterialInspectionForm({
         {/* UPN photo */}
         <div className="mt-5 max-md:mt-3">
           <span className={labelClass}>
-            {t("common.upnPhoto")} <span className="text-red-500">*</span>
+            {t("common.upnPhoto")}{" "}
+            {!readOnly && <span className="text-red-500">*</span>}
           </span>
 
           <label
-            className={`flex cursor-pointer items-center gap-3 rounded-2xl p-3 max-md:p-2.5 transition active:scale-[0.99] ${
+            className={`flex items-center gap-3 rounded-2xl p-3 max-md:p-2.5 ${
+              readOnly ? "" : "cursor-pointer transition active:scale-[0.99]"
+            } ${
               hasPhoto
                 ? "border border-[#008348] bg-[#E7F5EC]"
                 : "border-2 border-dashed border-[#b8d9c5] bg-[#f5fbf7] hover:bg-[#edf8f1]"
@@ -168,6 +175,7 @@ export default function MaterialInspectionForm({
               type="file"
               accept="image/*"
               capture="environment"
+              disabled={readOnly}
               onChange={handlePhotoChange}
               className="sr-only"
             />
@@ -177,6 +185,7 @@ export default function MaterialInspectionForm({
         <MaterialInspectionStatusButtons
           status={status}
           labelClass={labelClass}
+          disabled={readOnly}
           onStatusChange={(nextStatus) => {
             setStatus(nextStatus);
             setError("");
@@ -194,6 +203,7 @@ export default function MaterialInspectionForm({
             id="iqc-notes"
             rows={3}
             value={notes}
+            readOnly={readOnly}
             onChange={(event) => setNotes(event.target.value)}
             placeholder={t("iqc.form.notesPlaceholder")}
             className="w-full resize-none rounded-xl border border-strokestroke-gray px-4 py-3 text-[16px] max-md:text-field leading-6 outline-none focus:border-primaryprimary-green"
@@ -211,15 +221,17 @@ export default function MaterialInspectionForm({
       </section>
 
       {/* Sticky save (form flow hides the bottom nav) */}
-      <StickyActionBar>
-        <button
-          type="button"
-          onClick={handleSave}
-          className={`${primaryButton} flex-1`}
-        >
-          {t("iqc.form.save")}
-        </button>
-      </StickyActionBar>
+      {!readOnly && (
+        <StickyActionBar>
+          <button
+            type="button"
+            onClick={handleSave}
+            className={`${primaryButton} flex-1`}
+          >
+            {t("iqc.form.save")}
+          </button>
+        </StickyActionBar>
+      )}
     </div>
   );
 }

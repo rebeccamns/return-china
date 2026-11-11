@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/select";
 
 import KpiCard from "@/components/ui/kpichart";
+import CategorySelectValue from "./CategorySelectValue";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n";
 import { DEMO, demoMoNumber } from "@/lib/demo-data";
@@ -216,16 +217,12 @@ function MaterialFields({
             onValueChange={(value) => onChange("category", value)}
           >
             <SelectTrigger
-              className={cn(
-                "h-8 w-full rounded-md border text-xs",
-                material.category === "Wait repair"
-                  ? "border-amber-300 bg-yellow-100 text-yellow-800"
-                  : material.category === "Idle OK"
-                    ? "border-green-300 bg-green-100 text-green-800"
-                    : "border-strokestroke-gray",
-              )}
+              className="h-8 w-full rounded-md border-strokestroke-gray bg-backgroundbg-white text-xs"
             >
-              <SelectValue placeholder={t("common.category")} />
+              <CategorySelectValue
+                value={material.category ?? ""}
+                placeholder={t("common.category")}
+              />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="Wait repair" className="text-xs">
@@ -411,7 +408,6 @@ export function RevisionNotice() {
   const [submitStep, setSubmitStep] = useState<SubmitStep>(null);
   const [resubmitId, setResubmitId] = useState<string | null>(null);
   const detailsRef = React.useRef<HTMLDivElement>(null);
-
   function toggleShowAll() {
     const nextState = !showAll;
     setShowAll(nextState);
@@ -590,6 +586,14 @@ export function RevisionNotice() {
       >
         <div className="min-h-0 overflow-hidden">
           <div className="border-t border-strokestroke-gray px-4 pb-4 pt-3">
+            <div className="mb-3 flex items-center justify-end">
+              <p className="ml-auto pb-2 text-xs text-[#8F8F8E]">
+                {t("history.showingRecords", {
+                  shown: items.length,
+                  total: items.length,
+                })}
+              </p>
+            </div>
             <div className="overflow-x-auto rounded-md border border-strokestroke-gray">
               <Table className="min-w-[1120px]">
                 <TableHeader>
@@ -607,7 +611,16 @@ export function RevisionNotice() {
                 </TableHeader>
 
                 <TableBody>
-                  {items.map((item) => {
+                  {items.length === 0 ? (
+                    <TableRow>
+                      <TableCell
+                        colSpan={7}
+                        className="px-3 py-10 text-center text-sm text-[#5F5F5E]"
+                      >
+                        {t("history.noMatchingRecords")}
+                      </TableCell>
+                    </TableRow>
+                  ) : items.map((item) => {
                     const isExpanded = expandedId === item.id;
                     const isEditing = editingId === item.id;
                     const displayedMaterials = isEditing ? draftMaterials : item.materials;
@@ -967,6 +980,14 @@ function OngoingMoTable() {
       </CardHeader>
 
       <CardContent className="px-4 pb-4">
+        <div className="mb-3 flex items-center justify-end">
+          <p className="text-xs text-[#8F8F8E]">
+            {t("history.showingRecords", {
+              shown: rows.length,
+              total: rows.length,
+            })}
+          </p>
+        </div>
         <div className="overflow-x-auto rounded border border-[var(--strokestroke-gray)]">
           <Table className="min-w-[850px]">
             <TableHeader>
@@ -984,7 +1005,18 @@ function OngoingMoTable() {
             </TableHeader>
 
             <TableBody>
-              {rows.map((row) => {
+              {rows.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={7}
+                    className="px-3 py-10 text-center text-sm text-[#5F5F5E]"
+                  >
+                    {rows.length === 0
+                      ? t("common.noData")
+                      : t("history.noMatchingRecords")}
+                  </TableCell>
+                </TableRow>
+              ) : rows.map((row) => {
                 const isEditing = editingId === row.id;
                 const isExpanded = expandedId === row.id;
 
@@ -1183,17 +1215,12 @@ function OngoingMoTable() {
                                             }
                                           >
                                             <SelectTrigger
-                                              className={cn(
-                                                "h-8 w-full rounded-md border text-xs",
-                                                material.category === "Wait repair" &&
-                                                  "border-amber-300 bg-yellow-100 text-yellow-800",
-                                                material.category === "Idle OK" &&
-                                                  "border-green-300 bg-green-100 text-green-800",
-                                                !material.category &&
-                                                  "border-strokestroke-gray",
-                                              )}
+                                              className="h-8 w-full rounded-md border-strokestroke-gray bg-backgroundbg-white text-xs"
                                             >
-                                              <SelectValue placeholder={t("common.category")} />
+                                              <CategorySelectValue
+                                                value={material.category ?? ""}
+                                                placeholder={t("common.category")}
+                                              />
                                             </SelectTrigger>
                                             <SelectContent>
                                               <SelectItem value="Wait repair">

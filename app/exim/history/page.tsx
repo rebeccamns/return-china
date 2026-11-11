@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { CalendarDays, ChevronDown, Eye, Search } from "lucide-react";
+import { ChevronDown, Eye, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,9 +20,14 @@ import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n";
 import { DEMO, demoMoNumber } from "@/lib/demo-data";
 import type { TranslationKey } from "@/i18n";
+import { CalendarPickerModal } from "@/components/history/CalendarPickerModal";
+import {
+  ALL_CALENDAR_RANGE,
+  isWithinHistoryDateRange,
+  type CalendarRange,
+} from "@/components/history/date-range";
 
 type Status = "Completed" | "Rejected" | "Resubmitted";
-type DateRange = "7" | "30" | "custom" | "all";
 
 type HistoryRow = {
   id: string;
@@ -113,31 +118,12 @@ const rows: HistoryRow[] = [
 const inputClass =
   "h-9 w-full rounded-md border border-strokestroke-gray bg-white px-3 text-xs text-[#333] outline-none focus:border-[#046A39] focus:ring-1 focus:ring-[#046A39]/20";
 
-function toLocalDateString(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-}
-
-function getDateValue(value: string) {
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? null : date;
-}
-
-function getToday() {
-  return toLocalDateString(new Date());
-}
-
 export default function EximHistoryPage() {
   const { t } = useI18n();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [modelFilter, setModelFilter] = useState("All");
-  const [dateRange, setDateRange] = useState<DateRange>("all");
-  const [customStart, setCustomStart] = useState("");
-  const [customEnd, setCustomEnd] = useState("");
+  const [dateRange, setDateRange] = useState<CalendarRange>(ALL_CALENDAR_RANGE);
 
   const models = useMemo(
     () => Array.from(new Set(rows.map((row) => row.model))).sort(),
@@ -146,17 +132,6 @@ export default function EximHistoryPage() {
 
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase();
-    const now = new Date();
-    const today = toLocalDateString(now);
-
-    const startDate = new Date(now);
-    startDate.setHours(0, 0, 0, 0);
-
-    if (dateRange === "7") {
-      startDate.setDate(startDate.getDate() - 6);
-    } else if (dateRange === "30") {
-      startDate.setDate(startDate.getDate() - 29);
-    }
 
     return rows.filter((row) => {
       const matchesSearch =
@@ -173,36 +148,17 @@ export default function EximHistoryPage() {
         statusFilter === "All" || row.status === statusFilter;
 
       const matchesModel = modelFilter === "All" || row.model === modelFilter;
-
-      const submittedDate = getDateValue(row.submittedAt);
-      let matchesDate = true;
-
-      if (dateRange === "7" || dateRange === "30") {
-        matchesDate =
-          submittedDate !== null &&
-          submittedDate >= startDate &&
-          submittedDate <= now;
-      } else if (dateRange === "custom") {
-        const rowDate = submittedDate ? toLocalDateString(submittedDate) : "";
-
-        matchesDate =
-          !!rowDate &&
-          (!customStart || rowDate >= customStart) &&
-          (!customEnd || rowDate <= customEnd) &&
-          (!customStart || customStart <= today);
-      }
+      const matchesDate = isWithinHistoryDateRange(row.submittedAt, dateRange);
 
       return matchesSearch && matchesStatus && matchesModel && matchesDate;
     });
-  }, [search, statusFilter, modelFilter, dateRange, customStart, customEnd]);
+  }, [search, statusFilter, modelFilter, dateRange]);
 
   function resetFilters() {
     setSearch("");
     setStatusFilter("All");
     setModelFilter("All");
-    setDateRange("all");
-    setCustomStart("");
-    setCustomEnd("");
+    setDateRange(ALL_CALENDAR_RANGE);
   }
 
   return (
@@ -257,7 +213,7 @@ export default function EximHistoryPage() {
                   {(search ||
                     statusFilter !== "All" ||
                     modelFilter !== "All" ||
-                    dateRange !== "all") && (
+                    dateRange.type !== "all") && (
                     <div className="flex h-9 items-center">
                       <button
                         type="button"
@@ -322,79 +278,19 @@ export default function EximHistoryPage() {
                   </div>
 
                   {/* Date Range */}
-                  <div className="w-[165px]">
-                    <label
-                      htmlFor="date-range"
-                      className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
-                      >
-                        {t("exim.history.dateRangeLabel")}
-                      </label>
-                    <div className="relative">
-                      <select
-                        id="date-range"
-                        value={dateRange}
-                        onChange={(event) =>
-                          setDateRange(event.target.value as DateRange)
-                        }
-                        className={cn(inputClass, "appearance-none pr-8")}
-                      >
-                        <option value="7">{t("exim.history.last7Days")}</option>
-                        <option value="30">{t("exim.history.last30Days")}</option>
-                        <option value="custom">{t("exim.history.customRange")}</option>
-                        <option value="all">{t("exim.history.allTime")}</option>
-                      </select>
-                      <CalendarDays className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#8F8F8E]" />
-                    </div>
+                  <div className="w-[190px]">
+                    <label className="mb-1.5 block text-xs font-medium text-[#5F5F5E]">
+                      {t("exim.history.dateRangeLabel")}
+                    </label>
+                    <CalendarPickerModal
+                      value={dateRange}
+                      onChange={setDateRange}
+                      buttonClassName={inputClass}
+                      ariaLabel={t("exim.history.dateRangeLabel")}
+                    />
                   </div>
                 </div>
               </div>
-
-              {/* Custom date inputs */}
-              {dateRange === "custom" && (
-                <div className="mt-4 flex flex-wrap items-end gap-3 rounded-md bg-[#FAFAFA] p-3">
-                  <div className="w-[180px]">
-                    <label
-                      htmlFor="date-start"
-                      className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
-                      >
-                        {t("exim.history.from")}
-                      </label>
-                    <Input
-                      id="date-start"
-                      type="date"
-                      value={customStart}
-                      max={customEnd || getToday()}
-                      onChange={(event) => setCustomStart(event.target.value)}
-                      className="h-9 border-strokestroke-gray text-xs"
-                    />
-                  </div>
-
-                  <div className="w-[180px]">
-                    <label
-                      htmlFor="date-end"
-                      className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
-                      >
-                        {t("exim.history.to")}
-                      </label>
-                    <Input
-                      id="date-end"
-                      type="date"
-                      value={customEnd}
-                      min={customStart || undefined}
-                      max={getToday()}
-                      onChange={(event) => setCustomEnd(event.target.value)}
-                      className="h-9 border-strokestroke-gray text-xs"
-                    />
-                  </div>
-
-                  {customStart && customEnd && customStart > customEnd && (
-                    <p className="pb-2 text-xs text-red-600">
-                      {t("exim.history.dateError")}
-                    </p>
-                  )}
-                </div>
-              )}
-
 
             </div>
 

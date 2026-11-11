@@ -1,10 +1,11 @@
 ﻿"use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ClipboardList, FileUp, Plus, Send } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { CalendarPickerModal } from "@/components/history/CalendarPickerModal";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
@@ -37,6 +38,10 @@ import {
   MATERIAL_CODE_OPTIONS,
 } from "@/lib/mo-entry/material-options";
 import SubmitFlowDialog, { type SubmitStep } from "../_components/SubmitFlowDialog";
+import CategorySelectValue from "../_components/CategorySelectValue";
+import StatusToast, {
+  type StatusToastMessage,
+} from "../_components/StatusToast";
 
 type MaterialRow = {
   code: string;
@@ -113,8 +118,17 @@ export default function MoEntryPage() {
   const [targetDeliveryDate, setTargetDeliveryDate] = useState("");
   const [rows, setRows] = useState<MaterialRow[]>([]);
   const [checkedRows, setCheckedRows] = useState<Set<number>>(new Set());
-  const [statusMessage, setStatusMessage] = useState("");
+  const [statusMessage, setStatusMessage] = useState<StatusToastMessage | null>(
+    null,
+  );
   const [submitStep, setSubmitStep] = useState<SubmitStep>(null);
+
+  useEffect(() => {
+    if (!statusMessage) return;
+
+    const timeoutId = window.setTimeout(() => setStatusMessage(null), 4000);
+    return () => window.clearTimeout(timeoutId);
+  }, [statusMessage]);
 
   function updateRow(index: number, field: keyof MaterialRow, value: string) {
     setRows((prev) =>
@@ -182,7 +196,7 @@ export default function MoEntryPage() {
         projectCode: "",
       },
     ]);
-    setStatusMessage(t("moEntry.rowAdded"));
+    setStatusMessage({ message: t("moEntry.rowAdded"), type: "success" });
   }
 
   function getDeliveryDayCount() {
@@ -207,18 +221,21 @@ export default function MoEntryPage() {
       !projectNumber.trim() ||
       !targetDeliveryDate
     ) {
-      setStatusMessage(
-        "Please complete MO Number, Model, Project Number, and Target Pengiriman.",
-      );
+      setStatusMessage({
+        message:
+          "Please complete MO Number, Model, Project Number, and Target Pengiriman.",
+        type: "error",
+      });
       return;
     }
 
     if (rows.length === 0) {
       setRows(initialRows);
     }
-    setStatusMessage(
-      `Task created for MO ${moNumber.trim()} Â· Model ${model.trim()} Â· Project ${projectNumber.trim()}.`,
-    );
+    setStatusMessage({
+      message: `Task created for MO ${moNumber.trim()} · Model ${model.trim()} · Project ${projectNumber.trim()}.`,
+      type: "success",
+    });
   }
 
   function submitMo() {
@@ -231,7 +248,10 @@ export default function MoEntryPage() {
     );
 
     if (rows.length === 0 || hasIncompleteRow) {
-      setStatusMessage(t("moEntry.completeAllRows"));
+      setStatusMessage({
+        message: t("moEntry.completeAllRows"),
+        type: "error",
+      });
       return;
     }
 
@@ -240,14 +260,15 @@ export default function MoEntryPage() {
 
   function confirmSubmitMo() {
     // TODO: send the MO to your API here
-    setStatusMessage(
-      t(
+    setStatusMessage({
+      message: t(
         rows.length === 1
           ? "moEntry.moSubmittedSingular"
           : "moEntry.moSubmittedPlural",
         { count: rows.length },
       ),
-    );
+      type: "success",
+    });
     setRows([]);
     setCheckedRows(new Set());
     setMoNumber("");
@@ -272,13 +293,17 @@ export default function MoEntryPage() {
 
       <div className="flex min-h-screen flex-col pl-[255px]">
         <TopBar />
+        <StatusToast
+          message={statusMessage}
+          onDismiss={() => setStatusMessage(null)}
+        />
 
         <div className="mt-[52px] w-full px-[18px] py-5">
           <nav className="mb-4 flex items-center gap-2 text-xs">
             <span className="text-text-colortext-gray">
               {t("moEntry.breadcrumbSection")}
             </span>
-            <span className="text-[#B5B5B3]">â€º</span>
+            <span className="text-[#B5B5B3]">›</span>
             <span className="font-medium text-text-colortext-dark">
               {t("moEntry.title")}
             </span>
@@ -336,13 +361,12 @@ export default function MoEntryPage() {
 
                   {/* Keep the day count beside the date input on the same row. */}
                   <div className="flex h-9 items-center gap-2">
-                    <Input
-                      type="date"
+                    <CalendarPickerModal
+                      mode="single"
                       value={targetDeliveryDate}
-                      onChange={(e) => setTargetDeliveryDate(e.target.value)}
-                      className="h-9 w-[180px] shrink-0 rounded-md border-strokestroke-gray px-3 text-xs"
-                      aria-label="Target Pengiriman"
-                      required
+                      onChange={setTargetDeliveryDate}
+                      ariaLabel="Target Pengiriman"
+                      buttonClassName="h-9 w-[180px] shrink-0 rounded-md border-strokestroke-gray px-3 text-xs"
                     />
 
                     <span
@@ -404,12 +428,6 @@ export default function MoEntryPage() {
 
             <div className="border-t border-strokestroke-gray" />
 
-            {statusMessage && (
-              <div className="border-b border-strokestroke-gray bg-[#F8F8F8] px-[18px] py-2 text-xs font-medium text-[#555554]">
-                {statusMessage}
-              </div>
-            )}
-
             {rows.length === 0 ? (
               <div className="flex flex-col items-center px-[18px] py-12 text-center">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#E7F5EC] text-[#008348]">
@@ -437,7 +455,7 @@ export default function MoEntryPage() {
                       {t("common.mo")}
                     </span>
                     <span className="ml-2 truncate font-medium text-[#111111]">
-                      {moNumber.trim() || "â€”"}
+                      {moNumber.trim() || "—"}
                     </span>
                   </div>
 
@@ -446,14 +464,14 @@ export default function MoEntryPage() {
                       {t("moEntry.modelLabel")}
                     </span>
                     <span className="ml-2 truncate font-medium text-[#111111]">
-                      {model.trim() || "â€”"}
+                      {model.trim() || "—"}
                     </span>
                   </div>
 
                   <div className="flex h-8 max-w-[220px] items-center rounded-full bg-[#F8F8F8] px-3 text-xs">
                     <span className="shrink-0 text-[#8F8F8E]">Project No.</span>
                     <span className="ml-2 truncate font-medium text-[#111111]">
-                      {projectNumber.trim() || "â€”"}
+                      {projectNumber.trim() || "—"}
                     </span>
                   </div>
                 </div>
@@ -612,15 +630,12 @@ export default function MoEntryPage() {
                               }
                             >
                               <SelectTrigger
-                                className={`h-8 w-full text-xs ${
-                                  row.category === "Wait repair"
-                                    ? "border-amber-300 bg-yellow-100 text-yellow-800"
-                                    : row.category === "Idle OK"
-                                      ? "border-green-300 bg-green-100 text-green-800"
-                                      : "border-strokestroke-gray"
-                                }`}
+                                className="h-8 w-full border-strokestroke-gray bg-backgroundbg-white text-xs"
                               >
-                                <SelectValue placeholder={t("common.category")} />
+                                <CategorySelectValue
+                                  value={row.category}
+                                  placeholder={t("common.category")}
+                                />
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="Wait repair" className="text-xs">

@@ -22,7 +22,7 @@ export default function IqcHistoryMobile() {
   function navigate(item: MobileNavItem) {
     switch (item) {
       case "identity":
-        router.push(`/iqc/${DEFAULT_MO_ID}`);
+        router.push("/iqc");
         break;
       case "verification":
         router.push(`/iqc-verification/${DEFAULT_MO_ID}`);

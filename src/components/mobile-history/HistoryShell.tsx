@@ -14,10 +14,12 @@ export default function HistoryShell({
   children,
   onNavigate,
   items,
+  activeItem = "history",
 }: {
   children: ReactNode;
   onNavigate: (item: MobileNavItem) => void;
   items?: NavItem[];
+  activeItem?: MobileNavItem;
 }) {
   return (
     <main className="mobile-body-copy relative min-h-screen w-full overflow-x-hidden bg-backgroundbg-gray antialiased max-md:bg-white">
@@ -36,7 +38,11 @@ export default function HistoryShell({
         {children}
       </section>
 
-      <MobileBottomNav items={items} activeItem="history" onNavigate={onNavigate} />
+      <MobileBottomNav
+        items={items}
+        activeItem={activeItem}
+        onNavigate={onNavigate}
+      />
     </main>
   );
 }

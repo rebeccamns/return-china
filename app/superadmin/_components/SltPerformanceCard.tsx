@@ -2,8 +2,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CalendarDays } from "lucide-react";
 
+import { CalendarPickerModal } from "@/components/history/CalendarPickerModal";
 import { useI18n } from "@/i18n";
 import { stageLabelKey } from "../_lib/stageLabel";
 import { getFlowsForMonth } from "../_lib/data";
@@ -12,21 +12,6 @@ import type { FlowRow } from "../_lib/types";
 const ALERT_OVER_PCT = 25;
 const SCALE_FLOOR_HOURS = 24;
 
-const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
 export default function SltPerformanceCard({
   rows,
 }: {
@@ -34,6 +19,7 @@ export default function SltPerformanceCard({
 }) {
   const { t } = useI18n();
   const [month, setMonth] = useState(9);
+  const monthValue = `2026-${String(month + 1).padStart(2, "0")}`;
 
   const filteredRows = useMemo(
     () => getFlowsForMonth(month),
@@ -68,21 +54,13 @@ export default function SltPerformanceCard({
           </p>
         </div>
 
-        <label className="flex h-9 items-center gap-2 rounded-md border border-strokestroke-gray bg-white px-3 text-sm">
-          <CalendarDays className="h-4 w-4 text-[#777775]" />
-          <span className="sr-only">Filter SLT by month</span>
-          <select
-            value={month}
-            onChange={(event) => setMonth(Number(event.target.value))}
-            className="bg-transparent outline-none"
-          >
-            {MONTHS.map((name, index) => (
-              <option key={name} value={index}>
-                {name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <CalendarPickerModal
+          mode="month"
+          value={monthValue}
+          onChange={(value) => setMonth(Number(value.slice(5, 7)) - 1)}
+          ariaLabel={t("superadmin.slt.title")}
+          buttonClassName="h-9"
+        />
       </header>
 
       <div className="px-6 pb-3 pt-3">

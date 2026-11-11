@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useState } from "react";
-import { Minus, Plus, Send, X } from "lucide-react";
+import { Minus, Plus, Search, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -41,6 +41,8 @@ type WoRow = {
   iqcStatus: "Passed" | "Failed";
   materials: Material[];
 };
+
+type IqcFilter = "All" | "Passed" | "Failed";
 
 type RemovableFileInputProps = {
   name: string;
@@ -182,6 +184,30 @@ export default function WoEntryPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [submitStep, setSubmitStep] = useState<SubmitStep>(null);
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [listSearch, setListSearch] = useState("");
+  const [iqcFilter, setIqcFilter] = useState<IqcFilter>("All");
+
+  const filteredRows = rows.filter((row) => {
+    if (iqcFilter !== "All" && row.iqcStatus !== iqcFilter) return false;
+    const query = listSearch.trim().toLowerCase();
+    if (!query) return true;
+
+    const searchableText = [
+      row.code,
+      row.model,
+      row.iqcStatus,
+      woValues[row.id] ?? "",
+      ...row.materials.flatMap((material) => [
+        material.code,
+        material.englishName,
+        material.chinaName,
+      ]),
+    ]
+      .join(" ")
+      .toLowerCase();
+
+    return searchableText.includes(query);
+  });
 
   function updateWo(id: string, value: string) {
     setWoValues((prev) => ({ ...prev, [id]: value }));
@@ -233,7 +259,7 @@ export default function WoEntryPage() {
         <div className="mt-[52px] w-full px-[18px] py-5">
           <nav className="mb-4 flex items-center gap-2 text-xs">
             <span className="text-text-colortext-gray">{t("woEntry.breadcrumbSection")}</span>
-            <span className="text-[#B5B5B3]">â€º</span>
+            <span className="text-[#B5B5B3]">›</span>
             <span className="font-medium text-text-colortext-dark">
               {t("woEntry.title")}
             </span>
@@ -250,7 +276,66 @@ export default function WoEntryPage() {
 
             <div className="border-t border-strokestroke-gray" />
 
+            <div className="flex flex-wrap items-end gap-3 px-[18px] pt-4">
+              <div className="w-full sm:w-[280px]">
+                <label
+                  htmlFor="wo-entry-search"
+                  className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+                >
+                  {t("history.searchLabel")}
+                </label>
+                <div className="relative">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#A3A3A1]" />
+                  <Input
+                    id="wo-entry-search"
+                    value={listSearch}
+                    onChange={(event) => setListSearch(event.target.value)}
+                    placeholder={t("woEntry.searchPlaceholder")}
+                    className="h-9 rounded-md border-strokestroke-gray pl-9 text-xs placeholder:text-[#A3A3A1]"
+                  />
+                </div>
+              </div>
+              <div>
+                <label
+                  htmlFor="wo-entry-iqc-filter"
+                  className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+                >
+                  {t("woEntry.iqcStatus")}
+                </label>
+                <select
+                  id="wo-entry-iqc-filter"
+                  value={iqcFilter}
+                  onChange={(event) =>
+                    setIqcFilter(event.target.value as IqcFilter)
+                  }
+                  className="h-9 w-[150px] rounded-md border border-strokestroke-gray bg-white px-3 text-xs text-[#333333]"
+                >
+                  <option value="All">{t("history.allStatuses")}</option>
+                  <option value="Passed">{t("status.passed")}</option>
+                  <option value="Failed">{t("status.failed")}</option>
+                </select>
+              </div>
+              {(listSearch || iqcFilter !== "All") && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setListSearch("");
+                    setIqcFilter("All");
+                  }}
+                  className="h-9 text-xs font-medium text-[#046A39] hover:underline"
+                >
+                  {t("history.clearFilters")}
+                </button>
+              )}
+            </div>
+
             <div className="px-[18px] pb-[18px] pt-4">
+              <p className="mb-2 text-xs text-[#8F8F8E]">
+                {t("history.showingRecords", {
+                  shown: filteredRows.length,
+                  total: rows.length,
+                })}
+              </p>
               <div className="overflow-x-auto rounded-md border border-strokestroke-gray">
                 <Table className="min-w-[1400px]">
                   <TableHeader className="bg-[#F8F8F8]">
@@ -269,7 +354,18 @@ export default function WoEntryPage() {
                   </TableHeader>
 
                   <TableBody>
-                    {rows.map((row) => {
+                    {filteredRows.length === 0 ? (
+                      <TableRow>
+                        <TableCell
+                          colSpan={10}
+                          className="px-3 py-10 text-center text-sm text-[#5F5F5E]"
+                        >
+                          {rows.length === 0
+                            ? t("common.noData")
+                            : t("history.noMatchingRecords")}
+                        </TableCell>
+                      </TableRow>
+                    ) : filteredRows.map((row) => {
                       const woValue = woValues[row.id] ?? "";
                       const canSubmit = woValue.trim().length > 0;
                       const isExpanded = expandedId === row.id;

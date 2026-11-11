@@ -43,7 +43,7 @@ export default function IqcHistoryDetailMobile({ moId }: Props) {
   function navigate(item: MobileNavItem) {
     switch (item) {
       case "identity":
-        router.push(`/iqc/${resolveDemoMoNumber(moId || DEFAULT_MO_ID)}`);
+        router.push("/iqc");
         break;
       case "verification":
         router.push(

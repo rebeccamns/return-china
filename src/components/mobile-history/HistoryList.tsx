@@ -1,23 +1,33 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
-import { Calendar, ChevronRight, Search } from "lucide-react";
+import { useState } from "react";
+import { ChevronRight, Search } from "lucide-react";
 
 import BackTitle from "@/components/layout/BackTitle";
 import { Input } from "@/components/ui/input";
 import { useI18n } from "@/i18n";
 import type { MOStatus, MoSummary } from "@/lib/mo-detail/types";
+import { CalendarPickerModal } from "@/components/history/CalendarPickerModal";
+import {
+  ALL_CALENDAR_RANGE,
+  isWithinHistoryDateRange,
+  type CalendarRange,
+} from "@/components/history/date-range";
 
 import HistoryStatus from "./HistoryStatus";
 
 type Filter = "all" | MOStatus;
 
-const FILTERS: { id: Filter; key: "all" | "completed" | "inProgress" | "rejected" }[] = [
+const FILTERS: {
+  id: Filter;
+  key: "all" | "completed" | "inProgress" | "rejected" | "notStarted";
+}[] = [
   { id: "all", key: "all" },
   { id: "Completed", key: "completed" },
   { id: "In Progress", key: "inProgress" },
   { id: "Rejected", key: "rejected" },
+  { id: "Pending", key: "notStarted" },
 ];
 
 export default function HistoryList({
@@ -30,8 +40,7 @@ export default function HistoryList({
   const { t } = useI18n();
   const [filter, setFilter] = useState<Filter>("all");
   const [search, setSearch] = useState("");
-  const [date, setDate] = useState("");
-  const dateInputRef = useRef<HTMLInputElement>(null);
+  const [dateRange, setDateRange] = useState<CalendarRange>(ALL_CALENDAR_RANGE);
 
   const query = search.trim().toLowerCase();
   const filtered = summaries.filter((summary) => {
@@ -43,17 +52,10 @@ export default function HistoryList({
       if (!haystack.includes(query)) return false;
     }
 
-    if (date) {
-      const submitted = new Date(summary.submittedAt);
-      if (Number.isNaN(submitted.getTime())) return false;
-      const [year, month, day] = date.split("-").map(Number);
-      if (
-        submitted.getFullYear() !== year ||
-        submitted.getMonth() + 1 !== month ||
-        submitted.getDate() !== day
-      ) {
-        return false;
-      }
+    if (
+      !isWithinHistoryDateRange(summary.submittedAt, dateRange)
+    ) {
+      return false;
     }
 
     return true;
@@ -73,7 +75,7 @@ export default function HistoryList({
         <BackTitle title={t("iqcHistory.title")} />
       </div>
 
-      <div className="mb-3 flex gap-2">
+      <div className="mb-3 grid grid-cols-[minmax(0,1fr)_150px] gap-2">
         <div className="relative min-w-0 flex-1">
           <Search
             aria-hidden="true"
@@ -88,32 +90,12 @@ export default function HistoryList({
             className="h-11 rounded-xl border-strokestroke-gray bg-backgroundbg-white pl-9 text-[13px] placeholder:text-text-colortext-gray"
           />
         </div>
-        <div className="relative w-[132px] shrink-0">
-          <button
-            type="button"
-            aria-label={t("iqcHistory.dateFilterLabel")}
-            onClick={() => {
-              const input = dateInputRef.current;
-              if (!input) return;
-              try {
-                input.showPicker();
-              } catch {
-                input.focus();
-              }
-            }}
-            className="absolute left-3 top-1/2 z-10 -translate-y-1/2 text-text-colortext-gray"
-          >
-            <Calendar aria-hidden="true" className="h-4 w-4" />
-          </button>
-          <Input
-            ref={dateInputRef}
-            type="date"
-            value={date}
-            onChange={(event) => setDate(event.target.value)}
-            aria-label={t("iqcHistory.dateFilterLabel")}
-            className="h-11 w-full rounded-xl border-strokestroke-gray bg-backgroundbg-white pl-9 pr-2 text-[13px] text-text-colortext-black [&::-webkit-calendar-picker-indicator]:hidden"
-          />
-        </div>
+        <CalendarPickerModal
+          value={dateRange}
+          onChange={setDateRange}
+          ariaLabel={t("iqcHistory.dateFilterLabel")}
+          buttonClassName="h-11 w-full rounded-xl px-2 text-[12px]"
+        />
       </div>
 
       <div
@@ -137,7 +119,9 @@ export default function HistoryList({
                     : "border-strokestroke-gray bg-backgroundbg-white text-text-colortext-gray"
                 }`}
               >
-                {t(`iqcHistory.${item.key}`)}
+                {item.key === "notStarted"
+                  ? t("status.notStarted")
+                  : t(`iqcHistory.${item.key}`)}
               </span>
             </button>
           );

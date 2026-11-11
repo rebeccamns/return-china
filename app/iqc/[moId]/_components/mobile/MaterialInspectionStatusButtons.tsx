@@ -7,12 +7,14 @@ import type { InspectionStatus } from "../iqc-types";
 type Props = {
   status: InspectionStatus;
   labelClass: string;
+  disabled?: boolean;
   onStatusChange: (status: InspectionStatus) => void;
 };
 
 export default function MaterialInspectionStatusButtons({
   status,
   labelClass,
+  disabled = false,
   onStatusChange,
 }: Props) {
   const { t } = useI18n();
@@ -20,12 +22,14 @@ export default function MaterialInspectionStatusButtons({
   return (
     <fieldset className="mt-5 max-md:mt-3">
       <legend className={labelClass}>
-        {t("iqc.form.statusItem")} <span className="text-red-500">*</span>
+        {t("iqc.form.statusItem")}{" "}
+        {!disabled && <span className="text-red-500">*</span>}
       </legend>
 
       <div className="grid grid-cols-2 gap-3">
         <button
           type="button"
+          disabled={disabled}
           aria-pressed={status === "REJECT"}
           onClick={() => onStatusChange("REJECT")}
           className={`h-12 max-md:h-11 rounded-xl border text-[15px] max-md:text-button font-semibold transition active:scale-[0.98] ${
@@ -39,6 +43,7 @@ export default function MaterialInspectionStatusButtons({
 
         <button
           type="button"
+          disabled={disabled}
           aria-pressed={status === "PASS"}
           onClick={() => onStatusChange("PASS")}
           className={`h-12 max-md:h-11 rounded-xl border text-[15px] max-md:text-button font-semibold transition active:scale-[0.98] ${

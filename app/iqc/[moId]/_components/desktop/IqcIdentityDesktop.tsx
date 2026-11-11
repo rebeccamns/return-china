@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle, ClipboardList, Send, X } from "lucide-react";
+import { ArrowLeft, CheckCircle, ClipboardList, Send, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import {
   Dialog,
   DialogContent,
@@ -17,7 +18,7 @@ import TopBar from "@/components/layout/topbar";
 import { useI18n } from "@/i18n";
 
 import type { UseIqcIdentityReturn } from "../../_hooks/useIqcIdentity";
-import MaterialInspectionTable from "./MaterialInspectionTable";
+import MaterialInspectionList from "./MaterialInspectionList";
 import MoSummaryPanel from "./MoSummaryPanel";
 
 type Props = {
@@ -42,9 +43,15 @@ export default function IqcIdentityDesktop({ identity }: Props) {
         <TopBar />
 
         <div className="mt-[52px] w-full px-[18px] py-5">
-          <nav className="mb-4 text-xs text-text-colortext-gray">
-            {t("iqc.title")}
-          </nav>
+          <div className="mb-4">
+            <Link
+              href="/iqc"
+              className="inline-flex h-8 items-center gap-2 rounded-md border border-strokestroke-gray bg-white px-3 text-xs font-medium text-[#5F5F5E] transition-colors hover:border-[#B7DEC4] hover:text-[#006B3C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#008348]"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              {t("iqc.selectMoTitle")}
+            </Link>
+          </div>
 
           <div className="mb-5 flex items-start justify-between gap-4">
             <div>
@@ -107,7 +114,7 @@ export default function IqcIdentityDesktop({ identity }: Props) {
             </div>
 
             <div className="px-[18px] py-5">
-              <MaterialInspectionTable identity={identity} />
+              <MaterialInspectionList identity={identity} />
 
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
                 <span className="text-xs text-[#5F5F5E]">

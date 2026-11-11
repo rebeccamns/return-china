@@ -1,16 +1,10 @@
 
 "use client";
 
-import { CalendarDays, Download } from "lucide-react";
+import { Download } from "lucide-react";
 
+import { CalendarPickerModal } from "@/components/history/CalendarPickerModal";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n";
@@ -57,6 +51,8 @@ export default function DashboardHeader({
   );
 
   const periodOptions = getPeriodOptions(mode, periodTexts);
+  const selectedPeriodLabel =
+    periodOptions.find((option) => option.value === period)?.label ?? period;
 
   return (
     <div className="flex w-full flex-col gap-4">
@@ -98,32 +94,16 @@ export default function DashboardHeader({
           </div>
 
           {/* Period selector */}
-          <Select value={period} onValueChange={onPeriodChange}>
-  <SelectTrigger
-    aria-label={t("superadmin.period")}
-    className="h-[40px] w-auto min-w-[134px] gap-2 rounded-md border-strokestroke-gray bg-white px-3 text-sm font-medium text-[#111111]"
-  >
-    <div className="flex items-center gap-2">
-      <CalendarDays
-        className="h-[18px] w-[18px] shrink-0 text-[#555555]"
-        strokeWidth={1.5}
-      />
-      <SelectValue />
-    </div>
-  </SelectTrigger>
-
-  <SelectContent className="w-auto min-w-[var(--radix-select-trigger-width)]">
-    {periodOptions.map((option) => (
-      <SelectItem
-        key={option.value}
-        value={option.value}
-        className="whitespace-nowrap text-sm"
-      >
-        {option.label}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+          <CalendarPickerModal
+            mode="options"
+            value={period}
+            onChange={onPeriodChange}
+            options={periodOptions}
+            title={t("superadmin.period")}
+            selectedLabel={selectedPeriodLabel}
+            ariaLabel={t("superadmin.period")}
+            buttonClassName="h-[40px] min-w-[134px] text-sm font-medium"
+          />
 
           {/* Export button */}
           <Button

@@ -6,22 +6,46 @@ import Sidebar from "@/components/layout/sidebar";
 import TopBar from "@/components/layout/topbar";
 import { useI18n } from "@/i18n";
 import { listMoSummaries } from "@/lib/mo-detail/data";
+import {
+  ALL_CALENDAR_RANGE,
+  isWithinHistoryDateRange,
+  type CalendarRange,
+} from "@/components/history/date-range";
 import IqcHistoryTable, { type StatusFilter } from "./IqcHistoryTable";
 
 export default function IqcHistoryDesktop() {
   const { t } = useI18n();
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
+  const [search, setSearch] = useState("");
+  const [dateRange, setDateRange] = useState<CalendarRange>(ALL_CALENDAR_RANGE);
   const summaries = useMemo(() => listMoSummaries(), []);
 
-  const filteredSummaries = useMemo(
-    () =>
-      statusFilter === "All"
-        ? summaries
-        : summaries.filter(
-            (summary) => summary.overallStatus === statusFilter,
-          ),
-    [summaries, statusFilter],
-  );
+  const filteredSummaries = useMemo(() => {
+    const query = search.trim().toLowerCase();
+
+    return summaries.filter((summary) => {
+      if (
+        statusFilter !== "All" &&
+        summary.overallStatus !== statusFilter
+      ) {
+        return false;
+      }
+
+      if (query) {
+        const searchableText =
+          `${summary.moCode} ${summary.returnId} ${summary.model}`.toLowerCase();
+        if (!searchableText.includes(query)) return false;
+      }
+
+      return isWithinHistoryDateRange(summary.submittedAt, dateRange);
+    });
+  }, [summaries, statusFilter, search, dateRange]);
+
+  function resetFilters() {
+    setStatusFilter("All");
+    setSearch("");
+    setDateRange(ALL_CALENDAR_RANGE);
+  }
 
   return (
     <main className="min-h-screen w-full bg-backgroundbg-gray">
@@ -50,6 +74,11 @@ export default function IqcHistoryDesktop() {
             filteredSummaries={filteredSummaries}
             statusFilter={statusFilter}
             onStatusFilterChange={setStatusFilter}
+            search={search}
+            onSearchChange={setSearch}
+            dateRange={dateRange}
+            onDateRangeChange={setDateRange}
+            onResetFilters={resetFilters}
           />
         </div>
       </div>

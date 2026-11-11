@@ -7,12 +7,7 @@ import IqcIdentityMobile from "./_components/mobile/IqcIdentityMobile";
 import { useIqcIdentity } from "./_hooks/useIqcIdentity";
 import { useIsDesktop } from "@/hooks/use-is-desktop";
 
-export default function IQCPage({
-  params,
-}: {
-  params: Promise<{ moId: string }>;
-}) {
-  const { moId } = use(params);
+function IQCDetailPage({ moId }: { moId: string }) {
   const identity = useIqcIdentity(moId);
   const isDesktop = useIsDesktop();
 
@@ -25,4 +20,13 @@ export default function IQCPage({
   }
 
   return <IqcIdentityMobile identity={identity} />;
+}
+
+export default function IQCPage({
+  params,
+}: {
+  params: Promise<{ moId: string }>;
+}) {
+  const { moId } = use(params);
+  return <IQCDetailPage key={moId} moId={moId} />;
 }

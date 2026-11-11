@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
-
 import { DEMO, resolveDemoMoNumber } from "@/lib/demo-data";
 
+import {
+  getIqcSubmission,
+  recordIqcSubmission,
+} from "../../_lib/submittedMos";
 import type { IQCMaterial } from "../_components/iqc-types";
 
 const INITIAL_MATERIALS: IQCMaterial[] = [
@@ -76,8 +79,11 @@ const INITIAL_MATERIALS: IQCMaterial[] = [
 ];
 
 export function useIqcIdentity(moId: string) {
-  const [materials, setMaterials] = useState<IQCMaterial[]>(INITIAL_MATERIALS);
-  const [submitted, setSubmitted] = useState(false);
+  const [initialSubmission] = useState(() => getIqcSubmission(moId));
+  const [materials, setMaterials] = useState<IQCMaterial[]>(
+    () => initialSubmission?.materials ?? INITIAL_MATERIALS,
+  );
+  const [submitted, setSubmitted] = useState(Boolean(initialSubmission));
 
   const moData = {
     moNumber: resolveDemoMoNumber(moId),
@@ -98,6 +104,8 @@ export function useIqcIdentity(moId: string) {
     moData.totalMaterials > 0 && inspectedCount === moData.totalMaterials;
 
   function saveMaterial(updated: IQCMaterial) {
+    if (submitted) return;
+
     setMaterials((current) =>
       current.map((material) =>
         material.id === updated.id ? updated : material,
@@ -106,6 +114,7 @@ export function useIqcIdentity(moId: string) {
   }
 
   function submit() {
+    recordIqcSubmission(moData.moNumber, materials);
     setSubmitted(true);
   }
 

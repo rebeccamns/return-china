@@ -27,7 +27,8 @@ import type { EximRow } from "../_lib/data";
 
 type Props = {
   rows: EximRow[];
-  onChange: (id: string, field: "model" | "brand", value: string) => void;
+  onChange?: (id: string, field: "model" | "brand", value: string) => void;
+  readOnly?: boolean;
 };
 
 const PHOTO_COLUMNS: { key: "frontPhoto" | "backPhoto" | "upnPhoto"; labelKey: TranslationKey }[] = [
@@ -46,7 +47,11 @@ function Unit({ children }: { children: React.ReactNode }) {
   return <span className="ml-1 font-normal text-slate-400">{children}</span>;
 }
 
-export default function EximMaterialTable({ rows, onChange }: Props) {
+export default function EximMaterialTable({
+  rows,
+  onChange,
+  readOnly = false,
+}: Props) {
   const { t } = useI18n();
   const [preview, setPreview] = useState<{
     title: string;
@@ -115,23 +120,35 @@ export default function EximMaterialTable({ rows, onChange }: Props) {
                 </TableCell>
 
                 <TableCell className="px-3 py-2">
-                  <Input
-                    value={row.model}
-                    placeholder={t("exim.table.inputModel")}
-                    aria-label={t("exim.table.modelRowLabel", { row: index + 1 })}
-                    onChange={(e) => onChange(row.id, "model", e.target.value)}
-                    className={inputClass}
-                  />
+                  {readOnly ? (
+                    <span className="text-xs text-[#111111]">{row.model}</span>
+                  ) : (
+                    <Input
+                      value={row.model}
+                      placeholder={t("exim.table.inputModel")}
+                      aria-label={t("exim.table.modelRowLabel", { row: index + 1 })}
+                      onChange={(e) =>
+                        onChange?.(row.id, "model", e.target.value)
+                      }
+                      className={inputClass}
+                    />
+                  )}
                 </TableCell>
 
                 <TableCell className="px-3 py-2">
-                  <Input
-                    value={row.brand}
-                    placeholder={t("exim.table.inputBrand")}
-                    aria-label={t("exim.table.brandRowLabel", { row: index + 1 })}
-                    onChange={(e) => onChange(row.id, "brand", e.target.value)}
-                    className={inputClass}
-                  />
+                  {readOnly ? (
+                    <span className="text-xs text-[#111111]">{row.brand}</span>
+                  ) : (
+                    <Input
+                      value={row.brand}
+                      placeholder={t("exim.table.inputBrand")}
+                      aria-label={t("exim.table.brandRowLabel", { row: index + 1 })}
+                      onChange={(e) =>
+                        onChange?.(row.id, "brand", e.target.value)
+                      }
+                      className={inputClass}
+                    />
+                  )}
                 </TableCell>
 
                 <TableCell className="px-3 py-2 text-xs text-[#111111]">

@@ -4,9 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import BackTitle from "@/components/layout/BackTitle";
-import MobileBottomNav, {
-  type MobileNavItem,
-} from "@/components/layout/mobile-bottom-nav";
+import MobileBottomNav from "@/components/layout/mobile-bottom-nav";
 import MobileCircleBackground from "@/components/layout/mobile-circle-background";
 import MobileHeader from "@/components/layout/mobile-header";
 import { useI18n } from "@/i18n";
@@ -16,10 +14,9 @@ import MaterialInspectionForm from "../MaterialInspectionForm";
 import MaterialInspectionList from "../MaterialInspectionList";
 import type { IQCMaterial } from "../iqc-types";
 import MoCompactCard from "@/components/iqc/MoCompactCard";
-import MoInspectionCard from "../MoInspectionCard";
 import type { UseIqcIdentityReturn } from "../../_hooks/useIqcIdentity";
 
-type Step = "overview" | "material-list" | "material-detail";
+type Step = "material-list" | "material-detail";
 
 type Props = {
   identity: UseIqcIdentityReturn;
@@ -37,8 +34,7 @@ export default function IqcIdentityMobile({ identity }: Props) {
     submitted,
   } = identity;
 
-  const [step, setStep] = useState<Step>("overview");
-  const [activeNav, setActiveNav] = useState<MobileNavItem>("identity");
+  const [step, setStep] = useState<Step>("material-list");
   const [selectedMaterialId, setSelectedMaterialId] = useState<string | null>(
     null,
   );
@@ -53,14 +49,8 @@ export default function IqcIdentityMobile({ identity }: Props) {
 
   const bottomPadding =
     step === "material-list"
-      ? "pb-[calc(var(--bottom-nav-h)+88px)] max-md:pb-[calc(var(--bottom-nav-h)+var(--action-bar-h)+12px)]" // sticky submit + nav
-      : step === "material-detail"
-        ? "pb-[calc(env(safe-area-inset-bottom,0px)+88px)] max-md:pb-[calc(env(safe-area-inset-bottom,0px)+var(--action-bar-h)+12px)]" // sticky save
-        : "pb-[calc(var(--bottom-nav-h)+24px)] max-md:pb-[calc(var(--bottom-nav-h)+12px)]"; // nav only
-
-  function handleOpenInspection() {
-    setStep("material-list");
-  }
+      ? "pb-[calc(var(--bottom-nav-h)+88px)] max-md:pb-[calc(var(--bottom-nav-h)+var(--action-bar-h)+12px)]"
+      : "pb-[calc(env(safe-area-inset-bottom,0px)+88px)] max-md:pb-[calc(env(safe-area-inset-bottom,0px)+var(--action-bar-h)+12px)]";
 
   function handleSelectMaterial(material: IQCMaterial) {
     setSelectedMaterialId(material.id);
@@ -101,33 +91,13 @@ export default function IqcIdentityMobile({ identity }: Props) {
       <section
         className={`relative z-10 mx-auto w-full max-w-[412px] px-4 pt-[calc(var(--mobile-header-h)+0.75rem)] max-md:pt-[calc(var(--mobile-header-h)+0.5rem)] ${bottomPadding}`}
       >
-        {/* Overview */}
-        {step === "overview" && (
-          <>
-            <div className="mb-3 max-md:mb-3">
-              <BackTitle title={t("iqc.title")} />
-            </div>
-
-            <MoInspectionCard
-              moNumber={moData.moNumber}
-              submittedAt={moData.submittedAt}
-              returnId={moData.returnId}
-              model={moData.model}
-              inspectedCount={inspectedCount}
-              totalMaterials={moData.totalMaterials}
-              progressPercent={progressPercent}
-              onClick={handleOpenInspection}
-            />
-          </>
-        )}
-
         {/* Material list */}
         {step === "material-list" && (
           <>
             <BackTitle
-              title={t("iqc.title")}
-              onBack={() => setStep("overview")}
-              backLabel={t("common.back")}
+              title={t("common.materialList")}
+              onBack={() => router.push("/iqc")}
+              backLabel={t("iqc.selectMoTitle")}
             />
 
             <div className="mt-3">
@@ -165,6 +135,7 @@ export default function IqcIdentityMobile({ identity }: Props) {
             moNumber={moData.moNumber}
             model={moData.model}
             returnId={moData.returnId}
+            readOnly={submitted}
             onBack={handleBackToList}
             onSave={handleSaveMaterial}
           />
@@ -194,12 +165,11 @@ export default function IqcIdentityMobile({ identity }: Props) {
 
       {showBottomNav && (
         <MobileBottomNav
-          activeItem={activeNav}
+          activeItem="identity"
           onNavigate={(item) => {
             switch (item) {
               case "identity":
-                setActiveNav(item);
-                setStep("overview");
+                router.push("/iqc");
                 break;
 
               case "verification":

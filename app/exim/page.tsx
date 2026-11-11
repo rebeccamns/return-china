@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import {
   CircleCheck,
   CircleX,
@@ -9,11 +9,13 @@ import {
   ChevronRight,
   ClipboardList,
   Package,
+  Search,
   Send,
   X,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -27,6 +29,8 @@ import TopBar from "@/components/layout/topbar";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n";
 import { DEMO } from "@/lib/demo-data";
+import { formatDateTime, isSameLocalDay } from "@/lib/date-utils";
+import MoDeadline from "@/components/history/MoDeadline";
 
 import EximMaterialTable from "./_components/EximMaterialTable";
 import { pendingMos, type EximMo, type EximRow } from "./_lib/data";
@@ -41,14 +45,96 @@ type ExpandedMo = {
   rows: EximRow[];
 };
 
-export default function EximPage() {
-  const { t } = useI18n();
+type SubmittedEximMo = {
+  code: string;
+  rows: EximRow[];
+  submittedAt: number;
+};
 
-  const [mos, setMos] = useState<EximMo[]>(pendingMos);
+const EMPTY_SUBMISSIONS: SubmittedEximMo[] = [];
+let submittedEximMos = EMPTY_SUBMISSIONS;
+const submissionListeners = new Set<() => void>();
+
+function subscribeToSubmissions(listener: () => void) {
+  submissionListeners.add(listener);
+  return () => submissionListeners.delete(listener);
+}
+
+function getSubmissionSnapshot() {
+  return submittedEximMos;
+}
+
+function useSubmittedEximMos() {
+  return useSyncExternalStore(
+    subscribeToSubmissions,
+    getSubmissionSnapshot,
+    () => EMPTY_SUBMISSIONS,
+  );
+}
+
+function recordEximSubmission(code: string, rows: EximRow[]) {
+  submittedEximMos = [
+    { code, rows: rows.map((row) => ({ ...row })), submittedAt: Date.now() },
+    ...submittedEximMos.filter((mo) => mo.code !== code),
+  ];
+  submissionListeners.forEach((listener) => listener());
+}
+
+export default function EximPage() {
+  const { t, locale } = useI18n();
+
+  const [mos, setMos] = useState<EximMo[]>(() =>
+    pendingMos.filter(
+      (mo) => !submittedEximMos.some((submitted) => submitted.code === mo.code),
+    ),
+  );
+  const submittedMos = useSubmittedEximMos();
   const [expanded, setExpanded] = useState<ExpandedMo | null>(null);
+  const [expandedSubmittedCode, setExpandedSubmittedCode] = useState<
+    string | null
+  >(null);
   const [notice, setNotice] = useState<Notice | null>(null);
   const [rejectOpen, setRejectOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
+  const [listSearch, setListSearch] = useState("");
+
+  const filteredMos = useMemo(() => {
+    const query = listSearch.trim().toLowerCase();
+
+    return mos.filter((mo) => {
+      const searchableText = [
+        mo.code,
+        ...mo.materials.flatMap((material) => [
+          material.code,
+          material.englishName,
+          material.chinaName,
+        ]),
+      ]
+        .join(" ")
+        .toLowerCase();
+
+      return !query || searchableText.includes(query);
+    });
+  }, [mos, listSearch]);
+
+  const filteredSubmittedMos = useMemo(() => {
+    const query = listSearch.trim().toLowerCase();
+
+    return submittedMos.filter((mo) => {
+      const searchableText = [
+        mo.code,
+        ...mo.rows.flatMap((row) => [row.code, row.model, row.brand]),
+      ]
+        .join(" ")
+        .toLowerCase();
+
+      return !query || searchableText.includes(query);
+    });
+  }, [submittedMos, listSearch]);
+
+  const submittedTodayCount = submittedMos.filter((mo) =>
+    isSameLocalDay(mo.submittedAt),
+  ).length;
 
   const total = expanded?.rows.length ?? 0;
 
@@ -101,9 +187,13 @@ export default function EximPage() {
     code: string,
     type: Notice["type"],
     message: string,
+    submittedRows?: EximRow[],
   ) {
     setMos((prev) => prev.filter((mo) => mo.code !== code));
     setExpanded(null);
+    if (type === "success" && submittedRows) {
+      recordEximSubmission(code, submittedRows);
+    }
     setNotice({ type, message });
   }
 
@@ -124,6 +214,7 @@ export default function EximPage() {
       expanded.code,
       "success",
       t("exim.submitSuccess", { code: expanded.code }),
+      expanded.rows,
     );
   }
 
@@ -157,7 +248,7 @@ export default function EximPage() {
             {t("exim.title")}
           </nav>
 
-          <div className="mb-5 flex items-start justify-between gap-4">
+          <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
             <div>
               <h1 className="text-lg font-semibold text-[#111111]">
                 {t("exim.title")}
@@ -168,14 +259,29 @@ export default function EximPage() {
               </p>
             </div>
 
-            <div className="flex shrink-0 items-center gap-2 rounded-lg border border-strokestroke-gray bg-white px-3 py-2">
-              <ClipboardList className="h-4 w-4 text-[#0B5934]" />
-              <span className="text-sm text-[#5F5F5E]">
-                Pending MOs
-              </span>
-              <span className="text-sm font-semibold text-[#111111]">
-                {mos.length}
-              </span>
+            <div className="flex w-full flex-wrap items-end justify-end gap-3 sm:w-auto">
+              <div className="relative w-full sm:w-[280px]">
+                <label htmlFor="exim-list-search" className="sr-only">
+                  {t("history.searchLabel")}
+                </label>
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#A3A3A1]" />
+                <Input
+                  id="exim-list-search"
+                  value={listSearch}
+                  onChange={(event) => setListSearch(event.target.value)}
+                  placeholder={t("exim.searchPlaceholder")}
+                  className="h-9 rounded-md border-strokestroke-gray pl-9 text-xs placeholder:text-[#A3A3A1]"
+                />
+              </div>
+              <div className="flex h-9 shrink-0 items-center gap-2 rounded-lg border border-strokestroke-gray bg-white px-3">
+                <ClipboardList className="h-4 w-4 text-[#0B5934]" />
+                <span className="text-sm text-[#5F5F5E]">
+                  {t("common.pendingMos")}
+                </span>
+                <span className="text-sm font-semibold text-[#111111]">
+                  {mos.length}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -236,9 +342,13 @@ export default function EximPage() {
                   {t("exim.noMoWaitingHint")}
                 </p>
               </div>
+            ) : filteredMos.length === 0 ? (
+              <p className="px-6 py-10 text-center text-sm text-[#8F8F8E]">
+                {t("history.noMatchingRecords")}
+              </p>
             ) : (
               <div className="divide-y divide-strokestroke-gray">
-                {mos.map((mo) => {
+                {filteredMos.map((mo) => {
                   const isExpanded = expanded?.code === mo.code;
                   const rowCount = mo.materials.length;
 
@@ -285,6 +395,7 @@ export default function EximPage() {
                           <p className="text-sm font-semibold text-[#111111]">
                             {mo.code}
                           </p>
+                          <MoDeadline moCode={mo.code} />
 
                           <p className="mt-1 text-xs text-[#8F8F8E]">
                             {rowCount}{" "}
@@ -374,6 +485,88 @@ export default function EximPage() {
                                 {t("common.submit")}
                               </Button>
                             </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+
+          <section className="mt-5 overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-strokestroke-gray px-[18px] py-4">
+              <h2 className="text-sm font-semibold text-[#111111]">
+                {t("common.moSubmitted")}
+              </h2>
+              <div className="flex items-center gap-3 text-xs text-[#8F8F8E]">
+                <span>
+                  {t("common.submittedTodayCount", {
+                    count: submittedTodayCount,
+                  })}
+                </span>
+                <span>{submittedMos.length}</span>
+              </div>
+            </div>
+            {submittedMos.length === 0 ? (
+              <p className="px-[18px] py-6 text-sm text-[#8F8F8E]">
+                {t("common.noSubmittedMos")}
+              </p>
+            ) : filteredSubmittedMos.length === 0 ? (
+              <p className="px-[18px] py-6 text-sm text-[#8F8F8E]">
+                {t("history.noMatchingRecords")}
+              </p>
+            ) : (
+              <div className="divide-y divide-strokestroke-gray">
+                {filteredSubmittedMos.map((mo) => {
+                  const isExpanded = expandedSubmittedCode === mo.code;
+
+                  return (
+                    <div key={mo.code}>
+                      <button
+                        type="button"
+                        aria-expanded={isExpanded}
+                        onClick={() =>
+                          setExpandedSubmittedCode(
+                            isExpanded ? null : mo.code,
+                          )
+                        }
+                        className="flex w-full items-center gap-4 bg-white px-[18px] py-4 text-left transition-colors hover:bg-slate-50"
+                      >
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#EAF6EE]">
+                          <Package className="h-5 w-5 text-[#0B5934]" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-semibold text-[#111111]">
+                            {mo.code}
+                          </p>
+                          <p className="mt-1 text-xs text-[#8F8F8E]">
+                            {t("common.materialPlural", {
+                              count: mo.rows.length,
+                            })}
+                          </p>
+                          <MoDeadline moCode={mo.code} />
+                          <p className="mt-1 text-[11px] text-[#8F8F8E]">
+                            {formatDateTime(mo.submittedAt, locale)}
+                          </p>
+                        </div>
+                        <span className="hidden text-xs text-[#0B5934] sm:block">
+                          {t("common.viewSubmittedDetails")}
+                        </span>
+                        {isExpanded ? (
+                          <ChevronDown className="h-4 w-4 text-[#0B5934]" />
+                        ) : (
+                          <ChevronRight className="h-4 w-4 text-[#737373]" />
+                        )}
+                      </button>
+                      {isExpanded && (
+                        <div className="border-t border-strokestroke-gray bg-white px-[18px] py-5">
+                          <div className="mb-3 text-xs text-[#5F5F5E]">
+                            {t("common.submitted")}
+                          </div>
+                          <div className="overflow-x-auto rounded-lg border border-strokestroke-gray">
+                            <EximMaterialTable rows={mo.rows} readOnly />
                           </div>
                         </div>
                       )}

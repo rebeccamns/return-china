@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { Search } from "lucide-react";
 
+import { CalendarPickerModal } from "@/components/history/CalendarPickerModal";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -11,6 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useI18n, type TranslationKey } from "@/i18n";
+import type { CalendarRange } from "@/components/history/date-range";
 import { cn } from "@/lib/utils";
 import type { MOStatus, MoSummary } from "@/lib/mo-detail/types";
 
@@ -49,6 +53,11 @@ type Props = {
   filteredSummaries: MoSummary[];
   statusFilter: StatusFilter;
   onStatusFilterChange: (filter: StatusFilter) => void;
+  search: string;
+  onSearchChange: (search: string) => void;
+  dateRange: CalendarRange;
+  onDateRangeChange: (range: CalendarRange) => void;
+  onResetFilters: () => void;
 };
 
 function parseStatusFilter(value: string): StatusFilter {
@@ -83,13 +92,22 @@ export default function IqcHistoryTable({
   filteredSummaries,
   statusFilter,
   onStatusFilterChange,
+  search,
+  onSearchChange,
+  dateRange,
+  onDateRangeChange,
+  onResetFilters,
 }: Props) {
   const { t } = useI18n();
+  const hasFilters =
+    search.trim() !== "" ||
+    statusFilter !== "All" ||
+    dateRange.type !== "all";
 
   return (
     <section className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
-      <div className="flex flex-wrap items-end justify-between gap-4 border-b border-strokestroke-gray px-[18px] py-4">
-        <div>
+      <div className="border-b border-strokestroke-gray px-[18px] py-4">
+        <div className="mb-4">
           <h2 className="text-sm font-semibold text-[#111111]">
             {t("history.submittedMo")}
           </h2>
@@ -101,28 +119,72 @@ export default function IqcHistoryTable({
           </p>
         </div>
 
-        <div>
-          <label
-            htmlFor="iqc-history-status"
-            className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
-          >
-            {t("history.statusLabel")}
-          </label>
-          <select
-            id="iqc-history-status"
-            value={statusFilter}
-            onChange={(event) =>
-              onStatusFilterChange(parseStatusFilter(event.target.value))
-            }
-            className={filterClass}
-          >
-            {STATUS_FILTERS.map((filter) => (
-              <option key={filter.value} value={filter.value}>
-                {t(filter.labelKey)}
-              </option>
-            ))}
-          </select>
+        <div className="flex flex-wrap items-end gap-3">
+          <div className="w-full sm:w-[250px]">
+            <label
+              htmlFor="iqc-history-search"
+              className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+            >
+              {t("history.searchLabel")}
+            </label>
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#A3A3A1]" />
+              <Input
+                id="iqc-history-search"
+                value={search}
+                onChange={(event) => onSearchChange(event.target.value)}
+                placeholder={t("history.searchPlaceholder")}
+                className="h-9 rounded-md border-strokestroke-gray pl-9 text-xs placeholder:text-[#A3A3A1]"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              htmlFor="iqc-history-status"
+              className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+            >
+              {t("history.statusLabel")}
+            </label>
+            <select
+              id="iqc-history-status"
+              value={statusFilter}
+              onChange={(event) =>
+                onStatusFilterChange(parseStatusFilter(event.target.value))
+              }
+              className={filterClass}
+            >
+              {STATUS_FILTERS.map((filter) => (
+                <option key={filter.value} value={filter.value}>
+                  {t(filter.labelKey)}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-[#5F5F5E]">
+              {t("history.dateRangeLabel")}
+            </label>
+            <CalendarPickerModal
+              value={dateRange}
+              onChange={onDateRangeChange}
+              buttonClassName={filterClass}
+              ariaLabel={t("history.dateRangeLabel")}
+            />
+          </div>
+
+          {hasFilters && (
+            <button
+              type="button"
+              onClick={onResetFilters}
+              className="h-9 text-xs font-medium text-[#046A39] hover:underline"
+            >
+              {t("history.clearFilters")}
+            </button>
+          )}
         </div>
+
       </div>
 
       <div className="overflow-x-auto">

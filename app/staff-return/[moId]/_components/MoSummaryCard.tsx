@@ -1,5 +1,6 @@
 import { useI18n } from "@/i18n";
 import { DEMO } from "@/lib/demo-data";
+import MoDeadline from "@/components/history/MoDeadline";
 
 import { primaryButton } from "./StickyActionBar";
 
@@ -35,6 +36,7 @@ export default function MoSummaryCard({
           <p className="mt-0.5 truncate text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
             {mo.model} · {mo.wo}
           </p>
+          <MoDeadline moCode={mo.code} />
         </div>
 
         <span className="shrink-0 text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
@@ -53,6 +55,7 @@ export default function MoSummaryCard({
       <p className="mt-0.5 text-[12px] max-md:text-caption font-medium leading-4 text-text-colortext-gray">
         {t("common.submittedAt", { date: mo.submittedAt })}
       </p>
+      <MoDeadline moCode={mo.code} />
 
       <dl className="mt-4 max-md:mt-3 grid grid-cols-2 gap-4 max-md:gap-3">
         <div>
