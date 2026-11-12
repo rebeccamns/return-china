@@ -14,6 +14,11 @@ export default {
     },
     extend: {
       colors: {
+        "brand-fg": "var(--brand-green-fg)",
+        "glass": "var(--surface-glass)",
+        "decor-1": "var(--decor-circle-1)",
+        "decor-2": "var(--decor-circle-2)",
+        "icon-muted": "var(--icon-muted)",
         "7-primitive-primary-neutral-100":
           "var(--7-primitive-primary-neutral-100)",
         "7-primitive-primary-neutral-800":

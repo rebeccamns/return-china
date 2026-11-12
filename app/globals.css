@@ -13,73 +13,6 @@
     --font-heading: var(--app-font-family);
     --font-sans: var(--app-font-family);
   }
-  :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
-  }
-  .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
-  }
   * {
     @apply border-border outline-ring/50;
   }
@@ -491,56 +424,74 @@
   --tw-padding-py-0-5: var(--tokens-2-duplicate);
   --tw-padding-py-1: var(--tokens-4);
   --tw-space-space-x-2: var(--tokens-8);
-}
 
-/*
+  /* Phase 1 new light tokens */
+  --brand-green-fg: var(--primaryprimary-green);
+  --surface-glass: rgba(255, 255, 255, 0.7);
+  --decor-circle-1: rgba(216, 244, 226, 1);
+  --decor-circle-2: rgba(239, 251, 243, 1);
+  --icon-muted: rgba(196, 196, 196, 1);
+  --text-colortext-gray-mobile: rgba(38, 38, 38, 1);
 
-To enable a theme in your HTML, simply add one of the following data attributes to an HTML element, like so:
-
-<body data-mode-mode="light-mode">
-    \3c !-- the rest of your content -->
-</body>
-
-You can apply the theme on any DOM node, not just the `body`
-
-*/
-
-[data-mode-mode="light-mode"] {
+  /* figma mode light fallbacks */
   --mode-app-background: var(--tw-colors-white);
   --mode-app-border: var(--tw-colors-neutral-200);
   --mode-app-foreground: var(--tw-colors-neutral-950);
   --mode-sidebar-border: var(--tw-colors-neutral-200-duplicate);
+  --mode-sidebar-foreground: rgba(85, 85, 84, 1);
 }
 
-[data-mode-mode="dark-mode"] {
+.dark {
+  color-scheme: dark;
+
+  /* surfaces */
+  --backgroundbg-gray: rgba(10, 10, 10, 1);          /* page */
+  --backgroundbg-white: rgba(23, 23, 23, 1);         /* cards, sheets, inputs */
+  --backgroundbg-bluish-gray: rgba(30, 30, 30, 1);   /* inner panels (slate-50 role) */
+  --backgroundbg-black: rgba(38, 38, 38, 1);         /* subtle fills, progress tracks */
+
+  /* status surfaces */
+  --backgroundbg-green: rgba(2, 45, 24, 1);
+  --backgroundbg-lime: rgba(19, 84, 32, 1);
+  --backgroundbg-red: rgba(93, 16, 22, 1);
+  --backgroundbg-yellow: rgba(100, 82, 0, 1);
+  --backgroundbg-blue: rgba(18, 25, 100, 1);
+
+  /* strokes */
+  --strokestroke-gray: rgba(255, 255, 255, 0.1);
+  --strokestroke-gray-darker: rgba(255, 255, 255, 0.18);
+  --strokestroke-green: rgba(3, 75, 40, 1);
+  --strokestroke-lime: rgba(25, 110, 42, 1);
+  --strokestroke-red: rgba(122, 20, 29, 1);
+  --strokestroke-yellow: rgba(131, 107, 0, 1);
+  --strokestroke-blue: rgba(31, 42, 170, 1);
+
+  /* text */
+  --text-colortext-black: rgba(250, 250, 250, 1);
+  --text-colortext-dark: rgba(212, 212, 212, 1);
+  --text-colortext-gray: rgba(163, 163, 163, 1);
+  --text-colortext-green: rgba(140, 186, 164, 1);
+  --text-colortext-lime: rgba(158, 230, 173, 1);
+  --text-colortext-red: rgba(239, 155, 162, 1);
+  --text-colortext-yellow: rgba(248, 227, 138, 1);
+  --text-colortext-blue: rgba(157, 165, 248, 1);
+  /* --text-colortext-white and --primaryprimary-green stay as they are:
+     white text on the green fill (6.7:1) must not change */
+
+  /* new tokens */
+  --brand-green-fg: rgba(87, 155, 122, 1);
+  --surface-glass: rgba(23, 23, 23, 0.7);
+  --decor-circle-1: rgba(4, 106, 57, 0.18);
+  --decor-circle-2: rgba(4, 106, 57, 0.1);
+  --icon-muted: rgba(255, 255, 255, 0.35);
+  --text-colortext-gray-mobile: rgba(212, 212, 212, 1);
+
+  /* figma-style mode tokens */
   --mode-app-background: var(--tw-colors-neutral-950-duplicate);
   --mode-app-border: var(--tw-colors-neutral-700);
   --mode-app-foreground: var(--tw-colors-neutral-50);
   --mode-sidebar-border: var(--tw-colors-neutral-700-duplicate);
-}
-
-[data-2-spacing-size-mode="dashboard"] {
-  --2-spacing-size-padding-padding: var(--2-spacing-size-UI-spacing-spacing-24);
-}
-
-[data-2-spacing-size-mode="mobile"] {
-  --2-spacing-size-padding-padding: var(--2-spacing-size-UI-spacing-spacing-16);
-}
-
-[data-2-spacing-size-mode="website"] {
-  --2-spacing-size-padding-padding: var(--2-spacing-size-UI-spacing-spacing-128);
-}
-
-[data-2-spacing-size-mode="tablet"] {
-  --2-spacing-size-padding-padding: var(--2-spacing-size-UI-spacing-spacing-24);
-}
-
-[data-1-colors-mode="light-mode"] {
-  --1-colors-border-border-primary: var(--7-primitive-primary-neutral-100);
-}
-
-[data-1-colors-mode="dark-mode"] {
-  --1-colors-border-border-primary: var(--7-primitive-primary-neutral-800);
+  --mode-sidebar-foreground: var(--tw-colors-neutral-50);
 }
 
 :root {
@@ -692,35 +643,25 @@ You can apply the theme on any DOM node, not just the `body`
   }
 
   .dark {
-    --background: 224 71% 4%;
-    --foreground: 213 31% 91%;
-
-    --muted: 223 47% 11%;
-    --muted-foreground: 215.4 16.3% 56.9%;
-
-    --accent: 216 34% 17%;
-    --accent-foreground: 210 40% 98%;
-
-    --popover: 224 71% 4%;
-    --popover-foreground: 215 20.2% 65.1%;
-
-    --border: 216 34% 17%;
-    --input: 216 34% 17%;
-
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+    --popover: 0 0% 9%;
+    --popover-foreground: 0 0% 98%;
     --card: transparent;
-    --card-foreground: 213 31% 91%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 1.2%;
-
-    --secondary: 222.2 47.4% 11.2%;
-    --secondary-foreground: 210 40% 98%;
-
+    --card-foreground: 0 0% 98%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 64%;
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 98%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 98%;
+    --border: 0 0% 18%;
+    --input: 0 0% 20%;
+    --ring: 0 0% 45%;
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
-
-    --ring: 216 34% 17%;
-
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 1.2%;
     --radius: 0.5rem;
   }
 }
@@ -741,7 +682,7 @@ You can apply the theme on any DOM node, not just the `body`
 
 @media (max-width: 767px) {
   .mobile-body-copy .text-text-colortext-gray:not(svg) {
-    color: #262626;
+    color: var(--text-colortext-gray-mobile);
   }
 
   .mobile-body-copy
