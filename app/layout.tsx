@@ -18,8 +18,27 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={cn("h-full", "antialiased", inter.variable, "font-sans")}
     >
+      <head>
+        <meta name="color-scheme" content="light dark" />
+        <meta
+          name="theme-color"
+          media="(prefers-color-scheme: light)"
+          content="#ffffff"
+        />
+        <meta
+          name="theme-color"
+          media="(prefers-color-scheme: dark)"
+          content="#0A0A0A"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme')||'system';var m=window.matchMedia('(prefers-color-scheme: dark)');function u(v){var d=v==='dark'||(v==='system'&&m.matches);if(d){document.documentElement.classList.add('dark')}else{document.documentElement.classList.remove('dark')}}u(t);m.addEventListener('change',function(){var c=localStorage.getItem('theme')||'system';if(c==='system'){u('system')}})}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <I18nProvider>{children}</I18nProvider>
       </body>

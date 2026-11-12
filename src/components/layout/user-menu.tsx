@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useI18n } from "@/i18n";
 import type { TranslationKey } from "@/i18n";
+import ThemeToggle from "@/components/theme-toggle";
 
 const USER = { name: "Bagus Saputra", nik: "I0123456" };
 
@@ -71,6 +72,9 @@ export default function UserMenu() {
               {t(roleKey(pathname))}
             </span>
           </div>
+        </div>
+        <div className="px-2 py-1.5">
+          <ThemeToggle />
         </div>
         <div role="separator" className="-mx-1 my-1 h-px bg-strokestroke-gray" />
         <DropdownMenuItem

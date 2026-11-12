@@ -2,6 +2,7 @@
 
 import { UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
+import ThemeToggle from "@/components/theme-toggle";
 
 type MobileHeaderProps = {
   userName?: string;
@@ -58,9 +59,11 @@ export default function MobileHeader({
           </span>
         </div>
 
-        <button
-          type="button"
-          onClick={handleUserClick}
+        <div className="flex items-center gap-2 shrink-0">
+          <ThemeToggle variant="compact" />
+          <button
+            type="button"
+            onClick={handleUserClick}
           aria-label={userName}
           className="flex min-h-11 min-w-0 max-w-[60%] items-center gap-2 rounded-full p-1 transition active:bg-backgroundbg-gray focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green"
         >
@@ -82,7 +85,8 @@ export default function MobileHeader({
               />
             )}
           </span>
-        </button>
+          </button>
+        </div>
       </div>
     </header>
   );

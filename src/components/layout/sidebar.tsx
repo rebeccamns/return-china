@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { useI18n } from "@/i18n";
 import type { TranslationKey } from "@/i18n";
 import { DEMO } from "@/lib/demo-data";
+import ThemeToggle from "@/components/theme-toggle";
 
 type NavLink = {
   labelKey: TranslationKey;
@@ -375,6 +376,11 @@ hasActiveChild
           })}
         </div>
       </nav>
+
+      {/* Footer / Theme toggle */}
+      <footer className="relative mt-auto border-t border-strokestroke-gray p-3">
+        <ThemeToggle />
+      </footer>
     </aside>
   );
 }
