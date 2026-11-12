@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useMemo, useState } from "react";
@@ -36,10 +35,11 @@ export default function SuperadminDashboardPage() {
 
   const [mode, setMode] = useState<Mode>("year");
   const [period, setPeriod] = useState(DEFAULT_PERIOD.year);
+  const [model, setModel] = useState("all");
 
   const data = useMemo(
-    () => getDashboardData(mode, period),
-    [mode, period],
+    () => getDashboardData(mode, period, model),
+    [mode, period, model],
   );
 
   const periodTexts = useMemo<PeriodOptionTexts>(
@@ -75,8 +75,7 @@ export default function SuperadminDashboardPage() {
     });
   }
 
-  // Placeholder business rule: display 100% for every period.
-  // Replace this when the actual pass-rate calculation is defined.
+  // Preserve the chart logic / data mapping as requested
   const passRatePoints = useMemo(
     () =>
       data.trend.map((point) => ({
@@ -93,35 +92,40 @@ export default function SuperadminDashboardPage() {
       <div className="flex min-h-screen flex-col pl-[255px]">
         <TopBar />
 
-        <div className="mt-[52px] w-full px-[18px] py-5">
-          <nav className="mb-5 flex items-center gap-2 text-xs">
+        {/* Proportional padding to fill screen gracefully without scrolling */}
+        <div className="mt-[52px] w-full px-5 py-3.5 lg:px-6">
+          {/* Breadcrumb */}
+          <nav className="mb-2 flex items-center gap-1.5 text-xs leading-none">
             <span className="text-text-colortext-gray">
               {t("superadmin.dashboard")}
             </span>
-
             <span className="text-[#B5B5B3]">›</span>
-
             <span className="font-medium text-text-colortext-dark">
               {t("superadmin.dashboard")}
             </span>
           </nav>
 
+          {/* Unified Filter Header */}
           <DashboardHeader
             mode={mode}
             period={period}
+            model={model}
             onModeChange={handleModeChange}
             onPeriodChange={setPeriod}
+            onModelChange={setModel}
             onExport={handleExport}
           />
 
-          <div className="mt-5 flex flex-col gap-5">
+          {/* Main Visual Hierarchy: Proportional comfortable gaps */}
+          <div className="mt-3.5 flex flex-col gap-3.5">
+            {/* 1. Executive Summary KPIs */}
             <KpiCards
               kpis={data.kpis}
               compareLabel={compareLabel}
             />
 
-            {/* Pass Rate and shipment feedback trend */}
-            <div className="grid grid-cols-1 items-stretch gap-5 xl:grid-cols-2">
+            {/* 2. Analytical Trends (Side by side) */}
+            <div className="grid grid-cols-1 items-stretch gap-3.5 xl:grid-cols-2">
               <RejectionRateChart
                 points={passRatePoints}
                 title="Pass Rate (%)"
@@ -131,7 +135,7 @@ export default function SuperadminDashboardPage() {
               <ShipmentFeedbackComboChart points={data.trend} />
             </div>
 
-            {/* Full-width section with its own month filter */}
+            {/* 3. Operational SLT Bottleneck Breakdown */}
             <SltPerformanceCard rows={data.flows} />
           </div>
         </div>

@@ -1,26 +1,25 @@
-
 "use client";
 
 import { useEffect, useId, useMemo, useState } from "react";
 
 import { useI18n } from "@/i18n";
 import { useElementWidth } from "../_lib/useElementWidth";
-import { stageLabelKey } from "../_lib/stageLabel";
 import type { TrendPoint } from "../_lib/types";
 
-const SVG_H = 204;
-const PLOT_TOP = 32;
-const PLOT_H = 99;
+const SVG_H = 205;
+const PLOT_TOP = 20;
+const PLOT_H = 130;
 const AREA_EXTRA = 8;
-const LABEL_Y = PLOT_TOP + PLOT_H + 41;
-const Y_AXIS_W = 44;
-const SIDE_PAD = 40;
-const MIN_LABEL_GAP = 56;
+const LABEL_Y = 178;
+const Y_AXIS_W = 42;
+const SIDE_PAD = 24;
+const MIN_LABEL_GAP = 54;
 
-const TOOLTIP_W = 210;
-const TOOLTIP_H = 88;
+const TOOLTIP_W = 190;
+const TOOLTIP_H = 75;
 
-const LINE = "#1e9e4f";
+// Linked semantic color: Forest Green for Pass Rate / Healthy yield
+const LINE = "#16A34A";
 const STEPS = [1, 2, 5, 10, 20, 25, 50];
 
 type Metric = "rejection" | "pass";
@@ -68,9 +67,7 @@ export default function RejectionRateChart({
   const [active, setActive] = useState<number | null>(null);
   const gradientId = `rate-fill-${useId().replace(/:/g, "")}`;
 
-  const heading =
-    title ??
-    t("superadmin.chart.rejectionRate");
+  const heading = title ?? t("superadmin.chart.rejectionRate");
 
   useEffect(() => setActive(null), [points]);
 
@@ -83,13 +80,10 @@ export default function RejectionRateChart({
 
   const plotW = Math.max(width - Y_AXIS_W, 0);
   const gap =
-    n > 1
-      ? Math.max(plotW - SIDE_PAD * 2, 0) / (n - 1)
-      : 0;
+    n > 1 ? Math.max(plotW - SIDE_PAD * 2, 0) / (n - 1) : 0;
 
   const xAt = (i: number) =>
-    Y_AXIS_W +
-    (n > 1 ? SIDE_PAD + i * gap : plotW / 2);
+    Y_AXIS_W + (n > 1 ? SIDE_PAD + i * gap : plotW / 2);
 
   const yAt = (value: number) =>
     PLOT_TOP + ((hi - value) / (hi - lo)) * PLOT_H;
@@ -109,22 +103,13 @@ export default function RejectionRateChart({
       : "";
 
   const labelStride =
-    gap > 0
-      ? Math.max(1, Math.ceil(MIN_LABEL_GAP / gap))
-      : 1;
+    gap > 0 ? Math.max(1, Math.ceil(MIN_LABEL_GAP / gap)) : 1;
 
   function handleMove(event: React.PointerEvent<SVGSVGElement>) {
     if (n === 0) return;
-
-    const x =
-      event.clientX -
-      event.currentTarget.getBoundingClientRect().left;
-
+    const x = event.clientX - event.currentTarget.getBoundingClientRect().left;
     const raw =
-      n > 1
-        ? Math.round((x - Y_AXIS_W - SIDE_PAD) / gap)
-        : 0;
-
+      n > 1 ? Math.round((x - Y_AXIS_W - SIDE_PAD) / gap) : 0;
     setActive(clamp(raw, 0, n - 1));
   }
 
@@ -132,26 +117,35 @@ export default function RejectionRateChart({
   const px = active !== null ? xAt(active) : 0;
   const py = point ? yAt(point.rate) : 0;
 
-  const above = py - 11 - TOOLTIP_H >= -6;
+  const above = py - 12 - TOOLTIP_H >= 0;
 
   const center = clamp(
     px,
-    TOOLTIP_W / 2 - 16,
-    width + 24 - TOOLTIP_W / 2,
+    TOOLTIP_W / 2 - 14,
+    width + 18 - TOOLTIP_W / 2,
   );
 
   return (
-    <section className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
-      <header className="flex h-[55px] items-center border-b border-strokestroke-gray px-6">
-        <h2 className="text-base font-semibold text-[#111111]">
-          {heading}
-        </h2>
+    <section className="min-w-0 overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
+      {/* Header */}
+      <header className="flex h-11 items-center justify-between border-b border-strokestroke-gray px-5">
+        <div className="flex items-center gap-2">
+          <h2 className="text-sm font-semibold text-[#111111]">{heading}</h2>
+          <span className="hidden text-xs text-[#777775] sm:inline">
+            · Yield &amp; quality compliance
+          </span>
+        </div>
+
+        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded px-2.5 py-1">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+          Target: &gt;95%
+        </span>
       </header>
 
-      <div className="pl-6 pr-8">
+      <div className="px-4 pt-3 sm:px-5">
         <div
           ref={ref}
-          className="relative"
+          className="relative w-full"
           style={{ height: SVG_H }}
         >
           {width > 0 && n > 0 && (
@@ -176,12 +170,12 @@ export default function RejectionRateChart({
                     <stop
                       offset="0%"
                       stopColor={LINE}
-                      stopOpacity="0.16"
+                      stopOpacity="0.2"
                     />
                     <stop
                       offset="100%"
                       stopColor={LINE}
-                      stopOpacity="0"
+                      stopOpacity="0.02"
                     />
                   </linearGradient>
                 </defs>
@@ -193,16 +187,16 @@ export default function RejectionRateChart({
                       x2={width}
                       y1={yAt(tick)}
                       y2={yAt(tick)}
-                      stroke="#e4e4e2"
-                      strokeDasharray="4 4"
+                      stroke="#F0F1F0"
+                      strokeDasharray="3 3"
                     />
                     <text
-                      x={Y_AXIS_W - 12}
+                      x={Y_AXIS_W - 8}
                       y={yAt(tick)}
                       textAnchor="end"
                       dominantBaseline="central"
-                      fontSize={12}
-                      fill="#5f5f5e"
+                      fontSize={10}
+                      fill="#777775"
                     >
                       {tick}%
                     </text>
@@ -211,15 +205,12 @@ export default function RejectionRateChart({
 
                 {n > 1 && (
                   <>
-                    <path
-                      d={areaPath}
-                      fill={`url(#${gradientId})`}
-                    />
+                    <path d={areaPath} fill={`url(#${gradientId})`} />
                     <path
                       d={linePath}
                       fill="none"
                       stroke={LINE}
-                      strokeWidth={2}
+                      strokeWidth={2.25}
                       strokeLinejoin="round"
                       strokeLinecap="round"
                     />
@@ -234,12 +225,8 @@ export default function RejectionRateChart({
                       y={LABEL_Y}
                       textAnchor="middle"
                       dominantBaseline="central"
-                      fontSize={12}
-                      fill={
-                        active === i
-                          ? "#111111"
-                          : "#5f5f5e"
-                      }
+                      fontSize={10}
+                      fill={active === i ? "#111111" : "#777775"}
                       fontWeight={active === i ? 600 : 400}
                     >
                       {p.label}
@@ -259,77 +246,57 @@ export default function RejectionRateChart({
                 )}
               </svg>
 
+              {/* Hover Tooltip */}
               {point && (
                 <div
                   className="pointer-events-none absolute z-10"
                   style={{
                     left: center,
-                    top: above ? py - 11 : py + 15,
+                    top: above ? py - 10 : py + 14,
                     transform: above
                       ? "translate(-50%, -100%)"
                       : "translate(-50%, 0)",
                   }}
                 >
-                  <div className="relative min-w-[190px] whitespace-nowrap rounded-lg border border-strokestroke-gray bg-white px-3 py-2 text-[11px] leading-4 text-[#444444] shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
-                    <p className="mb-1.5 text-xs font-semibold text-[#111111]">
+                  <div className="relative min-w-[160px] whitespace-nowrap rounded-lg border border-strokestroke-gray bg-white/95 px-3 py-2 text-xs leading-tight text-[#444444] shadow-sm backdrop-blur-xs">
+                    <p className="mb-1 text-xs font-semibold text-[#111111]">
                       {point.tooltipLabel}
                     </p>
 
                     {metric === "pass" ? (
-                      <>
-                        <p>
-                          Pass Rate: {point.rate.toFixed(1)}%
-                        </p>
-                        <p>
-                          Target achievement rate
-                        </p>
-                      </>
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="text-[#777775]">Pass Rate</span>
+                        <span className="font-bold text-[#16A34A]">
+                          {point.rate.toFixed(1)}%
+                        </span>
+                      </div>
                     ) : point.shipments === 0 ? (
                       <p>{t("superadmin.chart.noShipments")}</p>
                     ) : (
-                      <>
-                        <p>
-                          {t("superadmin.chart.rejectionRateValue", {
-                            rate: point.rate,
-                          })}
-                        </p>
-                        <p>
-                          {t("superadmin.chart.rejectedOf", {
-                            rejected: point.rejected,
-                            shipments: point.shipments.toLocaleString("en-US"),
-                          })}
-                        </p>
-                        {point.topStage && (
-                          <p>
-                            {t("superadmin.chart.mostRejections", {
-                              stage: stageLabelKey(point.topStage)
-                                ? t(stageLabelKey(point.topStage)!)
-                                : point.topStage,
-                              count: point.topStageCount,
-                              total: point.rejected,
-                            })}
-                          </p>
-                        )}
-                      </>
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[#777775]">Rate</span>
+                        <span className="font-bold text-[#16A34A]">
+                          {point.rate}%
+                        </span>
+                      </div>
                     )}
-
-                    <span
-                      aria-hidden="true"
-                      className={
-                        above
-                          ? "absolute -bottom-1 h-2 w-2 rotate-45 border-b border-r border-strokestroke-gray bg-white"
-                          : "absolute -top-1 h-2 w-2 rotate-45 border-l border-t border-strokestroke-gray bg-white"
-                      }
-                      style={{
-                        left: `calc(50% + ${px - center}px)`,
-                        marginLeft: -4,
-                      }}
-                    />
                   </div>
                 </div>
               )}
             </>
           )}
+        </div>
+
+        {/* Linked Color-coded Legend */}
+        <div className="flex items-center justify-center gap-6 border-t border-[#EEEEEC] py-2.5 text-xs text-[#555555]">
+          <span className="flex items-center gap-2">
+            <span className="h-0.5 w-4 bg-[#16A34A]" />
+            Pass Rate (%) Trend
+          </span>
+          <span className="flex items-center gap-1.5 text-[#777775]">
+            <span className="h-2 w-2 rounded-full bg-[#16A34A]/30" />
+            Within tolerance
+          </span>
         </div>
       </div>
     </section>

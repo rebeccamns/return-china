@@ -1,16 +1,27 @@
-
 "use client";
 
-import { Download } from "lucide-react";
+import { Download, SlidersHorizontal } from "lucide-react";
 
 import { CalendarPickerModal } from "@/components/history/CalendarPickerModal";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n";
 import type { TranslationKey } from "@/i18n";
 
-import { MODES, getPeriodOptions, type PeriodOptionTexts } from "../_lib/data";
+import {
+  MODES,
+  MODEL_OPTIONS,
+  getPeriodOptions,
+  type PeriodOptionTexts,
+} from "../_lib/data";
 import type { Mode } from "../_lib/types";
 
 const MODE_LABEL_KEYS: Record<Mode, TranslationKey> = {
@@ -23,16 +34,20 @@ const MODE_LABEL_KEYS: Record<Mode, TranslationKey> = {
 type Props = {
   mode: Mode;
   period: string;
+  model: string;
   onModeChange: (mode: Mode) => void;
   onPeriodChange: (period: string) => void;
+  onModelChange: (model: string) => void;
   onExport: () => void;
 };
 
 export default function DashboardHeader({
   mode,
   period,
+  model,
   onModeChange,
   onPeriodChange,
+  onModelChange,
   onExport,
 }: Props) {
   const { t, dictionary } = useI18n();
@@ -55,67 +70,85 @@ export default function DashboardHeader({
     periodOptions.find((option) => option.value === period)?.label ?? period;
 
   return (
-    <div className="flex w-full flex-col gap-4">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        {/* Page title */}
-        <h1 className="shrink-0 text-lg font-semibold text-[#111111]">
+    <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      {/* Page Title & Scope summary */}
+      <div className="flex items-center gap-3">
+        <h1 className="text-base font-semibold leading-tight text-[#111111]">
           {t("superadmin.dashboard")}
         </h1>
+        <span className="hidden items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-medium text-emerald-800 md:inline-flex">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-pulse" />
+          {selectedPeriodLabel} · {model === "all" ? "All Models" : model}
+        </span>
+      </div>
 
-        {/* Controls aligned to the right */}
-        <div className="flex flex-wrap items-center justify-end gap-2">
-          {/* Time granularity */}
-          <div
-            role="tablist"
-            aria-label={t("superadmin.timeGranularity")}
-            className="flex h-[38px] items-center rounded-md border border-strokestroke-gray bg-white p-1"
-          >
-            {MODES.map((item) => {
-              const active = item.value === mode;
+      {/* Controls aligned to the right (compact 32px height) */}
+      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+        {/* Time granularity tabs */}
+        <div
+          role="tablist"
+          aria-label={t("superadmin.timeGranularity")}
+          className="flex h-8 items-center rounded-md border border-strokestroke-gray bg-white p-0.5"
+        >
+          {MODES.map((item) => {
+            const active = item.value === mode;
 
-              return (
-                <button
-                  key={item.value}
-                  type="button"
-                  role="tab"
-                  aria-selected={active}
-                  onClick={() => onModeChange(item.value)}
-                  className={cn(
-                    "h-[30px] flex-1 rounded px-4 text-[13px] transition-colors sm:px-5",
-                    active
-                      ? "bg-[#08783F] font-semibold text-white"
-                      : "font-medium text-[#444444] hover:bg-slate-50",
-                  )}
-                >
-                  {t(MODE_LABEL_KEYS[item.value])}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Period selector */}
-          <CalendarPickerModal
-            mode="options"
-            value={period}
-            onChange={onPeriodChange}
-            options={periodOptions}
-            title={t("superadmin.period")}
-            selectedLabel={selectedPeriodLabel}
-            ariaLabel={t("superadmin.period")}
-            buttonClassName="h-[40px] min-w-[134px] text-sm font-medium"
-          />
-
-          {/* Export button */}
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={onExport}
-            className="h-[38px] w-full gap-2 rounded-md px-3 text-[13px] font-semibold sm:w-auto"
-          >
-            <Download className="h-4 w-4" strokeWidth={1.75} />
-            {t("superadmin.export")}
-          </Button>
+            return (
+              <button
+                key={item.value}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => onModeChange(item.value)}
+                className={cn(
+                  "h-7 rounded px-2.5 text-xs transition-colors sm:px-3",
+                  active
+                    ? "bg-[#08783F] font-semibold text-white shadow-xs"
+                    : "font-medium text-[#444444] hover:bg-slate-50",
+                )}
+              >
+                {t(MODE_LABEL_KEYS[item.value])}
+              </button>
+            );
+          })}
         </div>
+
+        {/* Period selector */}
+        <CalendarPickerModal
+          mode="options"
+          value={period}
+          onChange={onPeriodChange}
+          options={periodOptions}
+          title={t("superadmin.period")}
+          selectedLabel={selectedPeriodLabel}
+          ariaLabel={t("superadmin.period")}
+          buttonClassName="h-8 min-w-[110px] text-xs font-medium px-2.5"
+        />
+
+        {/* Model filter */}
+        <Select value={model} onValueChange={onModelChange}>
+          <SelectTrigger className="h-8 w-[116px] rounded-md border-strokestroke-gray bg-white text-xs font-medium px-2.5">
+            <SelectValue placeholder="Model" />
+          </SelectTrigger>
+          <SelectContent align="end">
+            {MODEL_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value} className="text-xs">
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* Export button */}
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={onExport}
+          className="h-8 gap-1.5 rounded-md px-2.5 text-xs font-semibold"
+        >
+          <Download className="h-3.5 w-3.5" strokeWidth={1.75} />
+          <span>{t("superadmin.export")}</span>
+        </Button>
       </div>
     </div>
   );

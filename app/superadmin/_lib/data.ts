@@ -363,8 +363,19 @@ function flowsFor(mode: Mode, period: string): FlowRow[] {
    Public API
 ============================================================ */
 
-export function getDashboardData(mode: Mode, period: string): DashboardData {
-  const isDesign = mode === "year" && period === "2026";
+export const MODEL_OPTIONS = [
+  { value: "all", label: "All Models" },
+  { value: "Lychee F4", label: "Lychee F4" },
+  { value: "Latte-M", label: "Latte-M" },
+  { value: "Latte-S", label: "Latte-S" },
+] as const;
+
+export function getDashboardData(
+  mode: Mode,
+  period: string,
+  model = "all",
+): DashboardData {
+  const isDesign = mode === "year" && period === "2026" && model === "all";
 
   let buckets: Bucket[];
   let labels: Label[];
@@ -399,20 +410,46 @@ export function getDashboardData(mode: Mode, period: string): DashboardData {
     }));
   }
 
+  if (model !== "all") {
+    const modelMultiplier =
+      model === "Lychee F4" ? 0.45 : model === "Latte-M" ? 0.35 : 0.2;
+    buckets = buckets.map((b) => ({
+      ...b,
+      shipments: Math.max(1, Math.round(b.shipments * modelMultiplier)),
+      rejected: Math.round(b.rejected * modelMultiplier),
+      topStageCount: Math.round(b.topStageCount * modelMultiplier),
+    }));
+  }
+
   const trend: TrendPoint[] = buckets.map((b, i) => ({
     ...labels[i],
     ...b,
     rate: b.shipments > 0 ? round1((b.rejected / b.shipments) * 100) : 0,
   }));
 
+  const baseKpis = isDesign
+    ? DESIGN_KPIS
+    : kpisFrom(buckets, rng(`kpi:${mode}:${period}:${model}`));
+
+  const kpis: Kpis =
+    model === "all"
+      ? baseKpis
+      : {
+          ...baseKpis,
+          total: buckets.reduce((s, b) => s + b.shipments, 0),
+          completed: Math.max(
+            1,
+            Math.round(buckets.reduce((s, b) => s + b.shipments - b.rejected, 0) * 0.7),
+          ),
+          rejected: buckets.reduce((s, b) => s + b.rejected, 0),
+        };
+
   return {
-    kpis: isDesign ? DESIGN_KPIS : kpisFrom(buckets, rng(`kpi:${mode}:${period}`)),
+    kpis,
     trend,
     flows: isDesign ? DESIGN_FLOWS : flowsFor(mode, period),
   };
-  
 }
-
 
 /**
  * Demo monthly SLT data.

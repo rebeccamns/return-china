@@ -7,7 +7,7 @@ import type { Kpis } from "../_lib/types";
 type Tone = "inverse" | "good" | "bad";
 
 const TONE_CLASS: Record<Tone, string> = {
-  inverse: "text-white",
+  inverse: "text-white/90",
   good: "text-[#0b6b3a]",
   bad: "text-[#b3202d]",
 };
@@ -40,43 +40,56 @@ function KpiCard({
   return (
     <div
       className={cn(
-        "flex min-h-[124px] flex-col rounded-lg border px-5 pb-5 pt-3",
+        "flex min-h-[96px] sm:min-h-[102px] flex-col justify-between rounded-lg border p-3.5 sm:p-4 transition-shadow hover:shadow-xs",
         hero
-          ? "border-transparent bg-gradient-to-b from-[#058346] to-[#0b5934]"
+          ? "border-transparent bg-gradient-to-br from-[#058346] to-[#0b5934] text-white shadow-xs"
           : "border-strokestroke-gray bg-white",
       )}
     >
-      <div className="flex items-center gap-3">
+      {/* Top row: Title + Icon */}
+      <div className="flex items-center justify-between gap-2">
         <span
           className={cn(
-            "flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
-            hero ? "bg-white/20" : iconWrap,
+            "text-xs sm:text-[13px] font-medium truncate",
+            hero ? "text-white/95" : "text-[#555554]",
+          )}
+          title={title}
+        >
+          {title}
+        </span>
+        <span
+          className={cn(
+            "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg",
+            hero ? "bg-white/20 text-white" : cn(iconWrap, iconColor),
           )}
         >
-          <Icon
-            className={cn("h-5 w-5", hero ? "text-white" : iconColor)}
-            strokeWidth={1.75}
-          />
-        </span>
-        <span className={cn("text-sm font-medium", hero ? "text-white" : "text-[#555554]")}>
-          {title}
+          <Icon className="h-4 w-4" strokeWidth={2} />
         </span>
       </div>
 
-      <p
-        className={cn(
-          "mt-3 text-[24px] font-bold leading-6",
-          hero ? "text-white" : "text-[#111111]",
-        )}
-      >
-        {value}
-      </p>
+      {/* Bottom row: Value + Trend delta */}
+      <div className="mt-1 flex items-baseline justify-between gap-2">
+        <p
+          className={cn(
+            "text-2xl font-bold tracking-tight leading-none sm:text-[26px]",
+            hero ? "text-white" : "text-[#111111]",
+          )}
+        >
+          {value}
+        </p>
 
-      <div className={cn("mt-3.5 flex items-center gap-2 text-sm font-medium", TONE_CLASS[tone])}>
-        <Trend className="h-[18px] w-[18px]" strokeWidth={1.75} />
-        <span>
-          {Math.abs(delta).toFixed(1)}% {compareLabel}
-        </span>
+        <div
+          className={cn(
+            "flex items-center gap-1.5 text-xs font-medium shrink-0",
+            TONE_CLASS[tone],
+          )}
+        >
+          <Trend className="h-3.5 w-3.5" strokeWidth={2} />
+          <span>{Math.abs(delta).toFixed(1)}%</span>
+          <span className="hidden text-[11px] opacity-80 sm:inline">
+            {compareLabel}
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -93,7 +106,10 @@ export default function KpiCards({
   const fmt = (n: number) => n.toLocaleString("en-US");
 
   return (
-    <section aria-label={t("superadmin.keyFigures")} className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+    <section
+      aria-label={t("superadmin.keyFigures")}
+      className="grid grid-cols-2 gap-3 sm:gap-3.5 xl:grid-cols-4"
+    >
       <KpiCard
         hero
         title={t("superadmin.kpi.totalShipments")}
@@ -115,7 +131,6 @@ export default function KpiCards({
         iconColor="text-[#0b6b3a]"
       />
 
-      {/* Always red, as in the design (the card's own colour, not good/bad) */}
       <KpiCard
         title={t("superadmin.kpi.rejectedShipments")}
         value={fmt(kpis.rejected)}
@@ -129,7 +144,9 @@ export default function KpiCards({
 
       <KpiCard
         title={t("superadmin.kpi.avgLeadTime")}
-        value={t("superadmin.kpi.daysValue", { value: kpis.leadTimeDays.toFixed(1) })}
+        value={t("superadmin.kpi.daysValue", {
+          value: kpis.leadTimeDays.toFixed(1),
+        })}
         delta={kpis.leadTimeDelta}
         compareLabel={compareLabel}
         tone={kpis.leadTimeDelta <= 0 ? "good" : "bad"}
