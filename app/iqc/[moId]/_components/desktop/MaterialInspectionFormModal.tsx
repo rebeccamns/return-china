@@ -82,16 +82,16 @@ export default function MaterialInspectionFormModal({
       className="max-h-[calc(100vh-2rem)] max-w-[640px] overflow-y-auto rounded-lg border border-strokestroke-gray px-5 pb-5 pt-9 sm:px-6"
     >
       <div className="mb-4 border-b border-strokestroke-gray pb-3">
-        <p className="text-xs font-medium uppercase tracking-wide text-[#8F8F8E]">
+        <p className="text-xs font-medium uppercase tracking-wide text-text-colortext-gray">
           {t("iqc.form.title")}
         </p>
-        <h2 className="mt-1 text-lg font-semibold text-[#111111]">
+        <h2 className="mt-1 text-lg font-semibold text-text-colortext-black">
           {material.code}
         </h2>
-        <p className="mt-1 text-sm text-[#5F5F5E]">
+        <p className="mt-1 text-sm text-text-colortext-gray">
           {material.englishName} · {material.chinaName}
         </p>
-        <p className="mt-1 text-xs text-[#8F8F8E]">
+        <p className="mt-1 text-xs text-text-colortext-gray">
           {t("iqc.form.quantity", { qty: material.qty })}
         </p>
       </div>
@@ -102,7 +102,7 @@ export default function MaterialInspectionFormModal({
         <div>
           <label
             htmlFor="iqc-modal-upn"
-            className="mb-1 block text-xs font-medium text-[#5F5F5E]"
+            className="mb-1 block text-xs font-medium text-text-colortext-gray"
           >
             {t("common.scanUpnBarcode")}{" "}
             {!readOnly && <span className="text-red-500">*</span>}
@@ -119,14 +119,14 @@ export default function MaterialInspectionFormModal({
               onChange={(event) =>
                 updateDraft({ upnBarcode: event.target.value })
               }
-              className="h-9 min-w-0 flex-1 border-strokestroke-gray text-sm"
+              className="h-9 min-w-0 flex-1 border-strokestroke-gray bg-backgroundbg-white text-sm text-text-colortext-black"
             />
             <button
               type="button"
               disabled={readOnly}
               aria-label={`${t("iqc.form.scanButton")} ${t("common.scanUpnBarcode")} ${material.code}`}
               title={t("iqc.form.scanButton")}
-              className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-md border border-strokestroke-gray bg-white px-3 text-sm font-medium text-[#006B3C] transition-colors hover:bg-[#F5FBF7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#008348]"
+              className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-md border border-strokestroke-gray bg-backgroundbg-white px-3 text-sm font-medium text-primaryprimary-green transition-colors hover:bg-[#F5FBF7] dark:text-[#A7D7B9] dark:hover:bg-backgroundbg-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#008348]"
             >
               <ScanLine className="h-4 w-4" />
               {t("iqc.form.scanButton")}
@@ -135,18 +135,18 @@ export default function MaterialInspectionFormModal({
         </div>
 
         <div>
-          <span className="mb-1 block text-xs font-medium text-[#5F5F5E]">
+          <span className="mb-1 block text-xs font-medium text-text-colortext-gray">
             {t("common.upnPhoto")}{" "}
             {!readOnly && <span className="text-red-500">*</span>}
           </span>
           <label
-            className={`flex min-h-[56px] items-center gap-3 rounded-lg border-2 border-dashed border-[#B7D9C5] bg-[#F5FBF7] px-3 py-2 ${
+            className={`flex min-h-[56px] items-center gap-3 rounded-lg border-2 border-dashed border-[#B7D9C5] bg-[#F5FBF7] px-3 py-2 dark:border-[#4F9B6F] dark:bg-backgroundbg-bluish-gray ${
               readOnly
                 ? ""
-                : "cursor-pointer transition-colors hover:border-[#008348] hover:bg-[#EDF8F1]"
+                : "cursor-pointer transition-colors hover:border-[#008348] hover:bg-[#EDF8F1] dark:hover:border-[#66B486] dark:hover:bg-backgroundbg-black"
             }`}
           >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-md bg-white text-[#006B3C]">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-md bg-backgroundbg-white text-primaryprimary-green dark:text-[#A7D7B9]">
               {photoPreview ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -161,10 +161,10 @@ export default function MaterialInspectionFormModal({
               )}
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-sm font-semibold text-[#006B3C]">
+              <span className="block truncate text-sm font-semibold text-primaryprimary-green dark:text-[#A7D7B9]">
                 {draft.photoName || t("common.takeOrUploadPhoto")}
               </span>
-              <span className="mt-0.5 block text-xs text-[#5F5F5E]">
+              <span className="mt-0.5 block text-xs text-text-colortext-gray">
                 {t("iqc.form.upnPhotoHint")}
               </span>
             </span>
@@ -180,7 +180,7 @@ export default function MaterialInspectionFormModal({
         </div>
 
         <fieldset>
-          <legend className="mb-1 text-xs font-medium text-[#5F5F5E]">
+          <legend className="mb-1 text-xs font-medium text-text-colortext-gray">
             {t("common.status")}{" "}
             {!readOnly && <span className="text-red-500">*</span>}
           </legend>
@@ -192,8 +192,8 @@ export default function MaterialInspectionFormModal({
               onClick={() => updateDraft({ status: "PASS" })}
               className={`flex h-9 items-center justify-center gap-2 rounded-md border text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#008348] ${
                 draft.status === "PASS"
-                  ? "border-[#B7DEC4] bg-[#E7F5EC] text-[#006B3C]"
-                  : "border-strokestroke-gray bg-white text-[#5F5F5E] hover:bg-slate-50"
+                  ? "border-[#B7DEC4] bg-[#E7F5EC] text-[#006B3C] dark:border-[#4F9B6F] dark:bg-[#0D663B] dark:text-white dark:[&_svg]:text-white"
+                  : "border-strokestroke-gray bg-backgroundbg-white text-text-colortext-gray hover:bg-slate-50 dark:border-[#4F9B6F] dark:text-[#A7D7B9] dark:hover:bg-backgroundbg-green"
               }`}
             >
               <Check className="h-4 w-4" />
@@ -206,8 +206,8 @@ export default function MaterialInspectionFormModal({
               onClick={() => updateDraft({ status: "REJECT" })}
               className={`flex h-9 items-center justify-center gap-2 rounded-md border text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 ${
                 draft.status === "REJECT"
-                  ? "border-red-200 bg-red-50 text-red-600"
-                  : "border-strokestroke-gray bg-white text-[#5F5F5E] hover:bg-slate-50"
+                  ? "border-red-200 bg-red-50 text-red-600 dark:border-[#D1646D] dark:bg-[#6B1F25] dark:text-white dark:[&_svg]:text-white"
+                  : "border-strokestroke-gray bg-backgroundbg-white text-text-colortext-gray hover:bg-slate-50 dark:border-[#8A3F46] dark:text-[#F1A2A8] dark:hover:bg-backgroundbg-red"
               }`}
             >
               <X className="h-4 w-4" />
@@ -219,7 +219,7 @@ export default function MaterialInspectionFormModal({
         <div>
           <label
             htmlFor="iqc-modal-notes"
-            className="mb-1 block text-xs font-medium text-[#5F5F5E]"
+            className="mb-1 block text-xs font-medium text-text-colortext-gray"
           >
             {t("common.notes")}
           </label>
@@ -229,7 +229,7 @@ export default function MaterialInspectionFormModal({
             placeholder={t("iqc.form.notesPlaceholder")}
             readOnly={readOnly}
             onChange={(event) => updateDraft({ notes: event.target.value })}
-            className="min-h-[64px] w-full resize-y rounded-md border border-strokestroke-gray bg-white px-3 py-2 text-sm placeholder:text-[#A3A3A1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#008348]"
+            className="min-h-[64px] w-full resize-y rounded-md border border-strokestroke-gray bg-backgroundbg-white px-3 py-2 text-sm text-text-colortext-black placeholder:text-text-colortext-gray focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#008348]"
           />
         </div>
       </div>
@@ -237,7 +237,7 @@ export default function MaterialInspectionFormModal({
       {!readOnly && (
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-strokestroke-gray pt-3">
           {error ? (
-            <p role="alert" className="text-xs leading-4 text-red-700">
+            <p role="alert" className="text-xs leading-4 text-red-700 dark:text-red-300">
               {t(error)}
             </p>
           ) : (

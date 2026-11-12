@@ -101,7 +101,7 @@ export default function MoDetailPage() {
         <div className="flex min-h-screen flex-col pl-[255px]">
           <TopBar />
           <div className="mt-[52px] flex items-center justify-center px-[18px] py-20">
-            <p className="text-sm text-gray-400">{t("common.loading")}</p>
+            <p className="text-sm text-gray-400 dark:text-text-colortext-gray">{t("common.loading")}</p>
           </div>
         </div>
       </main>
@@ -116,16 +116,16 @@ export default function MoDetailPage() {
         <div className="flex min-h-screen flex-col pl-[255px]">
           <TopBar />
           <div className="mt-[52px] flex flex-col items-center justify-center px-[18px] py-24 text-center">
-            <p className="text-lg font-semibold text-gray-700">
+            <p className="text-lg font-semibold text-gray-700 dark:text-text-colortext-dark">
               {t("moMonitoring.detail.notFound")}
             </p>
-            <p className="mt-2 text-sm text-gray-400">
+            <p className="mt-2 text-sm text-gray-400 dark:text-text-colortext-gray">
               {t("moMonitoring.detail.notFoundHint", { code: moCode })}
             </p>
             <button
               type="button"
               onClick={() => router.push("/superadmin/mo-monitoring")}
-              className="mt-6 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-black/5"
+              className="mt-6 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-black/5 dark:text-text-colortext-dark dark:hover:bg-backgroundbg-bluish-gray"
             >
               <ArrowLeft className="h-4 w-4" />
               {t("moMonitoring.backBtn")}
@@ -164,7 +164,7 @@ export default function MoDetailPage() {
           </nav>
 
           {/* Page title */}
-          <h1 className="text-lg font-semibold text-[#111111]">
+          <h1 className="text-lg font-semibold text-[#111111] dark:text-text-colortext-black">
             {t("moMonitoring.title")}
           </h1>
 
@@ -173,7 +173,7 @@ export default function MoDetailPage() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-gray-700 transition hover:bg-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F]"
+              className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-gray-700 transition hover:bg-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F] dark:text-text-colortext-dark dark:hover:bg-backgroundbg-bluish-gray"
             >
               <ArrowLeft className="h-4 w-4" strokeWidth={1.75} />
               {t("moMonitoring.backBtn")}
@@ -190,30 +190,30 @@ export default function MoDetailPage() {
           </div>
 
           {/* Main card */}
-          <div className="mt-4 rounded-xl border border-gray-200 bg-white">
+          <div className="mt-4 rounded-xl border border-gray-200 bg-white dark:border-strokestroke-gray dark:bg-backgroundbg-white">
             {/* Card header */}
-            <div className="flex flex-wrap items-start justify-between gap-3 border-b border-gray-100 px-6 py-5">
+            <div className="flex flex-wrap items-start justify-between gap-3 border-b border-gray-100 px-6 py-5 dark:border-strokestroke-gray">
               <div>
                 <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="text-lg font-bold text-gray-900">
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-text-colortext-black">
                     MO - {mo.moCode}
                   </h2>
                   <StatusBadge status={mo.status} />
                 </div>
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-gray-500 dark:text-text-colortext-gray">
                   <span className="mr-4">
                     Model{" "}
-                    <span className="font-medium text-gray-700">{mo.model}</span>
+                    <span className="font-medium text-gray-700 dark:text-text-colortext-dark">{mo.model}</span>
                   </span>
                   <span>
                     {t("moMonitoring.detail.lastUpdated")}{" "}
-                    <span className="font-medium text-gray-700">{mo.lastUpdated}</span>
+                    <span className="font-medium text-gray-700 dark:text-text-colortext-dark">{mo.lastUpdated}</span>
                   </span>
                 </p>
               </div>
 
               {mo.rejectionCount > 0 && (
-                <div className="flex items-center gap-1.5 text-sm text-gray-500">
+                <div className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-text-colortext-gray">
                   <RotateCcw className="h-4 w-4 shrink-0" strokeWidth={1.75} />
                   <span>{rejectionLabel}</span>
                 </div>

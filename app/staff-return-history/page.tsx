@@ -8,9 +8,6 @@ import HistoryList from "@/components/mobile-history/HistoryList";
 import HistoryLoading from "@/components/mobile-history/HistoryLoading";
 import HistoryShell from "@/components/mobile-history/HistoryShell";
 import { listMoSummaries } from "@/lib/mo-detail/data";
-import { DEMO } from "@/lib/demo-data";
-
-const DEFAULT_MO_ID = DEMO.moNumber;
 
 export default function StaffReturnHistoryPage() {
   const [ready, setReady] = useState(false);
@@ -20,10 +17,10 @@ export default function StaffReturnHistoryPage() {
   function navigate(item: MobileNavItem) {
     switch (item) {
       case "packing-list":
-        window.location.href = `/staff-return/${DEFAULT_MO_ID}`;
+        window.location.href = "/staff-return";
         break;
       case "carton-sticker":
-        window.location.href = `/staff-return-sticker/${DEFAULT_MO_ID}`;
+        window.location.href = "/staff-return-sticker";
         break;
       case "history":
       case "identity":

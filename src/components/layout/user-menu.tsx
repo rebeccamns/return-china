@@ -41,12 +41,12 @@ export default function UserMenu() {
           type="button"
           variant="ghost"
           aria-label={t("account.label")}
-          className="h-9 gap-2 rounded-md px-2 text-black hover:bg-slate-50"
+          className="h-9 gap-2 rounded-md px-2 text-text-colortext-black hover:bg-backgroundbg-bluish-gray"
         >
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[#08783F]">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[#08783F] dark:bg-backgroundbg-green dark:text-text-colortext-green">
             <UserRound className="h-4 w-4" strokeWidth={1.5} aria-hidden="true" />
           </span>
-          <span className="max-w-[140px] truncate text-xs font-medium text-black">
+          <span className="max-w-[140px] truncate text-xs font-medium text-text-colortext-black">
             {USER.name}
           </span>
         </Button>
@@ -68,7 +68,7 @@ export default function UserMenu() {
             <p className="truncate text-xs leading-4 text-text-colortext-gray">
               {USER.nik}
             </p>
-            <span className="mt-1 inline-flex rounded-full bg-[#E7F5EC] px-2 py-0.5 text-[11px] font-semibold leading-4 text-[#006B3C]">
+            <span className="mt-1 inline-flex rounded-full bg-[#E7F5EC] px-2 py-0.5 text-[11px] font-semibold leading-4 text-[#006B3C] dark:bg-backgroundbg-green dark:text-text-colortext-green">
               {t(roleKey(pathname))}
             </span>
           </div>

@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { useI18n } from "@/i18n";
 
 import StickyActionBar, { primaryButton } from "./StickyActionBar";
-import MoSummaryCard from "./MoSummaryCard";
 import {
   type Carton,
   type Material,
@@ -127,7 +126,7 @@ export default function MaterialDetailForm({
       </p>
 
       {packedElsewhere && (
-        <p className="mt-0.5 pl-7 text-[13px] max-md:text-secondary font-medium max-md:font-normal leading-[18px] text-[#006B3C]">
+        <p className="mt-0.5 pl-7 text-[13px] max-md:text-secondary font-medium max-md:font-normal leading-[18px] text-[#006B3C] dark:text-text-colortext-green">
           {t("staffReturn.packedSummary", {
             pieces: packedElsewhere.pieces,
             cartons: packedElsewhere.cartons,
@@ -135,16 +134,12 @@ export default function MaterialDetailForm({
         </p>
       )}
 
-      <div className="mb-3 max-md:mb-2 mt-2">
-        <MoSummaryCard compact />
-      </div>
-
       {/* Progress */}
       <div className="mt-5 max-md:mt-3 flex gap-2" aria-hidden="true">
-        <div className="h-1 flex-1 rounded-full bg-[#008348]" />
+        <div className="h-1 flex-1 rounded-full bg-[#008348] dark:bg-primaryprimary-green" />
         <div
           className={`h-1 flex-1 rounded-full transition-colors ${
-            isStep1 ? "bg-[#E6E6E6]" : "bg-[#008348]"
+            isStep1 ? "bg-[#E6E6E6] dark:bg-strokestroke-gray" : "bg-[#008348] dark:bg-primaryprimary-green"
           }`}
         />
       </div>
@@ -152,7 +147,7 @@ export default function MaterialDetailForm({
       <div className="mt-5 max-md:mt-3 rounded-2xl border border-strokestroke-gray bg-backgroundbg-white p-4 max-md:p-3.5">
         {isStep1 ? (
           <>
-            <p className="text-[12px] max-md:text-caption font-medium leading-4 text-[#006B3C]">
+            <p className="text-[12px] max-md:text-caption font-medium leading-4 text-[#006B3C] dark:text-text-colortext-green">
               {t("staffReturn.step1")}
             </p>
             <h2 className="mt-1 text-[16px] max-md:text-heading font-semibold leading-6 text-text-colortext-black">
@@ -179,7 +174,7 @@ export default function MaterialDetailForm({
               </div>
 
               {cartonCount > 1 && quantity > 0 && (
-                <p className="-mt-2 rounded-xl bg-[#E7F5EC] px-4 py-3 max-md:px-3.5 max-md:py-3.5 text-[13px] max-md:text-secondary leading-[18px] text-[#006B3C]">
+                <p className="-mt-2 rounded-xl bg-[#E7F5EC] px-4 py-3 max-md:px-3.5 max-md:py-3.5 text-[13px] max-md:text-secondary leading-[18px] text-[#006B3C] dark:bg-backgroundbg-green dark:text-text-colortext-green">
                   {t("staffReturn.totalAcrossCartons", {
                     count: cartonCount,
                     total: quantity * cartonCount,
@@ -242,7 +237,7 @@ export default function MaterialDetailForm({
           </>
         ) : (
           <>
-            <p className="text-[12px] max-md:text-caption font-medium leading-4 text-[#006B3C]">
+            <p className="text-[12px] max-md:text-caption font-medium leading-4 text-[#006B3C] dark:text-text-colortext-green">
               {t("staffReturn.step2")}
             </p>
             <h2 className="mt-1 text-[16px] max-md:text-heading font-semibold leading-6 text-text-colortext-black">
@@ -354,7 +349,9 @@ function Field({
           onChange={(e) => onChange?.(e.target.value)}
           inputMode={inputMode}
           className={`${inputClass} ${suffix ? "pr-16" : ""} ${
-            readOnly ? "bg-slate-50 text-text-colortext-gray" : ""
+            readOnly
+              ? "bg-slate-50 text-text-colortext-gray dark:bg-backgroundbg-bluish-gray"
+              : ""
           }`}
         />
 
@@ -385,13 +382,13 @@ function PhotoUpload({
       onClick={onUpload}
       className={`flex w-full items-center gap-4 max-md:gap-3 rounded-2xl p-3 max-md:p-2.5 text-left transition active:scale-[0.99] ${
         uploaded
-          ? "border border-[#008348] bg-[#E7F5EC]"
-          : "border-2 border-dashed border-[#4B4FF5] bg-[#F0F1FF] hover:bg-[#E8E9FF]"
+          ? "border border-[#008348] bg-[#E7F5EC] dark:border-strokestroke-green dark:bg-backgroundbg-green"
+          : "border-2 border-dashed border-[#4B4FF5] bg-[#F0F1FF] hover:bg-[#E8E9FF] dark:border-[#6256C9] dark:bg-[#211F30] dark:hover:bg-[#29263A]"
       }`}
     >
       <span
-        className={`flex h-14 w-14 max-md:h-12 max-md:w-12 shrink-0 items-center justify-center rounded-xl bg-white ${
-          uploaded ? "text-[#006B3C]" : "text-[#4B4FF5]"
+        className={`flex h-14 w-14 max-md:h-12 max-md:w-12 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-[#171717] ${
+          uploaded ? "text-[#006B3C] dark:text-text-colortext-green" : "text-[#4B4FF5] dark:text-[#A5A0FF]"
         }`}
       >
         {uploaded ? (
@@ -402,12 +399,14 @@ function PhotoUpload({
       </span>
 
       <span className="min-w-0">
-        <span className="block text-[14px] max-md:text-body font-semibold leading-5 text-black">
+        <span className="block text-[14px] max-md:text-body font-semibold leading-5 text-black dark:text-text-colortext-black">
           {label}
         </span>
         <span
           className={`mt-0.5 block text-[12px] max-md:text-caption font-medium leading-4 ${
-            uploaded ? "text-[#006B3C]" : "text-[#272BC4]"
+            uploaded
+              ? "text-[#006B3C] dark:text-text-colortext-green"
+              : "text-[#272BC4] dark:text-[#A5A0FF]"
           }`}
         >
           {uploaded

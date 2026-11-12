@@ -210,7 +210,7 @@ function Bar({ value, className }: { value: number; className?: string }) {
       aria-valuemin={0}
       aria-valuemax={100}
       className={cn(
-        "h-1.5 w-full overflow-hidden rounded-full bg-slate-200",
+        "h-1.5 w-full overflow-hidden rounded-full bg-backgroundbg-black",
         className,
       )}
     >
@@ -257,7 +257,7 @@ export default function TaskProgressCard({
   const moTotal = dateFilteredTasks.reduce((sum, t) => sum + t.total, 0);
 
   return (
-    <Card className="min-w-0 flex-1 overflow-hidden rounded-lg border-slate-200">
+    <Card className="min-w-0 flex-1 overflow-hidden rounded-lg border-strokestroke-gray bg-backgroundbg-white">
       <CardHeader className="flex flex-row items-center justify-between gap-4 border-b px-4 py-3">
         <CardTitle className="text-sm font-semibold">{t("dashboard.taskProgress.title")}</CardTitle>
         <div className="flex items-center gap-1">
@@ -270,7 +270,7 @@ export default function TaskProgressCard({
           {dateRange.type !== "all" && (
             <Button
               variant="ghost"
-              className="h-8 w-8 p-0 text-slate-500"
+              className="h-8 w-8 p-0 text-text-colortext-gray"
               type="button"
               onClick={() => setDateRange(ALL_CALENDAR_RANGE)}
               aria-label={t("dashboard.taskProgress.clearDateFilter")}
@@ -283,7 +283,7 @@ export default function TaskProgressCard({
 
       <CardContent className="space-y-4 px-4 py-3">
         {dateFilteredTasks.length === 0 ? (
-          <div className="rounded-md border border-dashed border-slate-200 bg-slate-50 p-4 text-center text-xs text-slate-500">
+          <div className="rounded-md border border-dashed border-strokestroke-gray bg-backgroundbg-bluish-gray p-4 text-center text-xs text-text-colortext-gray">
             {dateRange.type !== "all"
               ? t("dashboard.taskProgress.noTasksOnDate")
               : t("dashboard.taskProgress.noTasks")}
@@ -295,32 +295,32 @@ export default function TaskProgressCard({
                 <strong className="text-2xl leading-6">
                   {completed}/{dateFilteredTasks.length}
                 </strong>
-                <span className="text-xs text-slate-500">{t("dashboard.taskProgress.taskComplete")}</span>
+                <span className="text-xs text-text-colortext-gray">{t("dashboard.taskProgress.taskComplete")}</span>
               </div>
 
               <div className="flex items-center gap-2">
                 <Bar value={taskPercent} />
-                <span className="w-8 shrink-0 text-right text-[10px] text-slate-600">
+                <span className="w-8 shrink-0 text-right text-[10px] text-text-colortext-dark">
                   {taskPercent}%
                 </span>
               </div>
 
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-text-colortext-gray">
                 {t("dashboard.taskProgress.moDoneSummary", { done: moDone, total: moTotal })}
               </p>
             </section>
 
-            <div className="border-t border-slate-200" />
+            <div className="border-t border-strokestroke-gray" />
 
             <section className="space-y-2">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-semibold">{t("dashboard.taskProgress.taskList")}</h3>
-                <span className="text-[10px] text-slate-500">
+                <span className="text-[10px] text-text-colortext-gray">
                   {t("dashboard.taskProgress.tasksOngoing", { count: ongoing })}
                 </span>
               </div>
 
-              <ul className="max-h-[6.25rem] divide-y divide-slate-200 overflow-y-auto overscroll-contain">
+              <ul className="max-h-[6.25rem] divide-y divide-strokestroke-gray overflow-y-auto overscroll-contain">
                   {sorted.map((task) => {
                     const complete = isComplete(task);
                     return (
@@ -331,7 +331,7 @@ export default function TaskProgressCard({
                         <span
                           className={cn(
                             "min-w-0 flex-1 truncate",
-                            complete && "text-slate-500",
+                            complete && "text-text-colortext-gray",
                           )}
                         >
                           {taskName(task)}
@@ -343,8 +343,8 @@ export default function TaskProgressCard({
                             className={cn(
                               "w-9 text-right",
                               complete
-                                ? "font-medium text-[#0b5934]"
-                                : "text-slate-600",
+                                ? "font-medium text-text-colortext-green"
+                                : "text-text-colortext-dark",
                             )}
                           >
                             {task.done}/{task.total}

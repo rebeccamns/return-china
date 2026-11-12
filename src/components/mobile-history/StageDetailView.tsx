@@ -116,8 +116,8 @@ function MaterialRow({
             <span
               className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-1 text-[11px] font-semibold leading-4 ${
                 passed
-                  ? "bg-[#E7F5EC] text-[#006B3C]"
-                  : "bg-red-50 text-red-600"
+                  ? "bg-[#E7F5EC] text-[#006B3C] dark:bg-backgroundbg-green dark:text-text-colortext-green"
+                  : "bg-red-50 text-red-600 dark:bg-backgroundbg-red dark:text-text-colortext-red"
               }`}
             >
               {passed ? (
@@ -178,8 +178,8 @@ function CartonRow({
             <span
               className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-1 text-[11px] font-semibold leading-4 ${
                 carton.verified
-                  ? "bg-[#E7F5EC] text-[#006B3C]"
-                  : "bg-slate-100 text-text-colortext-gray"
+                  ? "bg-[#E7F5EC] text-[#006B3C] dark:bg-backgroundbg-green dark:text-text-colortext-green"
+                  : "bg-slate-100 text-text-colortext-gray dark:bg-backgroundbg-bluish-gray"
               }`}
             >
               {carton.verified ? (
@@ -318,7 +318,7 @@ export default function StageDetailView({
           </p>
         )}
         {stage.rejectionReason && (
-          <p className="mt-2 rounded-lg bg-red-50 p-3 text-[13px] leading-[18px] text-red-700">
+          <p className="mt-2 rounded-lg bg-red-50 p-3 text-[13px] leading-[18px] text-red-700 dark:bg-red-950 dark:text-red-200">
             <span className="font-semibold">
               {t("history.detail.rejectionReason")}:{" "}
             </span>
@@ -367,7 +367,7 @@ export default function StageDetailView({
               ))}
             </ul>
           )}
-          <p className="mt-2 rounded-xl bg-[#E7F5EC] px-3.5 py-3 text-[13px] font-medium leading-[18px] text-[#006B3C]">
+          <p className="mt-2 rounded-xl bg-[#E7F5EC] px-3.5 py-3 text-[13px] font-medium leading-[18px] text-[#006B3C] dark:bg-backgroundbg-green dark:text-text-colortext-green">
             {identity
               ? t("iqcHistory.materialsSummary", { count, pieces })
               : t("iqcHistory.cartonsSummary", { count })}

@@ -12,15 +12,13 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-import { DEMO } from "@/lib/demo-data";
-
 const DEMO_ROUTES = [
   { label: "Operational", description: "PMC Entry & WO", href: "/operational" },
   { label: "Exim", description: "Export processing", href: "/exim" },
   {
     label: "Staff Return",
     description: "Material & carton handling",
-    href: `/staff-return/${DEMO.moNumber}`,
+    href: "/staff-return",
   },
   // {
   //   label: "Staff Return Sticker",
@@ -56,23 +54,23 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-white px-5 py-12 text-slate-900">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-backgroundbg-gray px-5 py-12 text-text-colortext-black">
       {/* Organic background gradient wave shapes inspired by the sidebar design */}
  <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-40 -top-44 h-[420px] w-[420px] rounded-full border border-emerald-100"
+        className="pointer-events-none absolute -right-40 -top-44 h-[420px] w-[420px] rounded-full border border-emerald-100 dark:border-strokestroke-green/30"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-24 -top-28 h-[280px] w-[280px] rounded-full bg-emerald-50/70 blur-3xl"
+        className="pointer-events-none absolute -right-24 -top-28 h-[280px] w-[280px] rounded-full bg-emerald-50/70 dark:bg-decor-1 blur-3xl"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-56 -left-40 h-[480px] w-[480px] rounded-full border border-emerald-100"
+        className="pointer-events-none absolute -bottom-56 -left-40 h-[480px] w-[480px] rounded-full border border-emerald-100 dark:border-strokestroke-green/30"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-44 -left-32 h-[320px] w-[320px] rounded-full bg-emerald-50/80 blur-3xl"
+        className="pointer-events-none absolute -bottom-44 -left-32 h-[320px] w-[320px] rounded-full bg-emerald-50/80 dark:bg-decor-2 blur-3xl"
       />
 
       <section className="relative z-10 w-full max-w-[420px]">
@@ -93,10 +91,10 @@ export default function LoginPage() {
     </span>
           </div>
 
-          <h1 className="text-[28px] font-semibold tracking-tight text-slate-900">
+          <h1 className="text-[28px] font-semibold tracking-tight text-text-colortext-black">
             Selamat datang kembali
           </h1>
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-text-colortext-gray">
             Masuk untuk melanjutkan Return China.
           </p>
         </div>
@@ -106,12 +104,12 @@ export default function LoginPage() {
           <div>
             <label
               htmlFor="nik"
-              className="mb-2 block text-sm font-medium text-slate-700"
+              className="mb-2 block text-sm font-medium text-text-colortext-dark"
             >
               NIK
             </label>
 
-            <div className="flex h-12 items-center gap-3 rounded-lg border border-slate-200 bg-white px-4 transition focus-within:border-emerald-700 focus-within:ring-2 focus-within:ring-emerald-700/10">
+            <div className="flex h-12 items-center gap-3 rounded-lg border border-strokestroke-gray bg-backgroundbg-white px-4 transition focus-within:border-primaryprimary-green focus-within:ring-2 focus-within:ring-primaryprimary-green/10">
               <UserRound className="h-[18px] w-[18px] shrink-0 text-slate-400" />
 
               <input
@@ -123,7 +121,7 @@ export default function LoginPage() {
                 placeholder="Masukkan NIK Anda"
                 value={nik}
                 onChange={(event) => setNik(event.target.value)}
-                className="h-full min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-slate-400"
+                className="h-full min-w-0 flex-1 bg-transparent text-sm outline-none text-text-colortext-black placeholder:text-text-colortext-gray"
                 required
               />
             </div>
@@ -132,12 +130,12 @@ export default function LoginPage() {
           <div>
             <label
               htmlFor="password"
-              className="mb-2 block text-sm font-medium text-slate-700"
+              className="mb-2 block text-sm font-medium text-text-colortext-dark"
             >
               Password
             </label>
 
-            <div className="flex h-12 items-center gap-3 rounded-lg border border-slate-200 bg-white px-4 transition focus-within:border-emerald-700 focus-within:ring-2 focus-within:ring-emerald-700/10">
+            <div className="flex h-12 items-center gap-3 rounded-lg border border-strokestroke-gray bg-backgroundbg-white px-4 transition focus-within:border-primaryprimary-green focus-within:ring-2 focus-within:ring-primaryprimary-green/10">
               <LockKeyhole className="h-[18px] w-[18px] shrink-0 text-slate-400" />
 
               <input
@@ -148,7 +146,7 @@ export default function LoginPage() {
                 placeholder="Masukkan password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                className="h-full min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-slate-400"
+                className="h-full min-w-0 flex-1 bg-transparent text-sm outline-none text-text-colortext-black placeholder:text-text-colortext-gray"
                 required
               />
 
@@ -180,14 +178,14 @@ export default function LoginPage() {
 
         {/* Demo navigation */}
         <div className="my-7 flex items-center gap-4">
-          <div className="h-px flex-1 bg-slate-200" />
+          <div className="h-px flex-1 bg-strokestroke-gray" />
           <span className="text-xs text-slate-400">atau akses demo</span>
-          <div className="h-px flex-1 bg-slate-200" />
+          <div className="h-px flex-1 bg-strokestroke-gray" />
         </div>
 
         <div className="mb-3 flex items-center gap-2">
           <Building2 className="h-4 w-4 text-emerald-700" />
-          <h2 className="text-sm font-semibold text-slate-800">
+          <h2 className="text-sm font-semibold text-text-colortext-black">
             Pilih workflow
           </h2>
         </div>
@@ -198,12 +196,12 @@ export default function LoginPage() {
               key={route.href}
               type="button"
               onClick={() => router.push(route.href)}
-              className="group rounded-lg border border-slate-200 bg-white/80 backdrop-blur-sm p-3 text-left transition hover:border-[#08783F]/30 hover:bg-[#E7F5EC]/50"
+              className="group rounded-lg border border-strokestroke-gray bg-backgroundbg-white/80 dark:bg-backgroundbg-white backdrop-blur-sm p-3 text-left transition hover:border-[#08783F]/30 hover:bg-[#E7F5EC]/50 dark:hover:bg-backgroundbg-bluish-gray"
             >
-              <span className="block text-sm font-medium text-slate-800 group-hover:text-[#066B3B]">
+              <span className="block text-sm font-medium text-text-colortext-black group-hover:text-brand-green-fg">
                 {route.label}
               </span>
-              <span className="mt-1 block text-xs leading-relaxed text-slate-500">
+              <span className="mt-1 block text-xs leading-relaxed text-text-colortext-gray">
                 {route.description}
               </span>
             </button>

@@ -92,19 +92,19 @@ export default function ShipmentFeedbackComboChart({ points }: Props) {
   ].filter((value, index, array) => array.indexOf(value) === index);
 
   return (
-    <section className="min-w-0 overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
+    <section className="min-w-0 overflow-hidden rounded-lg border border-strokestroke-gray bg-backgroundbg-white">
       {/* Header */}
       <header className="flex h-11 items-center justify-between border-b border-strokestroke-gray px-5">
         <div className="flex items-center gap-2">
-          <h2 className="text-sm font-semibold text-[#111111]">
+          <h2 className="text-sm font-semibold text-text-colortext-black">
             Shipment &amp; Feedback Trend
           </h2>
-          <span className="hidden text-xs text-[#777775] sm:inline">
+          <span className="hidden text-xs text-text-colortext-gray sm:inline">
             · Total shipments vs abnormal feedback
           </span>
         </div>
 
-        <span className="inline-flex items-center gap-1.5 rounded bg-slate-50 px-2.5 py-1 text-xs font-medium text-[#777775]">
+        <span className="inline-flex items-center gap-1.5 rounded bg-backgroundbg-bluish-gray px-2.5 py-1 text-xs font-medium text-text-colortext-gray">
           <CalendarDays className="h-3.5 w-3.5" />
           Monthly trend
         </span>
@@ -148,7 +148,7 @@ export default function ShipmentFeedbackComboChart({ points }: Props) {
                         x2={width - RIGHT_AXIS}
                         y1={y}
                         y2={y}
-                        stroke="#F0F1F0"
+                        stroke="var(--strokestroke-gray)"
                         strokeDasharray="3 3"
                       />
                       <text
@@ -157,7 +157,7 @@ export default function ShipmentFeedbackComboChart({ points }: Props) {
                         textAnchor="end"
                         dominantBaseline="central"
                         fontSize={10}
-                        fill="#777775"
+                        fill="var(--text-colortext-gray)"
                       >
                         {tick}
                       </text>
@@ -174,7 +174,7 @@ export default function ShipmentFeedbackComboChart({ points }: Props) {
                     textAnchor="start"
                     dominantBaseline="central"
                     fontSize={10}
-                    fill="#777775"
+                    fill="var(--text-colortext-gray)"
                   >
                     {tick}%
                   </text>
@@ -200,7 +200,7 @@ export default function ShipmentFeedbackComboChart({ points }: Props) {
                           width={Math.max(chart.gap * 0.72, 22)}
                           height={PLOT_HEIGHT + 8}
                           rx={4}
-                          fill="#F2F8F4"
+                          fill="var(--backgroundbg-green)"
                         />
                       )}
 
@@ -229,7 +229,7 @@ export default function ShipmentFeedbackComboChart({ points }: Props) {
                         y={LABEL_Y}
                         textAnchor="middle"
                         fontSize={10}
-                        fill={activeIndex === index ? "#111111" : "#777775"}
+                        fill={activeIndex === index ? "var(--text-colortext-black)" : "var(--text-colortext-gray)"}
                         fontWeight={activeIndex === index ? 600 : 400}
                       >
                         {point.label}
@@ -264,7 +264,7 @@ export default function ShipmentFeedbackComboChart({ points }: Props) {
                         cx={x}
                         cy={y}
                         r={activeIndex === index ? 5 : 3.5}
-                        fill="white"
+                        fill="var(--backgroundbg-white)"
                         stroke={LINE_COLOR}
                         strokeWidth={2}
                       />
@@ -275,26 +275,26 @@ export default function ShipmentFeedbackComboChart({ points }: Props) {
 
               {/* Hover tooltip */}
               {activePoint && (
-                <div className="pointer-events-none absolute right-3 top-2 z-10 w-[180px] rounded-lg border border-strokestroke-gray bg-white/95 p-2.5 shadow-sm backdrop-blur-xs">
-                  <p className="text-xs font-semibold text-[#111111]">
+                <div className="pointer-events-none absolute right-3 top-2 z-10 w-[180px] rounded-lg border border-strokestroke-gray bg-backgroundbg-white p-2.5 text-text-colortext-dark shadow-sm">
+                  <p className="text-xs font-semibold text-text-colortext-black">
                     {activePoint.tooltipLabel}
                   </p>
                   <div className="mt-1.5 space-y-1 text-xs">
                     <div className="flex items-center justify-between">
-                      <span className="text-[#777775]">Total shipments</span>
-                      <span className="font-semibold text-[#008348]">
+                      <span className="text-text-colortext-gray">Total shipments</span>
+                      <span className="font-semibold text-text-colortext-green">
                         {activePoint.shipments.toLocaleString("en-US")}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-[#777775]">Abnormal feedback</span>
-                      <span className="font-semibold text-[#EF4444]">
+                      <span className="text-text-colortext-gray">Abnormal feedback</span>
+                      <span className="font-semibold text-text-colortext-red">
                         {activePoint.rejected.toLocaleString("en-US")}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between border-t border-[#EEEEEC] pt-1">
-                      <span className="text-[#777775]">Abnormal rate</span>
-                      <span className="font-bold text-[#DC2626]">
+                    <div className="flex items-center justify-between border-t border-strokestroke-gray pt-1">
+                      <span className="text-text-colortext-gray">Abnormal rate</span>
+                      <span className="font-bold text-text-colortext-red">
                         {activeRate.toFixed(1)}%
                       </span>
                     </div>
@@ -306,7 +306,7 @@ export default function ShipmentFeedbackComboChart({ points }: Props) {
         </div>
 
         {/* Linked Color-coded Legends */}
-        <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 border-t border-[#EEEEEC] py-2.5 text-xs text-[#555555]">
+        <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 border-t border-strokestroke-gray py-2.5 text-xs text-text-colortext-dark">
           <span className="flex items-center gap-2">
             <span className="h-3 w-3 rounded-xs bg-[#008348]" />
             Total shipments

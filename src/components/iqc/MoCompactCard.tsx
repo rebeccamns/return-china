@@ -54,7 +54,7 @@ export default function MoCompactCard({
               aria-valuemin={0}
               aria-valuemax={100}
               aria-valuenow={percent}
-              className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#E6E6E6]"
+              className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#E6E6E6] dark:bg-backgroundbg-black"
             >
               <div
                 className="h-full rounded-full bg-[#008348] transition-all duration-300"

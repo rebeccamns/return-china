@@ -24,7 +24,7 @@ export default function StatusToast({ message, onDismiss }: Props) {
   return (
     <div
       role={isSuccess ? "status" : "alert"}
-      className="fixed right-6 top-[68px] z-[60] flex w-[calc(100vw-2rem)] max-w-[420px] items-start gap-3 rounded-lg border border-strokestroke-gray bg-white px-4 py-3 text-xs text-[#555554] shadow-lg"
+      className="fixed right-6 top-[68px] z-[60] flex w-[calc(100vw-2rem)] max-w-[420px] items-start gap-3 rounded-lg border border-strokestroke-gray bg-backgroundbg-white px-4 py-3 text-xs text-[#555554] shadow-lg dark:text-text-colortext-dark"
     >
       <span
         aria-hidden="true"
@@ -34,9 +34,9 @@ export default function StatusToast({ message, onDismiss }: Props) {
       />
 
       {isSuccess ? (
-        <CircleCheck className="mt-px h-4 w-4 shrink-0 text-[#008348]" />
+        <CircleCheck className="mt-px h-4 w-4 shrink-0 text-[#008348] dark:text-text-colortext-green" />
       ) : (
-        <CircleX className="mt-px h-4 w-4 shrink-0 text-red-600" />
+        <CircleX className="mt-px h-4 w-4 shrink-0 text-red-600 dark:text-text-colortext-red" />
       )}
 
       <span className="flex-1">{message.message}</span>
@@ -45,7 +45,7 @@ export default function StatusToast({ message, onDismiss }: Props) {
         type="button"
         aria-label={t("common.dismiss")}
         onClick={onDismiss}
-        className="shrink-0"
+        className="shrink-0 text-current hover:text-[#262626] dark:text-text-colortext-gray dark:hover:text-text-colortext-black"
       >
         <X className="h-4 w-4" />
       </button>

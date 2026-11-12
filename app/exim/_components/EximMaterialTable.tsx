@@ -38,13 +38,13 @@ const PHOTO_COLUMNS: { key: "frontPhoto" | "backPhoto" | "upnPhoto"; labelKey: T
 ];
 
 const headClass =
-  "h-10 whitespace-nowrap bg-[#F8F8F8] px-3 text-xs font-medium text-slate-700";
+  "h-10 whitespace-nowrap bg-backgroundbg-bluish-gray px-3 text-xs font-medium text-text-colortext-dark dark:bg-backgroundbg-black dark:text-text-colortext-black";
 
 const inputClass =
-  "h-9 w-[200px] rounded-md border-strokestroke-gray px-3 text-xs placeholder:text-[#A3A3A1]";
+  "h-9 w-[200px] rounded-md border-strokestroke-gray px-3 text-xs placeholder:text-text-colortext-gray";
 
 function Unit({ children }: { children: React.ReactNode }) {
-  return <span className="ml-1 font-normal text-slate-400">{children}</span>;
+  return <span className="ml-1 font-normal text-text-colortext-gray">{children}</span>;
 }
 
 export default function EximMaterialTable({
@@ -63,8 +63,8 @@ export default function EximMaterialTable({
     <>
       <div className="overflow-hidden rounded-md border border-strokestroke-gray">
         <Table className="min-w-[1800px]">
-          <TableHeader className="bg-[#F8F8F8]">
-            <TableRow className="hover:bg-[#F8F8F8]">
+          <TableHeader className="bg-backgroundbg-bluish-gray">
+            <TableRow className="hover:bg-backgroundbg-bluish-gray">
               <TableHead
                 className={cn(
                   headClass,
@@ -102,18 +102,18 @@ export default function EximMaterialTable({
 
           <TableBody>
             {rows.map((row, index) => (
-              <TableRow key={row.id} className="h-[53px] hover:bg-[#FAFAFA]">
-                <TableCell className="sticky left-0 z-10 border-r border-strokestroke-gray bg-white px-3 py-2 text-xs font-medium text-[#111111]">
+              <TableRow key={row.id} className="h-[53px] hover:bg-backgroundbg-bluish-gray">
+                <TableCell className="sticky left-0 z-10 border-r border-strokestroke-gray bg-backgroundbg-white px-3 py-2 text-xs font-medium text-text-colortext-black">
                   {row.code}
                 </TableCell>
 
-                <TableCell className="max-w-[240px] px-3 py-2 text-xs text-[#111111]">
+                <TableCell className="max-w-[240px] px-3 py-2 text-xs text-text-colortext-black">
                   <span className="block truncate" title={row.englishName}>
                     {row.englishName}
                   </span>
                 </TableCell>
 
-                <TableCell className="max-w-[240px] px-3 py-2 text-xs text-[#111111]">
+                <TableCell className="max-w-[240px] px-3 py-2 text-xs text-text-colortext-black">
                   <span className="block truncate" title={row.chinaName}>
                     {row.chinaName}
                   </span>
@@ -121,7 +121,7 @@ export default function EximMaterialTable({
 
                 <TableCell className="px-3 py-2">
                   {readOnly ? (
-                    <span className="text-xs text-[#111111]">{row.model}</span>
+                    <span className="text-xs text-text-colortext-black">{row.model}</span>
                   ) : (
                     <Input
                       value={row.model}
@@ -137,7 +137,7 @@ export default function EximMaterialTable({
 
                 <TableCell className="px-3 py-2">
                   {readOnly ? (
-                    <span className="text-xs text-[#111111]">{row.brand}</span>
+                    <span className="text-xs text-text-colortext-black">{row.brand}</span>
                   ) : (
                     <Input
                       value={row.brand}
@@ -151,19 +151,19 @@ export default function EximMaterialTable({
                   )}
                 </TableCell>
 
-                <TableCell className="px-3 py-2 text-xs text-[#111111]">
+                <TableCell className="px-3 py-2 text-xs text-text-colortext-black">
                   {row.qty}
                 </TableCell>
-                <TableCell className="px-3 py-2 text-xs text-[#111111]">
+                <TableCell className="px-3 py-2 text-xs text-text-colortext-black">
                   {row.singleNet}
                 </TableCell>
-                <TableCell className="px-3 py-2 text-xs text-[#111111]">
+                <TableCell className="px-3 py-2 text-xs text-text-colortext-black">
                   {row.netWeight}
                 </TableCell>
-                <TableCell className="px-3 py-2 text-xs text-[#111111]">
+                <TableCell className="px-3 py-2 text-xs text-text-colortext-black">
                   {row.grossWeight}
                 </TableCell>
-                <TableCell className="whitespace-nowrap px-3 py-2 text-xs text-[#111111]">
+                <TableCell className="whitespace-nowrap px-3 py-2 text-xs text-text-colortext-black">
                   {row.volume}
                 </TableCell>
 
@@ -210,7 +210,7 @@ export default function EximMaterialTable({
                 className="max-h-[60vh] w-full object-contain"
               />
             ) : (
-              <ImageOff className="h-8 w-8 text-slate-300" strokeWidth={1.5} />
+              <ImageOff className="h-8 w-8 text-text-colortext-gray" strokeWidth={1.5} />
             )}
           </div>
         </DialogContent>

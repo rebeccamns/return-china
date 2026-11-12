@@ -11,7 +11,7 @@ interface ThemeToggleProps {
 
 const OPTIONS: { key: Theme; label: string; icon: typeof Sun }[] = [
   { key: "light", label: "Light", icon: Sun },
-  { key: "system", label: "Auto", icon: Monitor },
+  // { key: "system", label: "Auto", icon: Monitor },
   { key: "dark", label: "Dark", icon: Moon },
 ];
 

@@ -169,13 +169,13 @@ export function CalendarPickerModal(props: CalendarPickerProps) {
         type="button"
         variant="outline"
         className={cn(
-          "h-9 min-w-0 justify-start gap-2 border-[#D5D5D3] bg-white px-3 text-left font-normal text-[#333333] hover:bg-[#F8F8F8]",
+          "h-9 min-w-0 justify-start gap-2 border-strokestroke-gray bg-backgroundbg-white px-3 text-left font-normal text-text-colortext-black hover:bg-[#F8F8F8]",
           props.buttonClassName
         )}
         onClick={openPicker}
         aria-label={props.ariaLabel ?? t("history.dateRangeLabel")}
       >
-        <CalendarDays className="h-4 w-4 shrink-0 text-[#777777]" />
+        <CalendarDays className="h-4 w-4 shrink-0 text-text-colortext-gray" />
         <span className="truncate">{triggerLabel}</span>
       </Button>
 
@@ -183,7 +183,7 @@ export function CalendarPickerModal(props: CalendarPickerProps) {
         open={open}
         onClose={() => setOpen(false)}
         className={cn(
-          "rounded-lg border border-[#D9D9D7]",
+          "rounded-lg border border-strokestroke-gray bg-backgroundbg-white text-text-colortext-black",
           mode === "range"
             ? "max-w-[760px] overflow-hidden p-0"
             : mode === "single" || mode === "month"
@@ -214,17 +214,17 @@ export function CalendarPickerModal(props: CalendarPickerProps) {
         ) : props.mode === "options" ? (
           <>
             <div className="mb-5">
-              <h2 className="text-base font-semibold text-[#222222]">{props.title}</h2>
+              <h2 className="text-base font-semibold text-text-colortext-black">{props.title}</h2>
             </div>
-            <div className="max-h-[45vh] overflow-y-auto rounded-md border border-[#E4E4E2]">
+            <div className="max-h-[45vh] overflow-y-auto rounded-md border border-[#E4E4E2] dark:border-strokestroke-gray">
               {props.options.map((option) => (
                 <button
                   key={option.value}
                   type="button"
                   className={cn(
-                    "flex w-full items-center justify-between border-b border-[#E4E4E2] px-3 py-2.5 text-left text-sm last:border-b-0 hover:bg-[#F8F8F8]",
+                    "flex w-full items-center justify-between border-b border-[#E4E4E2] px-3 py-2.5 text-left text-sm last:border-b-0 hover:bg-[#F8F8F8] dark:border-strokestroke-gray dark:hover:bg-backgroundbg-black",
                     draftValue === option.value &&
-                      "bg-[#E7F5EC] font-medium text-[#08783F]"
+                      "bg-[#E7F5EC] font-medium text-[#08783F] dark:bg-backgroundbg-green dark:text-text-colortext-green"
                   )}
                   onClick={() => setDraftValue(option.value)}
                   aria-pressed={draftValue === option.value}
@@ -238,7 +238,7 @@ export function CalendarPickerModal(props: CalendarPickerProps) {
               <Button
                 type="button"
                 variant="outline"
-                className="border-[#D5D5D3] bg-white"
+                className="border-strokestroke-gray bg-backgroundbg-white"
                 onClick={() => setOpen(false)}
               >
                 {t("common.cancel")}

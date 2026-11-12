@@ -1,4 +1,5 @@
 import type { MoSummary, MOStatus } from "@/lib/mo-detail/types";
+import { getMoWorkOrder } from "@/lib/mo-detail/data";
 
 export type IqcMoStatusFilter = "All" | MOStatus;
 
@@ -19,7 +20,7 @@ export function filterIqcMoSummaries(
 
     if (!query) return true;
 
-    return `${summary.moCode} ${summary.model} ${summary.returnId}`
+    return `${summary.moCode} ${summary.model} ${summary.returnId} ${getMoWorkOrder(summary.moCode) ?? ""}`
       .toLowerCase()
       .includes(query);
   });

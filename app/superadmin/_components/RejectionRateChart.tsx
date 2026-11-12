@@ -126,17 +126,17 @@ export default function RejectionRateChart({
   );
 
   return (
-    <section className="min-w-0 overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
+    <section className="min-w-0 overflow-hidden rounded-lg border border-strokestroke-gray bg-backgroundbg-white">
       {/* Header */}
       <header className="flex h-11 items-center justify-between border-b border-strokestroke-gray px-5">
         <div className="flex items-center gap-2">
-          <h2 className="text-sm font-semibold text-[#111111]">{heading}</h2>
-          <span className="hidden text-xs text-[#777775] sm:inline">
+          <h2 className="text-sm font-semibold text-text-colortext-black">{heading}</h2>
+          <span className="hidden text-xs text-text-colortext-gray sm:inline">
             · Yield &amp; quality compliance
           </span>
         </div>
 
-        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded px-2.5 py-1">
+        <span className="inline-flex items-center gap-1.5 rounded border border-strokestroke-green bg-backgroundbg-green px-2.5 py-1 text-xs font-medium text-text-colortext-green">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
           Target: &gt;95%
         </span>
@@ -187,7 +187,7 @@ export default function RejectionRateChart({
                       x2={width}
                       y1={yAt(tick)}
                       y2={yAt(tick)}
-                      stroke="#F0F1F0"
+                      stroke="var(--strokestroke-gray)"
                       strokeDasharray="3 3"
                     />
                     <text
@@ -196,7 +196,7 @@ export default function RejectionRateChart({
                       textAnchor="end"
                       dominantBaseline="central"
                       fontSize={10}
-                      fill="#777775"
+                      fill="var(--text-colortext-gray)"
                     >
                       {tick}%
                     </text>
@@ -226,7 +226,7 @@ export default function RejectionRateChart({
                       textAnchor="middle"
                       dominantBaseline="central"
                       fontSize={10}
-                      fill={active === i ? "#111111" : "#777775"}
+                      fill={active === i ? "var(--text-colortext-black)" : "var(--text-colortext-gray)"}
                       fontWeight={active === i ? 600 : 400}
                     >
                       {p.label}
@@ -239,7 +239,7 @@ export default function RejectionRateChart({
                     cx={px}
                     cy={py}
                     r={4.5}
-                    fill="#ffffff"
+                    fill="var(--backgroundbg-white)"
                     stroke={LINE}
                     strokeWidth={2}
                   />
@@ -258,15 +258,15 @@ export default function RejectionRateChart({
                       : "translate(-50%, 0)",
                   }}
                 >
-                  <div className="relative min-w-[160px] whitespace-nowrap rounded-lg border border-strokestroke-gray bg-white/95 px-3 py-2 text-xs leading-tight text-[#444444] shadow-sm backdrop-blur-xs">
-                    <p className="mb-1 text-xs font-semibold text-[#111111]">
+                  <div className="relative min-w-[160px] whitespace-nowrap rounded-lg border border-strokestroke-gray bg-backgroundbg-white px-3 py-2 text-xs leading-tight text-text-colortext-dark shadow-sm">
+                    <p className="mb-1 text-xs font-semibold text-text-colortext-black">
                       {point.tooltipLabel}
                     </p>
 
                     {metric === "pass" ? (
                       <div className="flex items-center justify-between gap-3">
-                        <span className="text-[#777775]">Pass Rate</span>
-                        <span className="font-bold text-[#16A34A]">
+                        <span className="text-text-colortext-gray">Pass Rate</span>
+                        <span className="font-bold text-text-colortext-green">
                           {point.rate.toFixed(1)}%
                         </span>
                       </div>
@@ -274,8 +274,8 @@ export default function RejectionRateChart({
                       <p>{t("superadmin.chart.noShipments")}</p>
                     ) : (
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-[#777775]">Rate</span>
-                        <span className="font-bold text-[#16A34A]">
+                        <span className="text-text-colortext-gray">Rate</span>
+                        <span className="font-bold text-text-colortext-green">
                           {point.rate}%
                         </span>
                       </div>
@@ -288,12 +288,12 @@ export default function RejectionRateChart({
         </div>
 
         {/* Linked Color-coded Legend */}
-        <div className="flex items-center justify-center gap-6 border-t border-[#EEEEEC] py-2.5 text-xs text-[#555555]">
+        <div className="flex items-center justify-center gap-6 border-t border-strokestroke-gray py-2.5 text-xs text-text-colortext-dark">
           <span className="flex items-center gap-2">
             <span className="h-0.5 w-4 bg-[#16A34A]" />
             Pass Rate (%) Trend
           </span>
-          <span className="flex items-center gap-1.5 text-[#777775]">
+          <span className="flex items-center gap-1.5 text-text-colortext-gray">
             <span className="h-2 w-2 rounded-full bg-[#16A34A]/30" />
             Within tolerance
           </span>

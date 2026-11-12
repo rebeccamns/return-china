@@ -18,7 +18,6 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/i18n";
 import type { TranslationKey } from "@/i18n";
-import { DEMO } from "@/lib/demo-data";
 import ThemeToggle from "@/components/theme-toggle";
 
 type NavLink = {
@@ -44,7 +43,8 @@ export type SidebarVariant =
   | "exim"
   | "superadmin"
   | "warehouse"
-  | "iqc";
+  | "iqc"
+  | "staffReturn";
 
 const NAV: Record<SidebarVariant, NavItem[]> = {
   pmc: [
@@ -122,19 +122,38 @@ const NAV: Record<SidebarVariant, NavItem[]> = {
     {
       labelKey: "navigation.iqcIdentity",
       href: "/iqc",
-      match: "/iqc/",
       icon: ClipboardList,
     },
     {
       labelKey: "navigation.iqcVerification",
-      href: `/iqc-verification/${DEMO.moNumber}`,
-      match: "/iqc-verification/",
+      href: "/iqc-verification",
+      match: "/iqc-verification",
       icon: MonitorCheck,
     },
     {
       labelKey: "navigation.history",
       href: "/iqc-history",
       match: "/iqc-history",
+      icon: History,
+    },
+  ],
+
+  staffReturn: [
+    {
+      labelKey: "navigation.staffReturn",
+      href: "/staff-return",
+      icon: ClipboardList,
+    },
+    {
+      labelKey: "navigation.staffReturnSticker",
+      href: "/staff-return-sticker",
+      match: "/staff-return-sticker",
+      icon: MonitorCheck,
+    },
+    {
+      labelKey: "navigation.history",
+      href: "/staff-return-history",
+      match: "/staff-return-history",
       icon: History,
     },
   ],
@@ -216,17 +235,17 @@ export default function Sidebar({
 
     return `flex h-10 items-center rounded px-2 transition-colors ${
       isActive
-        ? "bg-[#DDEFE5]/80 text-text-colortext-green shadow-[inset_0_0_0_1px_rgba(11,89,52,0.05)] hover:bg-[#DDEFE5]"
-        : "text-mode-sidebar-foreground hover:bg-slate-50"
+        ? "bg-[#DDEFE5]/80 text-text-colortext-green shadow-[inset_0_0_0_1px_rgba(11,89,52,0.05)] hover:bg-[#DDEFE5] dark:bg-backgroundbg-green dark:text-text-colortext-green dark:hover:bg-backgroundbg-green dark:shadow-none"
+        : "text-mode-sidebar-foreground hover:bg-backgroundbg-bluish-gray hover:text-text-colortext-black"
     }`;
   };
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-[3] flex w-full max-w-[255px] flex-col overflow-hidden border-r border-strokestroke-gray bg-white/70 backdrop-blur-xl backdrop-saturate-150 supports-[not(backdrop-filter)]:bg-white">
+    <aside className="fixed inset-y-0 left-0 z-[3] flex w-full max-w-[255px] flex-col overflow-hidden border-r border-strokestroke-gray bg-glass backdrop-blur-xl backdrop-saturate-150 supports-[not(backdrop-filter)]:bg-backgroundbg-white">
 
       {/* Decorative background */}
 {/* Decorative glass background */}
-<div className="pointer-events-none absolute inset-x-0 bottom-0 h-96 overflow-hidden">
+<div className="pointer-events-none absolute inset-x-0 bottom-0 h-96 overflow-hidden dark:opacity-20">
   <img
     className="absolute left-0 top-0 h-[317px] w-full object-cover opacity-60"
     src="/rec-1.png"
@@ -241,8 +260,8 @@ export default function Sidebar({
     aria-hidden="true"
   />
 
-  {/* Soft white glass overlay */}
-  <div className="absolute inset-0 bg-gradient-to-t from-white/10 via-white/25 to-white/50" />
+  {/* Soft glass overlay */}
+  <div className="absolute inset-0 bg-gradient-to-t from-white/10 via-white/25 to-white/50 dark:from-transparent dark:to-black/40" />
 </div>
 
       {/* Header */}
@@ -307,8 +326,8 @@ export default function Sidebar({
                     variant="ghost"
                     className={`h-10 w-full justify-start rounded px-2 text-left transition-colors ${
 hasActiveChild
-  ? "bg-[#DDEFE5]/60 text-text-colortext-green"
-  : "bg-transparent text-mode-sidebar-foreground hover:bg-slate-50"
+  ? "bg-[#DDEFE5]/60 text-text-colortext-green dark:bg-backgroundbg-green/80 dark:text-text-colortext-green"
+  : "bg-transparent text-mode-sidebar-foreground hover:bg-backgroundbg-bluish-gray hover:text-text-colortext-black"
                     }`}
                     aria-expanded={open}
                     onClick={() =>

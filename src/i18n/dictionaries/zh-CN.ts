@@ -110,6 +110,8 @@ export const zhCN: Dictionary = {
     history: "历史记录",
     iqcIdentity: "IQC 检验",
     iqcVerification: "验证",
+    staffReturn: "装箱清单",
+    staffReturnSticker: "纸箱标签",
     exim: "进出口 (Exim)",
     moMonitoring: "MO 监控",
     logout: "退出登录",
@@ -512,6 +514,7 @@ export const zhCN: Dictionary = {
   },
   iqc: {
     title: "IQC 检验",
+    identityTitle: "IQC 检验",
     desktopSubtitle: "查看并检验此 MO 的物料。",
     selectMoTitle: "选择 MO",
     selectMoDescription: "选择一个制造订单以检验其中的物料。",
@@ -532,6 +535,8 @@ export const zhCN: Dictionary = {
     inspectionSubmitted: "检验已提交",
     verify: {
       title: "验证",
+      selectMoDescription: "选择一个制造订单以验证纸箱。",
+      moListSubtitle: "选择一个 MO 以查看并验证其纸箱。",
       desktopSubtitle: "验证此 MO 的物料和纸箱标签。",
       desktopMaterialsHint: "扫描每个 UPN 条形码；条码必须与物料编码一致。",
       stickerScanGateHint: "请先扫描此纸箱内的所有物料，再扫描纸箱标签。",
@@ -591,6 +596,8 @@ export const zhCN: Dictionary = {
   },
   staffReturn: {
     title: "员工退料",
+    selectMoDescription: "选择制造订单和工单以继续。",
+    moListSubtitle: "选择一个 MO 以查看工单并准备纸箱。",
     createPackingList: "创建装箱单",
     cartonList: "纸箱列表",
     cartonQuantity: "纸箱数量",
@@ -635,6 +642,7 @@ export const zhCN: Dictionary = {
     addMaterial: "添加物料",
   },
   staffReturnSticker: {
+    title: "纸箱标签",
     stickersScanned: "已扫描纸箱标签：{scanned}/{total}",
     scanProgressLabel: "纸箱标签扫描进度",
     allScanned: "所有纸箱标签均已扫描",

@@ -285,6 +285,16 @@ export function getMoDetail(moId: string): MoDetail | null {
   return details.get(moId) ?? null;
 }
 
+export function getMoWorkOrder(moId: string): string | null {
+  const stage = getMoDetail(moId)?.stages.find(
+    (item) => item.stageKey === "pmcOpenWo",
+  );
+
+  return stage?.stageKey === "pmcOpenWo"
+    ? (stage.data?.workOrder ?? null)
+    : null;
+}
+
 export function listMoSummaries() {
   return [...details.values()]
     .map((mo) => ({

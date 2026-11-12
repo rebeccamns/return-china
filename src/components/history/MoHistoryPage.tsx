@@ -42,9 +42,9 @@ type HistoryRow = {
 };
 
 const STATUS_STYLES: Record<MOStatus, string> = {
-  Completed: "bg-[#E6F4EA] text-[#0B5934]",
-  Rejected: "bg-red-50 text-red-600",
-  Resubmitted: "bg-amber-50 text-amber-700",
+  Completed: "bg-[#E6F4EA] text-[#0B5934] dark:bg-backgroundbg-green dark:text-text-colortext-green",
+  Rejected: "bg-red-50 text-red-600 dark:bg-backgroundbg-red dark:text-text-colortext-red",
+  Resubmitted: "bg-amber-50 text-amber-700 dark:bg-backgroundbg-yellow dark:text-text-colortext-yellow",
 };
 
 const STATUS_LABEL_KEYS = {
@@ -57,7 +57,7 @@ const headClass =
   "h-10 whitespace-nowrap bg-primaryprimary-green px-3 text-xs font-semibold text-white";
 
 const filterInputClass =
-  "h-9 w-full rounded-md border border-strokestroke-gray bg-white px-3 text-xs text-[#333] outline-none focus:border-[#046A39] focus:ring-1 focus:ring-[#046A39]/20";
+  "h-9 w-full rounded-md border border-strokestroke-gray bg-backgroundbg-white px-3 text-xs text-text-colortext-black outline-none focus:border-[#046A39] focus:ring-1 focus:ring-[#046A39]/20";
 
 function parseStatusFilter(value: string): "All" | MOStatus {
   switch (value) {
@@ -215,28 +215,28 @@ export default function MoHistoryPage({
             </span>
           </nav>
 
-          <h1 className="mb-4 text-lg font-semibold text-[#111111]">
+          <h1 className="mb-4 text-lg font-semibold text-text-colortext-black">
             {t("history.title")}
           </h1>
 
-          <section className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
+          <section className="overflow-hidden rounded-lg border border-strokestroke-gray bg-backgroundbg-white">
             <div className="border-b border-strokestroke-gray px-[18px] py-4">
               <div className="flex flex-wrap items-end justify-between gap-4">
                 <div className="w-full sm:w-[280px] sm:shrink-0">
                   <label
                     htmlFor="history-search"
-                    className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+                    className="mb-1.5 block text-xs font-medium text-text-colortext-gray"
                   >
                     {t("history.searchLabel")}
                   </label>
                   <div className="relative">
-                    <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#A3A3A1]" />
+                    <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-colortext-gray" />
                     <Input
                       id="history-search"
                       placeholder={t("history.searchPlaceholder")}
                       value={search}
                       onChange={(event) => setSearch(event.target.value)}
-                      className="h-9 rounded-md border-strokestroke-gray pl-9 text-xs placeholder:text-[#A3A3A1]"
+                      className="h-9 rounded-md border-strokestroke-gray bg-backgroundbg-white pl-9 text-xs text-text-colortext-black placeholder:text-text-colortext-gray"
                     />
                   </div>
                 </div>
@@ -250,7 +250,7 @@ export default function MoHistoryPage({
                       <button
                         type="button"
                         onClick={resetFilters}
-                        className="text-xs font-medium text-[#046A39] hover:underline"
+                        className="text-xs font-medium text-primaryprimary-green hover:underline"
                       >
                         {t("history.clearFilters")}
                       </button>
@@ -260,7 +260,7 @@ export default function MoHistoryPage({
                   <div className="w-[140px]">
                     <label
                       htmlFor="status-filter"
-                      className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+                      className="mb-1.5 block text-xs font-medium text-text-colortext-gray"
                     >
                       {t("history.statusLabel")}
                     </label>
@@ -276,14 +276,14 @@ export default function MoHistoryPage({
                         <option value="Rejected">{t(STATUS_LABEL_KEYS.Rejected)}</option>
                         <option value="Resubmitted">{t(STATUS_LABEL_KEYS.Resubmitted)}</option>
                       </select>
-                      <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#8F8F8E]" />
+                      <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-colortext-gray" />
                     </div>
                   </div>
 
                   <div className="w-[140px]">
                     <label
                       htmlFor="model-filter"
-                      className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+                      className="mb-1.5 block text-xs font-medium text-text-colortext-gray"
                     >
                       {t("history.modelLabel")}
                     </label>
@@ -301,12 +301,12 @@ export default function MoHistoryPage({
                           </option>
                         ))}
                       </select>
-                      <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#8F8F8E]" />
+                      <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-colortext-gray" />
                     </div>
                   </div>
 
                   <div className="w-[190px]">
-                    <label className="mb-1.5 block text-xs font-medium text-[#5F5F5E]">
+                    <label className="mb-1.5 block text-xs font-medium text-text-colortext-gray">
                       {t("history.dateRangeLabel")}
                     </label>
                     <CalendarPickerModal
@@ -322,7 +322,7 @@ export default function MoHistoryPage({
 
             <div className="px-[18px] pb-[18px] pt-2">
               <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-                <p className="h-8 text-xs text-[#8F8F8E]">
+                <p className="h-8 text-xs text-text-colortext-gray">
                   {t("history.showingRecords", {
                     shown: filteredRows.length,
                     total: historyRows.length,
@@ -333,7 +333,7 @@ export default function MoHistoryPage({
               <div className="overflow-x-auto rounded-md border border-strokestroke-gray">
                 <Table className="min-w-[1100px]">
                   <TableHeader>
-                    <TableRow className="hover:bg-[#F8F8F8]">
+                    <TableRow className="hover:bg-[#F8F8F8] dark:hover:bg-backgroundbg-black">
                       <TableHead className={headClass}>{t("common.moCode")}</TableHead>
                       <TableHead className={headClass}>{t("common.model")}</TableHead>
                       <TableHead className={headClass}>{t("history.detail.projectNumber")}</TableHead>
@@ -350,16 +350,16 @@ export default function MoHistoryPage({
                     {filteredRows.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={9} className="px-3 py-10 text-center">
-                          <p className="text-sm font-medium text-[#333333]">
+                          <p className="text-sm font-medium text-text-colortext-black">
                             {t("history.noMatchingRecords")}
                           </p>
-                          <p className="mt-1 text-xs text-[#8F8F8E]">
+                          <p className="mt-1 text-xs text-text-colortext-gray">
                             {t("history.noMatchingHint")}
                           </p>
                           <button
                             type="button"
                             onClick={resetFilters}
-                            className="mt-3 text-xs font-medium text-[#046A39] hover:underline"
+                            className="mt-3 text-xs font-medium text-primaryprimary-green hover:underline"
                           >
                             {t("history.resetFilters")}
                           </button>
@@ -372,9 +372,9 @@ export default function MoHistoryPage({
                         return (
                           <TableRow
                             key={row.id}
-                            className="h-12 hover:bg-[#FAFAFA]"
+                            className="h-12 hover:bg-[#FAFAFA] dark:hover:bg-backgroundbg-black"
                           >
-                            <TableCell className="whitespace-nowrap px-3 py-2 text-xs font-medium text-[#111111]">
+                            <TableCell className="whitespace-nowrap px-3 py-2 text-xs font-medium text-text-colortext-black">
                               <Link
                                 href={detailHref}
                                 className="hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green"
@@ -394,13 +394,13 @@ export default function MoHistoryPage({
                             <TableCell className="px-3 py-2">
                               <StatusBadge status={row.status} />
                             </TableCell>
-                            <TableCell className="max-w-[260px] px-3 py-2 text-xs text-[#5F5F5E]">
+                            <TableCell className="max-w-[260px] px-3 py-2 text-xs text-text-colortext-gray">
                               {row.notes}
                             </TableCell>
                             <TableCell className="whitespace-nowrap px-3 py-2 text-xs">
                               {row.submittedBy}
                             </TableCell>
-                            <TableCell className="whitespace-nowrap px-3 py-2 text-xs text-[#5F5F5E]">
+                            <TableCell className="whitespace-nowrap px-3 py-2 text-xs text-text-colortext-gray">
                               {row.dateSubmitted}
                             </TableCell>
                             <TableCell className="px-3 py-2 text-center">

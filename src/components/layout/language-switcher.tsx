@@ -28,7 +28,7 @@ export default function LanguageSwitcher() {
         <Button
           type="button"
           variant="ghost"
-          className="h-8 gap-1.5 rounded-md px-2 text-xs font-medium text-black hover:bg-slate-50"
+          className="h-8 gap-1.5 rounded-md px-2 text-xs font-medium text-text-colortext-black hover:bg-backgroundbg-bluish-gray"
           aria-label={t("language.label")}
         >
           <Languages className="h-4 w-4" strokeWidth={1.5} aria-hidden="true" />
@@ -46,7 +46,7 @@ export default function LanguageSwitcher() {
           >
             <span>{t(option.labelKey)}</span>
             {locale === option.value && (
-              <Check className="h-4 w-4 text-[#0b5934]" aria-hidden="true" />
+              <Check className="h-4 w-4 text-text-colortext-green" aria-hidden="true" />
             )}
           </DropdownMenuItem>
         ))}

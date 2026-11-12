@@ -99,7 +99,7 @@ export default function SuperadminDashboardPage() {
             <span className="text-text-colortext-gray">
               {t("superadmin.dashboard")}
             </span>
-            <span className="text-[#B5B5B3]">›</span>
+            <span className="text-text-colortext-gray">›</span>
             <span className="font-medium text-text-colortext-dark">
               {t("superadmin.dashboard")}
             </span>

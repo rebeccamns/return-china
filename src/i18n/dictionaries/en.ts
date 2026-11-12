@@ -101,6 +101,8 @@ export const en = {
     history: "History",
     iqcIdentity: "Identity",
     iqcVerification: "Verification",
+    staffReturn: "Packing List",
+    staffReturnSticker: "Carton Sticker",
     exim: "Exim",
     moMonitoring: "MO Monitoring",
     logout: "Logout",
@@ -510,6 +512,7 @@ export const en = {
   },
   iqc: {
     title: "IQC Inspect",
+    identityTitle: "IQC Identity",
     desktopSubtitle: "Review and inspect the materials for this MO.",
     selectMoTitle: "Choose an MO",
     selectMoDescription: "Select a manufacturing order to inspect its materials.",
@@ -530,6 +533,8 @@ export const en = {
     inspectionSubmitted: "Inspection Submitted",
     verify: {
       title: "Verification",
+      selectMoDescription: "Select a manufacturing order to verify its cartons.",
+      moListSubtitle: "Select an MO to view and verify its cartons.",
       desktopSubtitle: "Verify the materials and carton stickers for this MO.",
       desktopMaterialsHint:
         "Scan each UPN barcode; it must match the material code.",
@@ -591,6 +596,8 @@ export const en = {
   },
   staffReturn: {
     title: "Staff Return",
+    selectMoDescription: "Select a manufacturing order and work order to continue.",
+    moListSubtitle: "Select an MO to view its work order and prepare its cartons.",
     createPackingList: "Create Packing List",
     cartonList: "Carton List",
     cartonQuantity: "Number of cartons",
@@ -637,6 +644,7 @@ export const en = {
     addMaterial: "Add Material",
   },
   staffReturnSticker: {
+    title: "Carton Sticker",
     stickersScanned: "{scanned}/{total} Carton Stickers Scanned",
     scanProgressLabel: "Carton sticker scan progress",
     allScanned: "All carton stickers scanned",

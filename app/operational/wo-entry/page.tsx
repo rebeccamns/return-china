@@ -21,7 +21,7 @@ import { DEMO, demoMoNumber } from "@/lib/demo-data";
 import SubmitFlowDialog, { type SubmitStep } from "../_components/SubmitFlowDialog";
 
 const nestedHeadClass =
-  "bg-[#F8F8F8] px-3 text-xs font-semibold text-slate-700";
+  "bg-backgroundbg-bluish-gray px-3 text-xs font-semibold text-text-colortext-dark dark:bg-backgroundbg-black dark:text-text-colortext-black";
 
 type Material = {
   code: string;
@@ -78,7 +78,7 @@ function RemovableFileInput({
         onChange={(event) =>
           setHasFile(Boolean(event.currentTarget.files?.length))
         }
-        className=" min-w-0 flex-1 rounded-md border-strokestroke-gray px-1.5 py-1 text-[11px] file:mr-1.5 file:rounded file:border-0 file:bg-[#F3F4F6] file:px-1.5 file:py-1 file:text-[11px] file:font-medium"
+        className=        " min-w-0 flex-1 rounded-md border-strokestroke-gray px-1.5 py-1 text-[11px] file:mr-1.5 file:rounded file:border-0 file:bg-backgroundbg-bluish-gray file:px-1.5 file:py-1 file:text-[11px] file:font-medium"
       />
       {hasFile && (
         <button
@@ -86,7 +86,7 @@ function RemovableFileInput({
           aria-label={removeLabel}
           title={removeLabel}
           onClick={removeFile}
-          className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[#666666] hover:bg-red-50 hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-text-colortext-dark hover:bg-backgroundbg-red hover:text-text-colortext-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <X className="h-3.5 w-3.5" />
         </button>
@@ -265,13 +265,13 @@ export default function WoEntryPage() {
             </span>
           </nav>
 
-          <h1 className="mb-4 text-lg font-semibold text-[#111111]">
+          <h1 className="mb-4 text-lg font-semibold text-text-colortext-black">
             {t("woEntry.title")}
           </h1>
 
-          <div className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
+          <div className="overflow-hidden rounded-lg border border-strokestroke-gray bg-backgroundbg-white">
             <div className="px-[18px] py-[18px]">
-              <h2 className="text-sm font-semibold text-[#111111]">{t("woEntry.moList")}</h2>
+              <h2 className="text-sm font-semibold text-text-colortext-black">{t("woEntry.moList")}</h2>
             </div>
 
             <div className="border-t border-strokestroke-gray" />
@@ -280,7 +280,7 @@ export default function WoEntryPage() {
               <div className="w-full sm:w-[280px]">
                 <label
                   htmlFor="wo-entry-search"
-                  className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+                  className="mb-1.5 block text-xs font-medium text-text-colortext-dark"
                 >
                   {t("history.searchLabel")}
                 </label>
@@ -291,14 +291,14 @@ export default function WoEntryPage() {
                     value={listSearch}
                     onChange={(event) => setListSearch(event.target.value)}
                     placeholder={t("woEntry.searchPlaceholder")}
-                    className="h-9 rounded-md border-strokestroke-gray pl-9 text-xs placeholder:text-[#A3A3A1]"
+                    className="h-9 rounded-md border-strokestroke-gray pl-9 text-xs placeholder:text-text-colortext-gray"
                   />
                 </div>
               </div>
               <div>
                 <label
                   htmlFor="wo-entry-iqc-filter"
-                  className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+                  className="mb-1.5 block text-xs font-medium text-text-colortext-dark"
                 >
                   {t("woEntry.iqcStatus")}
                 </label>
@@ -308,7 +308,7 @@ export default function WoEntryPage() {
                   onChange={(event) =>
                     setIqcFilter(event.target.value as IqcFilter)
                   }
-                  className="h-9 w-[150px] rounded-md border border-strokestroke-gray bg-white px-3 text-xs text-[#333333]"
+                  className="h-9 w-[150px] rounded-md border border-strokestroke-gray bg-backgroundbg-white px-3 text-xs text-text-colortext-black"
                 >
                   <option value="All">{t("history.allStatuses")}</option>
                   <option value="Passed">{t("status.passed")}</option>
@@ -322,7 +322,7 @@ export default function WoEntryPage() {
                     setListSearch("");
                     setIqcFilter("All");
                   }}
-                  className="h-9 text-xs font-medium text-[#046A39] hover:underline"
+                  className="h-9 text-xs font-medium text-text-colortext-green hover:underline"
                 >
                   {t("history.clearFilters")}
                 </button>
@@ -330,7 +330,7 @@ export default function WoEntryPage() {
             </div>
 
             <div className="px-[18px] pb-[18px] pt-4">
-              <p className="mb-2 text-xs text-[#8F8F8E]">
+              <p className="mb-2 text-xs text-text-colortext-gray">
                 {t("history.showingRecords", {
                   shown: filteredRows.length,
                   total: rows.length,
@@ -339,7 +339,7 @@ export default function WoEntryPage() {
               <div className="overflow-x-auto rounded-md border border-strokestroke-gray">
                 <Table className="min-w-[1400px]">
                   <TableHeader className="bg-[#F8F8F8]">
-                    <TableRow className="hover:bg-[#F8F8F8]">
+                    <TableRow className="hover:bg-backgroundbg-bluish-gray">
                       <TableHead className="w-12 px-3 text-xs" />
                       <TableHead className="min-w-[180px] px-3 text-xs">{t("common.moCode")}</TableHead>
                       <TableHead className="px-3 text-xs">{t("common.model")}</TableHead>
@@ -358,7 +358,7 @@ export default function WoEntryPage() {
                       <TableRow>
                         <TableCell
                           colSpan={10}
-                          className="px-3 py-10 text-center text-sm text-[#5F5F5E]"
+                          className="px-3 py-10 text-center text-sm text-text-colortext-dark"
                         >
                           {rows.length === 0
                             ? t("common.noData")
@@ -374,7 +374,7 @@ export default function WoEntryPage() {
                         <React.Fragment key={row.id}>
                           <TableRow
                             key={row.id}
-                            className="h-14 hover:bg-[#FAFAFA]"
+                            className="h-14 hover:bg-backgroundbg-bluish-gray"
                           >
                             <TableCell className="px-3 py-2">
                               <Button
@@ -394,11 +394,11 @@ export default function WoEntryPage() {
                               </Button>
                             </TableCell>
 
-                            <TableCell className="px-3 py-2 text-xs font-medium text-[#111111]">
+                            <TableCell className="px-3 py-2 text-xs font-medium text-text-colortext-black">
                               {row.code}
                             </TableCell>
 
-                            <TableCell className="px-3 py-2 text-xs text-[#111111]">
+                            <TableCell className="px-3 py-2 text-xs text-text-colortext-black">
                               {row.model}
                             </TableCell>
 
@@ -406,8 +406,8 @@ export default function WoEntryPage() {
                               <span
                                 className={
                                   row.iqcStatus === "Passed"
-                                    ? "text-[#0b5934]"
-                                    : "text-red-600"
+                                    ? "text-text-colortext-green"
+                                    : "text-text-colortext-red"
                                 }
                               >
                                 {row.iqcStatus === "Passed"
@@ -416,7 +416,7 @@ export default function WoEntryPage() {
                               </span>
                             </TableCell>
 
-                            <TableCell className="px-3 py-2 text-xs text-[#111111]">
+                            <TableCell className="px-3 py-2 text-xs text-text-colortext-black">
                               {t(row.materials.length === 1 ? "woEntry.itemSingular" : "woEntry.itemPlural", { count: row.materials.length })}
                             </TableCell>
 
@@ -427,7 +427,7 @@ export default function WoEntryPage() {
                                 onChange={(e) =>
                                   updateWo(row.id, e.target.value)
                                 }
-                                className="h-9 rounded-md border-strokestroke-gray px-3 text-xs placeholder:text-[#A3A3A1]"
+                                className="h-9 rounded-md border-strokestroke-gray px-3 text-xs placeholder:text-text-colortext-gray"
                               />
                             </TableCell>
 
@@ -436,7 +436,7 @@ export default function WoEntryPage() {
                                 aria-label={t("woEntry.bearingCost")}
                                 name={`bearingCost-${row.id}`}
                                 placeholder={t("woEntry.bearingCostPlaceholder")}
-                                className="h-9 rounded-md border-strokestroke-gray px-3 text-xs placeholder:text-[#A3A3A1]"
+                                className="h-9 rounded-md border-strokestroke-gray px-3 text-xs placeholder:text-text-colortext-gray"
                               />
                             </TableCell>
 
@@ -475,13 +475,13 @@ export default function WoEntryPage() {
                           {isExpanded && (
                             <TableRow
                               key={`${row.id}-materials`}
-                              className="bg-white hover:bg-white"
+                              className="bg-backgroundbg-white hover:bg-backgroundbg-white"
                             >
                               <TableCell colSpan={10} className="p-0">
                                 <div className="overflow-x-auto border-t border-strokestroke-gray">
                                   <Table className="min-w-[1050px]">
                                     <TableHeader className="bg-[#F8F8F8]">
-                                      <TableRow className="hover:bg-[#F8F8F8]">
+                                      <TableRow className="hover:bg-backgroundbg-bluish-gray">
                                         <TableHead className={nestedHeadClass}>
                                           {t("common.materialCode")}
                                         </TableHead>
@@ -512,7 +512,7 @@ export default function WoEntryPage() {
                                       {row.materials.map((material, i) => (
                                         <TableRow
                                           key={`${row.id}-material-${i}`}
-                                          className="bg-white hover:bg-white"
+                                          className="bg-backgroundbg-white hover:bg-backgroundbg-white"
                                         >
                                           <TableCell className="text-xs">
                                             {material.code}
@@ -530,8 +530,8 @@ export default function WoEntryPage() {
                                             <span
                                               className={
                                                 material.category === "Wait repair"
-                                                  ? "inline-flex rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800"
-                                                  : "inline-flex rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800"
+                                                  ? "inline-flex rounded-full bg-backgroundbg-yellow px-2 py-0.5 text-xs font-medium text-text-colortext-yellow"
+                                                  : "inline-flex rounded-full bg-backgroundbg-green px-2 py-0.5 text-xs font-medium text-text-colortext-green"
                                               }
                                             >
                                               {material.category === "Wait repair"

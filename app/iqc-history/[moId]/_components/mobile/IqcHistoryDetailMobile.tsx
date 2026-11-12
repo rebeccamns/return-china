@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import BackTitle from "@/components/layout/BackTitle";
 import type { MobileNavItem } from "@/components/layout/mobile-bottom-nav";
 import { useI18n } from "@/i18n";
-import { DEMO, resolveDemoMoNumber } from "@/lib/demo-data";
 import { getMoDetail } from "@/lib/mo-detail/data";
 import type { StageDetail, StageKey } from "@/lib/mo-detail/types";
 
@@ -18,8 +17,6 @@ import StageDetailView from "@/components/mobile-history/StageDetailView";
 type Props = {
   moId: string;
 };
-
-const DEFAULT_MO_ID = DEMO.moNumber;
 
 export default function IqcHistoryDetailMobile({ moId }: Props) {
   const router = useRouter();
@@ -46,9 +43,7 @@ export default function IqcHistoryDetailMobile({ moId }: Props) {
         router.push("/iqc");
         break;
       case "verification":
-        router.push(
-          `/iqc-verification/${resolveDemoMoNumber(moId || DEFAULT_MO_ID)}`,
-        );
+        router.push("/iqc-verification");
         break;
       case "history":
         router.push("/iqc-history");

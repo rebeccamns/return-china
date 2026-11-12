@@ -309,15 +309,15 @@ export default function MoEntryPage() {
             </span>
           </nav>
 
-          <h1 className="mb-4 text-lg font-semibold text-[#111111]">
+          <h1 className="mb-4 text-lg font-semibold text-text-colortext-black">
             {t("moEntry.title")}
           </h1>
 
-          <div className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
+          <div className="overflow-hidden rounded-lg border border-strokestroke-gray bg-backgroundbg-white">
             <div className="px-[18px] py-[18px]">
               <div className="grid grid-cols-1 items-end gap-3 sm:grid-cols-2 xl:grid-cols-[1.15fr_1fr_0.8fr_1.4fr_auto]">
                 <div className="min-w-0">
-                  <label className="mb-1.5 block text-xs font-medium text-[#111111]">
+                  <label className="mb-1.5 block text-xs font-medium text-text-colortext-black">
                     {t("moEntry.moNumberLabel")}{" "}
                     <span className="text-red-500">*</span>
                   </label>
@@ -325,12 +325,12 @@ export default function MoEntryPage() {
                     placeholder={t("moEntry.moNumberPlaceholder")}
                     value={moNumber}
                     onChange={(e) => setMoNumber(e.target.value)}
-                    className="h-9 rounded-md border-strokestroke-gray px-3 text-xs placeholder:text-[#A3A3A1]"
+                    className="h-9 rounded-md border-strokestroke-gray px-3 text-xs placeholder:text-text-colortext-gray"
                   />
                 </div>
 
                 <div className="min-w-0">
-                  <label className="mb-1.5 block text-xs font-medium text-[#111111]">
+                  <label className="mb-1.5 block text-xs font-medium text-text-colortext-black">
                     {t("moEntry.modelLabel")}{" "}
                     <span className="text-red-500">*</span>
                   </label>
@@ -338,24 +338,24 @@ export default function MoEntryPage() {
                     placeholder={t("moEntry.modelPlaceholder")}
                     value={model}
                     onChange={(e) => setModel(e.target.value)}
-                    className="h-9 rounded-md border-strokestroke-gray px-3 text-xs placeholder:text-[#A3A3A1]"
+                    className="h-9 rounded-md border-strokestroke-gray px-3 text-xs placeholder:text-text-colortext-gray"
                   />
                 </div>
 
                 <div className="min-w-0">
-                  <label className="mb-1.5 block text-xs font-medium text-[#111111]">
+                  <label className="mb-1.5 block text-xs font-medium text-text-colortext-black">
                     Project Number <span className="text-red-500">*</span>
                   </label>
                   <Input
                     placeholder={DEMO.projectNumber}
                     value={projectNumber}
                     onChange={(e) => setProjectNumber(e.target.value)}
-                    className="h-9 rounded-md border-strokestroke-gray px-3 text-xs placeholder:text-[#A3A3A1]"
+                    className="h-9 rounded-md border-strokestroke-gray px-3 text-xs placeholder:text-text-colortext-gray"
                   />
                 </div>
 
                 <div className="min-w-0">
-                  <label className="mb-1.5 block text-xs font-medium text-[#111111]">
+                  <label className="mb-1.5 block text-xs font-medium text-text-colortext-black">
                     Target Pengiriman <span className="text-red-500">*</span>
                   </label>
 
@@ -375,7 +375,7 @@ export default function MoEntryPage() {
                           ? "text-red-600"
                           : deliveryDayCount === 0
                             ? "text-amber-600"
-                            : "text-[#777776]"
+                            : "text-text-colortext-gray"
                       }`}
                       aria-live="polite"
                     >
@@ -430,54 +430,54 @@ export default function MoEntryPage() {
 
             {rows.length === 0 ? (
               <div className="flex flex-col items-center px-[18px] py-12 text-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#E7F5EC] text-[#008348]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-backgroundbg-green text-text-colortext-green">
                   <ClipboardList className="h-6 w-6" />
                 </div>
-                <h2 className="mt-3 text-sm font-semibold text-[#111111]">
+                <h2 className="mt-3 text-sm font-semibold text-text-colortext-black">
                   {t("moEntry.emptyTitle")}
                 </h2>
-                <p className="mt-1 max-w-sm text-xs text-[#8F8F8E]">
+                <p className="mt-1 max-w-sm text-xs text-text-colortext-gray">
                   {t("moEntry.emptyDescription")}
                 </p>
               </div>
             ) : (
             <div className="px-[18px] pb-[18px] pt-4">
               <div className="mb-3">
-                <h2 className="text-sm font-semibold text-[#111111]">
+                <h2 className="text-sm font-semibold text-text-colortext-black">
                   {t("common.materialList")}
                 </h2>
               </div>
 
               <div className="mb-3 flex items-center justify-between gap-4">
                 <div className="flex min-w-0 flex-wrap items-center gap-2">
-                  <div className="flex h-8 max-w-full items-center rounded-full bg-[#F8F8F8] px-3 text-xs">
-                    <span className="shrink-0 text-[#8F8F8E]">
+                  <div className="flex h-8 max-w-full items-center rounded-full bg-backgroundbg-bluish-gray px-3 text-xs">
+                    <span className="shrink-0 text-text-colortext-gray">
                       {t("common.mo")}
                     </span>
-                    <span className="ml-2 truncate font-medium text-[#111111]">
+                    <span className="ml-2 truncate font-medium text-text-colortext-black">
                       {moNumber.trim() || "—"}
                     </span>
                   </div>
 
-                  <div className="flex h-8 max-w-[220px] items-center rounded-full bg-[#F8F8F8] px-3 text-xs">
-                    <span className="shrink-0 text-[#8F8F8E]">
+                  <div className="flex h-8 max-w-[220px] items-center rounded-full bg-backgroundbg-bluish-gray px-3 text-xs">
+                    <span className="shrink-0 text-text-colortext-gray">
                       {t("moEntry.modelLabel")}
                     </span>
-                    <span className="ml-2 truncate font-medium text-[#111111]">
+                    <span className="ml-2 truncate font-medium text-text-colortext-black">
                       {model.trim() || "—"}
                     </span>
                   </div>
 
-                  <div className="flex h-8 max-w-[220px] items-center rounded-full bg-[#F8F8F8] px-3 text-xs">
-                    <span className="shrink-0 text-[#8F8F8E]">Project No.</span>
-                    <span className="ml-2 truncate font-medium text-[#111111]">
+                  <div className="flex h-8 max-w-[220px] items-center rounded-full bg-backgroundbg-bluish-gray px-3 text-xs">
+                    <span className="shrink-0 text-text-colortext-gray">Project No.</span>
+                    <span className="ml-2 truncate font-medium text-text-colortext-black">
                       {projectNumber.trim() || "—"}
                     </span>
                   </div>
                 </div>
 
                 <div className="flex shrink-0 items-center gap-3">
-                  <span className="text-xs text-[#5F5F5E]">
+                  <span className="text-xs text-text-colortext-dark">
                     {t(
                       rows.length === 1
                         ? "common.itemSingular"
@@ -511,7 +511,7 @@ export default function MoEntryPage() {
               <div className="overflow-x-auto rounded-md border border-strokestroke-gray">
                 <Table className="min-w-[1450px]">
                   <TableHeader className="bg-[#F8F8F8]">
-                    <TableRow className="hover:bg-[#F8F8F8]">
+                    <TableRow className="hover:bg-backgroundbg-bluish-gray">
                       <TableHead className="w-12 px-3 text-xs" />
                       <TableHead className="px-3 text-xs">
                         {t("common.materialCode")}
@@ -550,8 +550,8 @@ export default function MoEntryPage() {
                           key={index}
                           className={`h-12 ${
                             isChecked
-                              ? "bg-[#EAF6EE] hover:bg-[#EAF6EE]"
-                              : "hover:bg-[#FAFAFA]"
+                              ? "bg-backgroundbg-green hover:bg-backgroundbg-green"
+                              : "hover:bg-backgroundbg-bluish-gray"
                           }`}
                         >
                           <TableCell className="px-3 py-2">
@@ -595,7 +595,7 @@ export default function MoEntryPage() {
                               onChange={(e) =>
                                 updateRow(index, "englishName", e.target.value)
                               }
-                              className="h-8 rounded-md border-strokestroke-gray px-2 text-xs placeholder:text-[#A3A3A1]"
+                              className="h-8 rounded-md border-strokestroke-gray px-2 text-xs placeholder:text-text-colortext-gray"
                             />
                           </TableCell>
 
@@ -606,7 +606,7 @@ export default function MoEntryPage() {
                               onChange={(e) =>
                                 updateRow(index, "chinaName", e.target.value)
                               }
-                              className="h-8 rounded-md border-strokestroke-gray px-2 text-xs placeholder:text-[#A3A3A1]"
+                              className="h-8 rounded-md border-strokestroke-gray px-2 text-xs placeholder:text-text-colortext-gray"
                             />
                           </TableCell>
 
@@ -618,7 +618,7 @@ export default function MoEntryPage() {
                               onChange={(e) =>
                                 updateRow(index, "qty", e.target.value)
                               }
-                              className="h-8 rounded-md border-strokestroke-gray px-2 text-xs placeholder:text-[#A3A3A1]"
+                              className="h-8 rounded-md border-strokestroke-gray px-2 text-xs placeholder:text-text-colortext-gray"
                             />
                           </TableCell>
 
@@ -676,7 +676,7 @@ export default function MoEntryPage() {
                               onChange={(e) =>
                                 updateRow(index, "locator", e.target.value)
                               }
-                              className="h-8 rounded-md border-strokestroke-gray px-2 text-xs placeholder:text-[#A3A3A1]"
+                              className="h-8 rounded-md border-strokestroke-gray px-2 text-xs placeholder:text-text-colortext-gray"
                             />
                           </TableCell>
 
@@ -687,7 +687,7 @@ export default function MoEntryPage() {
                               onChange={(e) =>
                                 updateRow(index, "projectCode", e.target.value)
                               }
-                              className="h-8 rounded-md border-strokestroke-gray px-2 text-xs placeholder:text-[#A3A3A1]"
+                              className="h-8 rounded-md border-strokestroke-gray px-2 text-xs placeholder:text-text-colortext-gray"
                             />
                           </TableCell>
 
@@ -696,7 +696,7 @@ export default function MoEntryPage() {
                               <button
                                 type="button"
                                 onClick={() => deleteRow(index)}
-                                className="text-xs font-medium text-red-600 hover:underline"
+                                className="text-xs font-medium text-text-colortext-red hover:underline"
                               >
                                 {t("moEntry.delete")}
                               </button>

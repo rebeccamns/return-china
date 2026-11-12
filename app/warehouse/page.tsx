@@ -587,8 +587,8 @@ export default function WarehousePage() {
                                             <span
                                               className={
                                                 material.category === "Wait repair"
-                                                  ? "inline-flex whitespace-nowrap rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800"
-                                                  : "inline-flex whitespace-nowrap rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800"
+                                                  ? "inline-flex whitespace-nowrap rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800 dark:bg-backgroundbg-yellow dark:text-text-colortext-yellow"
+                                                  : "inline-flex whitespace-nowrap rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800 dark:bg-backgroundbg-green dark:text-text-colortext-green"
                                               }
                                             >
                                               {material.category === "Wait repair"
@@ -798,8 +798,8 @@ export default function WarehousePage() {
                                       <span
                                         className={
                                           material.category === "Wait repair"
-                                            ? "inline-flex whitespace-nowrap rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800"
-                                            : "inline-flex whitespace-nowrap rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800"
+                                            ? "inline-flex whitespace-nowrap rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800 dark:bg-backgroundbg-yellow dark:text-text-colortext-yellow"
+                                            : "inline-flex whitespace-nowrap rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800 dark:bg-backgroundbg-green dark:text-text-colortext-green"
                                         }
                                       >
                                         {material.category === "Wait repair"

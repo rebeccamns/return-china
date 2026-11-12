@@ -65,7 +65,7 @@ export default function IqcHistoryDesktop() {
             </span>
           </nav>
 
-          <h1 className="mb-5 text-lg font-semibold text-[#111111]">
+          <h1 className="mb-5 text-lg font-semibold text-text-colortext-black">
             {t("iqcHistory.title")}
           </h1>
 

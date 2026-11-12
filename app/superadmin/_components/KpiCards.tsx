@@ -8,8 +8,8 @@ type Tone = "inverse" | "good" | "bad";
 
 const TONE_CLASS: Record<Tone, string> = {
   inverse: "text-white/90",
-  good: "text-[#0b6b3a]",
-  bad: "text-[#b3202d]",
+  good: "text-text-colortext-green",
+  bad: "text-text-colortext-red",
 };
 
 type CardProps = {
@@ -43,7 +43,7 @@ function KpiCard({
         "flex min-h-[96px] sm:min-h-[102px] flex-col justify-between rounded-lg border p-3.5 sm:p-4 transition-shadow hover:shadow-xs",
         hero
           ? "border-transparent bg-gradient-to-br from-[#058346] to-[#0b5934] text-white shadow-xs"
-          : "border-strokestroke-gray bg-white",
+          : "border-strokestroke-gray bg-backgroundbg-white",
       )}
     >
       {/* Top row: Title + Icon */}
@@ -51,7 +51,7 @@ function KpiCard({
         <span
           className={cn(
             "text-xs sm:text-[13px] font-medium truncate",
-            hero ? "text-white/95" : "text-[#555554]",
+            hero ? "text-white/95" : "text-text-colortext-dark",
           )}
           title={title}
         >
@@ -72,7 +72,7 @@ function KpiCard({
         <p
           className={cn(
             "text-2xl font-bold tracking-tight leading-none sm:text-[26px]",
-            hero ? "text-white" : "text-[#111111]",
+            hero ? "text-white" : "text-text-colortext-black",
           )}
         >
           {value}
@@ -128,7 +128,7 @@ export default function KpiCards({
         tone={kpis.completedDelta >= 0 ? "good" : "bad"}
         icon={Check}
         iconWrap="bg-backgroundbg-green"
-        iconColor="text-[#0b6b3a]"
+        iconColor="text-text-colortext-green"
       />
 
       <KpiCard
@@ -139,7 +139,7 @@ export default function KpiCards({
         tone="bad"
         icon={Truck}
         iconWrap="bg-backgroundbg-red"
-        iconColor="text-[#c92230]"
+        iconColor="text-text-colortext-red"
       />
 
       <KpiCard
@@ -152,7 +152,7 @@ export default function KpiCards({
         tone={kpis.leadTimeDelta <= 0 ? "good" : "bad"}
         icon={Clock}
         iconWrap="bg-backgroundbg-blue"
-        iconColor="text-[#2736d9]"
+        iconColor="text-text-colortext-blue"
       />
     </section>
   );

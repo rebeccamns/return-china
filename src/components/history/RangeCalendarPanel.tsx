@@ -172,8 +172,8 @@ export default function RangeCalendarPanel({
 
   return (
     <div ref={panelRef} className="flex flex-col">
-      <header className="flex min-h-10 items-center border-b border-[#E4E4E2] px-4 py-2.5 pr-12">
-        <h2 className="text-sm font-semibold text-[#222222]">
+      <header className="flex min-h-10 items-center border-b border-[#E4E4E2] px-4 py-2.5 pr-12 dark:border-strokestroke-gray">
+        <h2 className="text-sm font-semibold text-text-colortext-black">
           {t("history.calendarPicker.title")}
         </h2>
       </header>
@@ -209,7 +209,7 @@ export default function RangeCalendarPanel({
               />
             </div>
 
-            <div className="hidden border-l border-[#E4E4E2] p-3 md:block">
+            <div className="hidden border-l border-[#E4E4E2] p-3 md:block dark:border-strokestroke-gray">
               <MonthGrid
                 view={rightView}
                 locale={locale}
@@ -227,9 +227,9 @@ export default function RangeCalendarPanel({
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 border-t border-[#E4E4E2] px-3 py-2.5 md:flex-row md:items-end md:justify-between">
+          <div className="flex flex-col gap-3 border-t border-[#E4E4E2] px-3 py-2.5 md:flex-row md:items-end md:justify-between dark:border-strokestroke-gray">
             <div className="grid min-w-0 flex-1 grid-cols-2 gap-2.5">
-              <label className="min-w-0 space-y-1 text-xs font-medium text-[#555554]">
+              <label className="min-w-0 space-y-1 text-xs font-medium text-text-colortext-gray">
                 {t("history.calendarPicker.startDate")}
                 <Input
                   type="date"
@@ -237,10 +237,10 @@ export default function RangeCalendarPanel({
                   onChange={(event) =>
                     handleDateInputChange("start", event.target.value)
                   }
-                  className="h-8 border-[#D5D5D3] bg-white text-sm"
+                  className="h-8 border-strokestroke-gray bg-backgroundbg-white text-sm text-text-colortext-black"
                 />
               </label>
-              <label className="min-w-0 space-y-1 text-xs font-medium text-[#555554]">
+              <label className="min-w-0 space-y-1 text-xs font-medium text-text-colortext-gray">
                 {t("history.calendarPicker.endDate")}
                 <Input
                   type="date"
@@ -248,7 +248,7 @@ export default function RangeCalendarPanel({
                   onChange={(event) =>
                     handleDateInputChange("end", event.target.value)
                   }
-                  className="h-8 border-[#D5D5D3] bg-white text-sm"
+                  className="h-8 border-strokestroke-gray bg-backgroundbg-white text-sm text-text-colortext-black"
                 />
               </label>
             </div>
@@ -257,7 +257,7 @@ export default function RangeCalendarPanel({
               <Button
                 type="button"
                 variant="outline"
-                className="h-9 border-[#D5D5D3] bg-white px-3 text-xs"
+                className="h-9 border-strokestroke-gray bg-backgroundbg-white px-3 text-xs"
                 onClick={onCancel}
               >
                 {t("common.cancel")}

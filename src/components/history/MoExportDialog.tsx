@@ -242,7 +242,7 @@ export default function MoExportButton({ mo }: { mo: MoDetail }) {
                   <TableHead
                     key={group.label}
                     colSpan={group.columns.length}
-                    className="sticky top-0 z-10 h-8 border-l border-white/20 px-3 text-center text-[11px] uppercase tracking-wide first:border-l-0"
+                    className="sticky top-0 z-10 h-8 border-l border-white/20 px-3 text-center text-[11px] uppercase tracking-wide first:border-l-0 dark:bg-backgroundbg-black dark:text-text-colortext-black"
                   >
                     {group.label}
                   </TableHead>
@@ -253,7 +253,7 @@ export default function MoExportButton({ mo }: { mo: MoDetail }) {
                   group.columns.map((column, columnIndex) => (
                     <th
                       key={`${group.label}-${column}`}
-                      className={`sticky top-8 z-10 h-9 whitespace-nowrap bg-primaryprimary-green px-3 text-left align-middle text-[11px] font-medium text-white ${
+                      className={`sticky top-8 z-10 h-9 whitespace-nowrap bg-primaryprimary-green px-3 text-left align-middle text-[11px] font-medium text-white dark:bg-backgroundbg-black dark:text-text-colortext-black ${
                         columnIndex === 0 ? "border-l border-white/20" : ""
                       }`}
                     >
@@ -275,11 +275,11 @@ export default function MoExportButton({ mo }: { mo: MoDetail }) {
                 </TableRow>
               ) : (
                 rows.map((row, rowIndex) => (
-                  <TableRow key={rowIndex} className="hover:bg-slate-50">
+                  <TableRow key={rowIndex} className="hover:bg-slate-50 dark:hover:bg-backgroundbg-black">
                     {row.map((cell, cellIndex) => (
                       <TableCell
                         key={cellIndex}
-                        className="h-9 whitespace-nowrap border-b border-strokestroke-gray px-3 py-2 text-xs text-black"
+                        className="h-9 whitespace-nowrap border-b border-strokestroke-gray px-3 py-2 text-xs text-text-colortext-black"
                       >
                         {cell}
                       </TableCell>

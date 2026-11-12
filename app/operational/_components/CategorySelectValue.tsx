@@ -15,8 +15,10 @@ export default function CategorySelectValue({ value, placeholder }: Props) {
     <span
       className={cn(
         "inline-flex rounded-full px-1 py-0.5 text-xs font-medium",
-        value === "Wait repair" && "bg-yellow-100 text-yellow-800",
-        value === "Idle OK" && "bg-green-100 text-green-800",
+        value === "Wait repair" &&
+          "bg-yellow-100 text-yellow-800 dark:bg-backgroundbg-yellow dark:text-text-colortext-yellow",
+        value === "Idle OK" &&
+          "bg-green-100 text-green-800 dark:bg-backgroundbg-green dark:text-text-colortext-green",
       )}
     >
       <SelectValue />

@@ -32,10 +32,10 @@ type Props = {
 };
 
 const headClass =
-  "h-10 whitespace-nowrap bg-[#F8F8F8] px-3 text-xs font-medium text-slate-700";
+  "h-10 whitespace-nowrap bg-[#F8F8F8] px-3 text-xs font-medium text-slate-700 dark:bg-backgroundbg-black dark:text-text-colortext-black";
 
 const inputClass =
-  "h-9 w-[240px] rounded-md border-strokestroke-gray px-3 text-xs placeholder:text-[#A3A3A1]";
+  "h-9 w-[240px] rounded-md border-strokestroke-gray bg-backgroundbg-white px-3 text-xs text-text-colortext-black placeholder:text-text-colortext-gray";
 
 export default function MaterialScanTable({
   carton,
@@ -109,10 +109,10 @@ export default function MaterialScanTable({
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-strokestroke-gray bg-white">
+    <div className="overflow-x-auto rounded-lg border border-strokestroke-gray bg-backgroundbg-white">
       <Table className="min-w-[1100px]">
         <TableHeader className="bg-[#F8F8F8]">
-          <TableRow className="hover:bg-[#F8F8F8]">
+          <TableRow className="hover:bg-[#F8F8F8] dark:hover:bg-backgroundbg-black">
             <TableHead className={headClass}>#</TableHead>
             <TableHead className={headClass}>
               {t("common.materialCode")}
@@ -136,20 +136,20 @@ export default function MaterialScanTable({
             return (
               <TableRow
                 key={material.id}
-                className="h-[53px] hover:bg-[#FAFAFA]"
+                className="h-[53px] hover:bg-[#FAFAFA] dark:hover:bg-backgroundbg-black"
               >
-                <TableCell className="px-3 py-2 text-xs text-[#111111]">
+                <TableCell className="px-3 py-2 text-xs text-text-colortext-black">
                   {index + 1}
                 </TableCell>
-                <TableCell className="px-3 py-2 text-xs font-medium text-[#111111]">
+                <TableCell className="px-3 py-2 text-xs font-medium text-text-colortext-black">
                   {material.code}
                 </TableCell>
-                <TableCell className="max-w-[260px] px-3 py-2 text-xs text-[#111111]">
+                <TableCell className="max-w-[260px] px-3 py-2 text-xs text-text-colortext-black">
                   <span className="block truncate" title={material.englishName}>
                     {material.englishName}
                   </span>
                   <span
-                    className="mt-0.5 block truncate text-slate-500"
+                    className="mt-0.5 block truncate text-slate-500 dark:text-text-colortext-gray"
                     title={material.chinaName}
                   >
                     {material.chinaName}
@@ -182,7 +182,7 @@ export default function MaterialScanTable({
                     <p
                       id={`${inputId}-error`}
                       role="alert"
-                      className="mt-1 max-w-[240px] text-xs leading-4 text-red-700"
+                      className="mt-1 max-w-[240px] text-xs leading-4 text-red-700 dark:text-red-300"
                     >
                       {error}
                     </p>
@@ -192,8 +192,8 @@ export default function MaterialScanTable({
                   <span
                     className={`inline-flex h-6 items-center rounded-full px-2 text-xs font-medium ${
                       scanned
-                        ? "bg-[#E7F5EC] text-[#006B3C]"
-                        : "bg-slate-100 text-[#737373]"
+                        ? "bg-[#E7F5EC] text-[#006B3C] dark:bg-backgroundbg-green dark:text-text-colortext-green"
+                        : "bg-slate-100 text-[#737373] dark:bg-backgroundbg-bluish-gray dark:text-text-colortext-gray"
                     }`}
                   >
                     {scanned

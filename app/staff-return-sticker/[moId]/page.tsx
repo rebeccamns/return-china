@@ -3,6 +3,8 @@
 
 import { use, useMemo, useState } from "react";
 import { Check } from "lucide-react";
+import Sidebar from "@/components/layout/sidebar";
+import TopBar from "@/components/layout/topbar";
 import MobileHeader from "@/components/layout/mobile-header";
 import MobileBottomNav, {
   STAFF_RETURN_ITEMS,
@@ -13,9 +15,9 @@ import StickyActionBar, {
   primaryButton,
   secondaryButton,
 } from "@/components/layout/StickyActionBar";
+import { useIsDesktop } from "@/hooks/use-is-desktop";
 import { useI18n } from "@/i18n";
 import { resolveDemoMoNumber } from "@/lib/demo-data";
-import MoSummaryCard from "./_components/MoSummaryCard";
 
 import StickerCartonList, {
   type StickerCarton,
@@ -38,10 +40,10 @@ const INITIAL_CARTONS: StickerCarton[] = [
 export default function StaffReturnStickerPage({ params }: PageProps) {
   const { moId } = use(params);
   const moNumber = resolveDemoMoNumber(moId);
+  const isDesktop = useIsDesktop();
   const { t } = useI18n();
 
   const [cartons, setCartons] = useState(INITIAL_CARTONS);
-  const [showCartonList, setShowCartonList] = useState(false);
   const [activeCarton, setActiveCarton] =
     useState<StickerCarton | null>(null);
   const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
@@ -55,9 +57,12 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
 
   const allScanned =
     cartons.length > 0 && scannedCount === cartons.length;
-  const bottomPadding = showCartonList
-    ? "pb-[calc(var(--bottom-nav-h)+88px)] max-md:pb-[calc(var(--bottom-nav-h)+var(--action-bar-h)+12px)]"
-    : "pb-[calc(var(--bottom-nav-h)+24px)] max-md:pb-[calc(var(--bottom-nav-h)+12px)]";
+  const bottomPadding =
+    "pb-[calc(var(--bottom-nav-h)+var(--action-bar-h)+12px)]";
+
+  if (isDesktop === undefined) {
+    return <div className="min-h-screen bg-backgroundbg-gray" />;
+  }
 
   function markStickerScanned(cartonId: string) {
     setCartons((current) =>
@@ -79,35 +84,35 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
   }
 
   return (
-    <main className="mobile-body-copy relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray max-md:bg-white">
+    <main className="mobile-body-copy relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray max-md:bg-white dark:bg-backgroundbg-gray">
+      {isDesktop && <Sidebar variant="staffReturn" />}
       <section
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-[255px] overflow-hidden max-md:hidden"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[255px] overflow-hidden md:hidden"
       >
-        <div className="absolute -left-[90px] -top-[80px] h-[270px] w-[620px] rounded-[50%] bg-[#d8f4e2]" />
-        <div className="absolute -left-[100px] top-[80px] h-[190px] w-[620px] rounded-[50%] bg-[#effbf3]" />
+        <div className="absolute -left-[90px] -top-[80px] h-[270px] w-[620px] rounded-[50%] bg-[var(--decor-circle-1)]" />
+        <div className="absolute -left-[100px] top-[80px] h-[190px] w-[620px] rounded-[50%] bg-[var(--decor-circle-2)]" />
       </section>
-      <MobileCircleBackground />
-
-      <MobileHeader />
+      {!isDesktop && <MobileCircleBackground />}
+      {isDesktop ? <TopBar /> : <MobileHeader />}
 
       <section
-        className={`relative z-10 mx-auto w-full max-w-[412px] px-5 max-md:px-4 pt-[calc(var(--mobile-header-h)+1.25rem)] max-md:pt-[calc(var(--mobile-header-h)+0.5rem)] ${bottomPadding}`}
+        className={`relative z-10 ${
+          isDesktop
+            ? "ml-[255px] mt-[52px] w-auto px-6 py-5 pb-32"
+            : `mx-auto w-full max-w-[412px] px-5 max-md:px-4 pt-[calc(var(--mobile-header-h)+1.25rem)] max-md:pt-[calc(var(--mobile-header-h)+0.5rem)] ${bottomPadding}`
+        }`}
       >
+        {isDesktop && (
+          <nav className="mb-4 text-xs text-text-colortext-gray">
+            {t("staffReturnSticker.title")}
+          </nav>
+        )}
         <div className="mb-3 max-md:mb-3">
-          <BackTitle title={t("staffReturn.title")} />
+          <BackTitle title={t("staffReturnSticker.title")} />
         </div>
 
-        <MoSummaryCard
-          moNumber={moNumber}
-          scannedCount={scannedCount}
-          totalCartons={cartons.length}
-          showScanProgress
-          onExpandedChange={setShowCartonList}
-        />
-
-        {showCartonList && (
-          <div className="mt-5 max-md:mt-3">
+        <div className="mt-5 max-md:mt-3">
             <div className="mb-3 max-md:mb-2 flex items-center justify-between gap-3">
               <h2 className="text-[16px] max-md:text-heading font-semibold leading-6 text-text-colortext-black">
                 {t("staffReturn.cartonList")}
@@ -124,13 +129,13 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
             />
 
             {allScanned && !submitted && (
-              <div className="mt-4 max-md:mt-3 flex items-start gap-3 rounded-2xl bg-[#E7F5EC] p-4 max-md:p-3.5">
+              <div className="mt-4 max-md:mt-3 flex items-start gap-3 rounded-2xl bg-[#E7F5EC] p-4 max-md:p-3.5 dark:bg-backgroundbg-green">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-backgroundbg-white">
-                  <Check className="h-4 w-4 text-[#006B3C]" />
+                  <Check className="h-4 w-4 text-[#006B3C] dark:text-text-colortext-green" />
                 </span>
 
                 <div>
-                  <p className="text-[13px] max-md:text-secondary font-semibold leading-[18px] text-[#006B3C]">
+                  <p className="text-[13px] max-md:text-secondary font-semibold leading-[18px] text-[#006B3C] dark:text-text-colortext-green">
                     {t("staffReturnSticker.allScanned")}
                   </p>
                   <p className="mt-1 text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-dark">
@@ -143,11 +148,9 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
             {/* <p className="mt-4 max-md:mt-3 text-center text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
               {t("staffReturnSticker.scanInstructions")}
             </p> */}
-          </div>
-        )}
+        </div>
 
-        {showCartonList && (
-          <StickyActionBar aboveNav>
+        <StickyActionBar aboveNav desktopOffset>
             <button
               type="button"
               disabled={!allScanned || submitted}
@@ -156,17 +159,16 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
             >
               {submitted ? t("common.submitted") : t("common.submit")}
             </button>
-          </StickyActionBar>
-        )}
+        </StickyActionBar>
       </section>
 
-      <MobileBottomNav
+      {!isDesktop && <MobileBottomNav
         items={STAFF_RETURN_ITEMS}
         activeItem="carton-sticker"
         onNavigate={(item) => {
           switch (item) {
             case "packing-list":
-              window.location.href = `/staff-return/${moNumber}`;
+              window.location.href = "/staff-return";
               break;
             case "history":
               window.location.href = "/staff-return-history";
@@ -175,7 +177,7 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
               break;
           }
         }}
-      />
+      />}
 
       {/* Sticker scan modal */}
       {activeCarton && (
@@ -199,8 +201,8 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
             onClick={(event) => event.stopPropagation()}
             className="w-full max-w-[360px] rounded-3xl border border-strokestroke-gray bg-backgroundbg-white p-4 max-md:p-3.5 shadow-[0_8px_30px_rgba(0,0,0,0.18)]"
           >
-            <div className="mb-4 max-md:mb-3 flex h-8 w-8 max-md:h-12 max-md:w-12 items-center justify-center rounded-full bg-[#E7F5EC]">
-              <Check className="h-4 w-4 max-md:h-6 max-md:w-6 text-[#006B3C]" />
+            <div className="mb-4 max-md:mb-3 flex h-8 w-8 max-md:h-12 max-md:w-12 items-center justify-center rounded-full bg-[#E7F5EC] dark:bg-backgroundbg-green">
+              <Check className="h-4 w-4 max-md:h-6 max-md:w-6 text-[#006B3C] dark:text-text-colortext-green" />
             </div>
 
             <h2
@@ -248,8 +250,8 @@ export default function StaffReturnStickerPage({ params }: PageProps) {
             onClick={(event) => event.stopPropagation()}
             className="w-full max-w-[360px] rounded-3xl border border-strokestroke-gray bg-backgroundbg-white p-4 max-md:p-3.5 text-center shadow-[0_8px_30px_rgba(0,0,0,0.18)]"
           >
-            <div className="mx-auto mb-4 max-md:mb-3 flex h-10 w-10 max-md:h-12 max-md:w-12 items-center justify-center rounded-full bg-[#E7F5EC]">
-              <Check className="h-5 w-5 max-md:h-6 max-md:w-6 text-[#006B3C]" />
+            <div className="mx-auto mb-4 max-md:mb-3 flex h-10 w-10 max-md:h-12 max-md:w-12 items-center justify-center rounded-full bg-[#E7F5EC] dark:bg-backgroundbg-green">
+              <Check className="h-5 w-5 max-md:h-6 max-md:w-6 text-[#006B3C] dark:text-text-colortext-green" />
             </div>
 
             <h2

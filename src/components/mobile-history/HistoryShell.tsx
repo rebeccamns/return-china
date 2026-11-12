@@ -22,13 +22,13 @@ export default function HistoryShell({
   activeItem?: MobileNavItem;
 }) {
   return (
-    <main className="mobile-body-copy relative min-h-screen w-full overflow-x-hidden bg-backgroundbg-gray antialiased max-md:bg-white">
+    <main className="mobile-body-copy relative min-h-screen w-full overflow-x-hidden bg-backgroundbg-gray antialiased max-md:bg-white dark:max-md:bg-backgroundbg-gray">
       <section
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-[255px] overflow-hidden max-md:hidden"
       >
-        <div className="absolute -left-[90px] -top-[80px] h-[270px] w-[620px] rounded-[50%] bg-[#d8f4e2]" />
-        <div className="absolute -left-[100px] top-[80px] h-[190px] w-[620px] rounded-[50%] bg-[#effbf3]" />
+        <div className="absolute -left-[90px] -top-[80px] h-[270px] w-[620px] rounded-[50%] bg-[#d8f4e2] dark:bg-[#12251B]" />
+        <div className="absolute -left-[100px] top-[80px] h-[190px] w-[620px] rounded-[50%] bg-[#effbf3] dark:bg-[#101A15]" />
       </section>
       <MobileCircleBackground />
 

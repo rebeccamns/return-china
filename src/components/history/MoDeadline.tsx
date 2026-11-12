@@ -39,10 +39,10 @@ export default function MoDeadline({ moCode }: { moCode: string }) {
     <span
       className={`mt-1 inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] leading-4 ${
         daysUntilDeadline < 0
-          ? "border-red-200 bg-red-50 text-red-700"
+          ? "border-strokestroke-red bg-backgroundbg-red text-text-colortext-red"
           : daysUntilDeadline <= 3
-            ? "border-amber-200 bg-amber-50 text-amber-700"
-            : "border-[#E4E4E2] bg-[#FAFAFA] text-[#777775]"
+            ? "border-strokestroke-yellow bg-backgroundbg-yellow text-text-colortext-yellow"
+            : "border-strokestroke-gray-darker bg-backgroundbg-bluish-gray text-text-colortext-gray"
       }`}
     >
       {t("common.deadline", { date: dateLabel })} · {statusLabel}

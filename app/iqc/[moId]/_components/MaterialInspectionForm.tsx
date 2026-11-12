@@ -127,7 +127,7 @@ export default function MaterialInspectionForm({
               spellCheck={false}
               className="h-12 max-md:h-11 rounded-xl border-strokestroke-gray px-4 pr-12 text-[16px] max-md:text-field"
             />
-            <ScanLine className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-text-colortext-gray" />
+            <ScanLine className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-text-colortext-gray dark:text-[#A7D7B9]" />
           </div>
         </div>
 
@@ -143,11 +143,11 @@ export default function MaterialInspectionForm({
               readOnly ? "" : "cursor-pointer transition active:scale-[0.99]"
             } ${
               hasPhoto
-                ? "border border-[#008348] bg-[#E7F5EC]"
-                : "border-2 border-dashed border-[#b8d9c5] bg-[#f5fbf7] hover:bg-[#edf8f1]"
+                ? "border border-[#008348] bg-[#E7F5EC] dark:border-[#4F9B6F] dark:bg-backgroundbg-green"
+                : "border-2 border-dashed border-[#b8d9c5] bg-[#f5fbf7] hover:bg-[#edf8f1] dark:border-[#4F9B6F] dark:bg-backgroundbg-bluish-gray dark:hover:bg-backgroundbg-black"
             }`}
           >
-            <span className="flex h-14 w-14 max-md:h-12 max-md:w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white text-primaryprimary-green">
+            <span className="flex h-14 w-14 max-md:h-12 max-md:w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-backgroundbg-white text-primaryprimary-green dark:text-[#A7D7B9]">
               {photoPreview ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -206,14 +206,14 @@ export default function MaterialInspectionForm({
             readOnly={readOnly}
             onChange={(event) => setNotes(event.target.value)}
             placeholder={t("iqc.form.notesPlaceholder")}
-            className="w-full resize-none rounded-xl border border-strokestroke-gray px-4 py-3 text-[16px] max-md:text-field leading-6 outline-none focus:border-primaryprimary-green"
+            className="w-full resize-none rounded-xl border border-strokestroke-gray bg-backgroundbg-white px-4 py-3 text-[16px] max-md:text-field leading-6 text-text-colortext-black outline-none focus:border-primaryprimary-green"
           />
         </div>
 
         {error && (
           <p
             role="alert"
-            className="mt-4 max-md:mt-3 rounded-xl bg-red-50 px-4 py-3 max-md:px-3.5 max-md:py-3.5 text-[13px] max-md:text-secondary leading-[18px] text-red-700"
+            className="mt-4 max-md:mt-3 rounded-xl bg-red-50 px-4 py-3 max-md:px-3.5 max-md:py-3.5 text-[13px] max-md:text-secondary leading-[18px] text-red-700 dark:bg-red-950 dark:text-red-200"
           >
             {error}
           </p>

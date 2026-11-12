@@ -45,7 +45,7 @@ export default function MoVerificationCard({
         </div>
 
         <ChevronRight
-          className="mt-0.5 h-5 w-5 shrink-0 text-[#C4C4C4]"
+          className="mt-0.5 h-5 w-5 shrink-0 text-[#C4C4C4] dark:text-text-colortext-gray"
           strokeWidth={2}
         />
       </div>
@@ -70,7 +70,7 @@ export default function MoVerificationCard({
         </div>
       </dl>
 
-      <div className="mt-4 max-md:mt-3 rounded-xl bg-slate-50 p-3 max-md:p-3.5">
+      <div className="mt-4 max-md:mt-3 rounded-xl bg-slate-50 p-3 max-md:p-3.5 dark:bg-backgroundbg-bluish-gray">
         <div className="flex items-center justify-between">
           <p className="text-[13px] max-md:text-secondary leading-[18px] text-text-colortext-gray">
             {t("iqc.verify.cartonsVerified", {
@@ -83,7 +83,7 @@ export default function MoVerificationCard({
           </p>
         </div>
 
-        <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#E6E6E6]">
+        <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#E6E6E6] dark:bg-backgroundbg-black">
           <div
             className="h-full rounded-full bg-[#008348] transition-all duration-300"
             style={{ width: `${progressPercent}%` }}

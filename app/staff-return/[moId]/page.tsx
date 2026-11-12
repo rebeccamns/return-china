@@ -1,21 +1,22 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { use, useMemo, useState } from "react";
 import { ChevronLeft } from "lucide-react";
 
+import Sidebar from "@/components/layout/sidebar";
+import TopBar from "@/components/layout/topbar";
 import MobileCircleBackground from "@/components/layout/mobile-circle-background";
 import MobileHeader from "@/components/layout/mobile-header";
 import MobileBottomNav, {
   STAFF_RETURN_ITEMS,
-  type MobileNavItem,
 } from "@/components/layout/mobile-bottom-nav";
 import { useI18n } from "@/i18n";
 import { DEMO } from "@/lib/demo-data";
+import { useIsDesktop } from "@/hooks/use-is-desktop";
 
 import CartonList from "./_components/CartonList";
 import MaterialDetailForm from "./_components/MaterialDetailForm";
 import MaterialList from "./_components/MaterialList";
-import MoSummaryCard from "./_components/MoSummaryCard";
 import StickyActionBar, {
   primaryButton,
 } from "./_components/StickyActionBar";
@@ -29,7 +30,7 @@ import {
   formatCartonCode,
 } from "./_components/types";
 
-type Step = "landing" | "carton-list" | "material-list" | "material-detail";
+type Step = "carton-list" | "material-list" | "material-detail";
 
 const MATERIAL_OPTIONS: Material[] = [
   {
@@ -55,12 +56,13 @@ const MATERIAL_OPTIONS: Material[] = [
 export default function StaffReturnPage({
   params,
 }: {
-  params: { moId: string };
+  params: Promise<{ moId: string }>;
 }) {
+  const { moId } = use(params);
+  const isDesktop = useIsDesktop();
   const { t } = useI18n();
 
-  const [step, setStep] = useState<Step>("landing");
-  const [activeNav, setActiveNav] = useState<MobileNavItem>("packing-list");
+  const [step, setStep] = useState<Step>("carton-list");
 
   const [cartons, setCartons] = useState<Carton[]>([
     { id: "carton-CT1", codes: ["CT0001"], materials: [], saved: false },
@@ -92,7 +94,11 @@ export default function StaffReturnPage({
     cartons.length > 0 &&
     cartons.every((carton) => carton.saved && carton.materials.length > 0);
 
-  const showBottomNav = step === "landing" || step === "carton-list";
+  const showBottomNav = step === "carton-list";
+
+  if (isDesktop === undefined) {
+    return <div className="min-h-screen bg-backgroundbg-gray" />;
+  }
 
   /* ---------- helpers ---------- */
 
@@ -126,13 +132,9 @@ export default function StaffReturnPage({
 
   /* ---------- cartons ---------- */
 
-  function handleCreatePackingList() {
-    setStep("carton-list");
-  }
-
-  function handleBackToLanding() {
+  function handleBackToSelection() {
     clearSelection();
-    setStep("landing");
+    window.location.href = "/staff-return";
   }
 
   /** Create `count` identical cartons, starting at the selected carton number. */
@@ -228,47 +230,49 @@ export default function StaffReturnPage({
   }
 
   return (
-    <main className="mobile-body-copy relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray antialiased max-md:bg-white">
+    <main
+      aria-label={`${t("staffReturn.title")} ${moId}`}
+      className="mobile-body-copy relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray antialiased max-md:bg-white dark:bg-backgroundbg-gray"
+    >
+      {isDesktop && <Sidebar variant="staffReturn" />}
       {/* Desktop decorative background */}
       <section
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-[255px] overflow-hidden max-md:hidden"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[255px] overflow-hidden md:hidden"
       >
-        <div className="absolute -left-[90px] -top-[80px] h-[270px] w-[620px] rounded-[50%] bg-[#d8f4e2]" />
-        <div className="absolute -left-[100px] top-[80px] h-[190px] w-[620px] rounded-[50%] bg-[#effbf3]" />
+        <div className="absolute -left-[90px] -top-[80px] h-[270px] w-[620px] rounded-[50%] bg-[var(--decor-circle-1)]" />
+        <div className="absolute -left-[100px] top-[80px] h-[190px] w-[620px] rounded-[50%] bg-[var(--decor-circle-2)]" />
       </section>
-      <MobileCircleBackground />
-
-      <MobileHeader />
+      {!isDesktop && <MobileCircleBackground />}
+      {isDesktop ? (
+        <TopBar />
+      ) : (
+        <MobileHeader />
+      )}
 
       <section
-        className={`relative z-10 mx-auto w-full max-w-[412px] px-5 max-md:px-4 pt-[calc(var(--mobile-header-h)+1.25rem)] max-md:pt-[calc(var(--mobile-header-h)+0.5rem)] ${
-          showBottomNav
-            ? "pb-[calc(var(--bottom-nav-h)+88px)] max-md:pb-[calc(var(--bottom-nav-h)+var(--action-bar-h)+12px)]"
-            : "pb-[calc(env(safe-area-inset-bottom,0px)+88px)] max-md:pb-[calc(env(safe-area-inset-bottom,0px)+var(--action-bar-h)+12px)]"
+        className={`relative z-10 ${
+          isDesktop
+            ? "ml-[255px] mt-[52px] w-auto px-6 py-5 pb-32"
+            : `mx-auto w-full max-w-[412px] px-5 max-md:px-4 pt-[calc(var(--mobile-header-h)+1.25rem)] max-md:pt-[calc(var(--mobile-header-h)+0.5rem)] ${
+                showBottomNav
+                  ? "pb-[calc(var(--bottom-nav-h)+88px)] max-md:pb-[calc(var(--bottom-nav-h)+var(--action-bar-h)+12px)]"
+                  : "pb-[calc(env(safe-area-inset-bottom,0px)+88px)] max-md:pb-[calc(env(safe-area-inset-bottom,0px)+var(--action-bar-h)+12px)]"
+              }`
         }`}
       >
-        {/* Landing */}
-        {step === "landing" && (
-          <>
-            <h1 className="mb-5 max-md:mb-3 text-[22px] max-md:text-title font-semibold leading-7 tracking-[-0.01em] text-text-colortext-black">
-              {t("staffReturn.title")}
-            </h1>
-
-            <MoSummaryCard
-              showCreateButton
-              onCreatePackingList={handleCreatePackingList}
-            />
-          </>
+        {isDesktop && (
+          <nav className="mb-4 text-xs text-text-colortext-gray">
+            {t("staffReturn.title")}
+          </nav>
         )}
-
         {/* Carton list */}
         {step === "carton-list" && (
           <>
             <h1 className="m-0">
               <button
                 type="button"
-                onClick={handleBackToLanding}
+                onClick={handleBackToSelection}
                 aria-label={`${t("common.back")} ${t("staffReturn.title")}`}
                 className="-ml-1 flex min-h-11 items-center gap-1 text-left"
               >
@@ -282,15 +286,6 @@ export default function StaffReturnPage({
               </button>
             </h1>
 
-            <div className="mb-5 max-md:mb-0 mt-1 max-md:mt-3">
-              <div className="max-md:hidden">
-                <MoSummaryCard />
-              </div>
-              <div className="hidden max-md:block">
-                <MoSummaryCard compact />
-              </div>
-            </div>
-
             <CartonList
               cartons={cartons}
               onAddCartons={handleAddCartons}
@@ -301,7 +296,7 @@ export default function StaffReturnPage({
               <button
                 type="button"
                 onClick={handleRejectWO}
-                className="h-12 max-md:h-11 flex-1 rounded-[14px] border border-red-200 bg-red-50 px-4 text-[15px] max-md:text-button font-semibold text-red-600 transition active:scale-[0.98] hover:bg-red-100"
+                className="h-12 max-md:h-11 flex-1 rounded-[14px] border border-red-200 bg-red-50 px-4 text-[15px] max-md:text-button font-semibold text-red-600 transition active:scale-[0.98] hover:bg-red-100 dark:border-strokestroke-red dark:bg-backgroundbg-red dark:text-text-colortext-red dark:hover:bg-[#6B1F25]"
               >
                 {t("staffReturn.rejectWo")}
               </button>
@@ -352,24 +347,25 @@ export default function StaffReturnPage({
       </section>
 
       {/* Bottom nav only on the top-level screens; form flows get the full screen */}
-      {showBottomNav && (
+      {showBottomNav && !isDesktop && (
         <MobileBottomNav
           items={STAFF_RETURN_ITEMS}
-          activeItem={activeNav}
+          activeItem="packing-list"
           onNavigate={(item) => {
             switch (item) {
               case "packing-list":
-                setActiveNav(item);
-                clearSelection();
-                setStep("landing");
+                window.location.href = "/staff-return";
                 break;
 
               case "carton-sticker":
-                window.location.href = `/staff-return-sticker/${DEMO.moNumber}`;
+                window.location.href = "/staff-return-sticker";
                 break;
 
               case "history":
                 window.location.href = "/staff-return-history";
+                break;
+              case "identity":
+              case "verification":
                 break;
             }
           }}

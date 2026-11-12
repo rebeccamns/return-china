@@ -96,7 +96,9 @@ function Pill({ children, ok }: { children: ReactNode; ok: boolean }) {
   return (
     <span
       className={`shrink-0 rounded-full px-2 py-1 text-[11px] font-semibold leading-4 ${
-        ok ? "bg-[#E7F5EC] text-[#006B3C]" : "bg-slate-100 text-text-colortext-gray"
+        ok
+          ? "bg-[#E7F5EC] text-[#006B3C] dark:bg-backgroundbg-green dark:text-text-colortext-green"
+          : "bg-slate-100 text-text-colortext-gray dark:bg-backgroundbg-bluish-gray"
       }`}
     >
       {children}
@@ -290,7 +292,7 @@ function Sticker({ data }: { data: StageDataMap["staffReturnSticker"] }) {
           />
         ))}
       </ul>
-      <p className="mt-2 rounded-xl bg-[#E7F5EC] px-3.5 py-3 text-[13px] font-medium leading-[18px] text-[#006B3C]">
+      <p className="mt-2 rounded-xl bg-[#E7F5EC] px-3.5 py-3 text-[13px] font-medium leading-[18px] text-[#006B3C] dark:bg-backgroundbg-green dark:text-text-colortext-green">
         {t("history.detail.totalCartons", { count: data.cartons.length })} ·{" "}
         {scanned} / {data.cartons.length}
       </p>

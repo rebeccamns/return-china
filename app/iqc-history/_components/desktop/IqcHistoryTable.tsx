@@ -36,17 +36,17 @@ const STATUS_LABEL_KEYS: Record<MOStatus, TranslationKey> = {
 };
 
 const STATUS_STYLES: Record<MOStatus, string> = {
-  Completed: "bg-[#E6F4EA] text-[#0B5934]",
-  "In Progress": "bg-amber-50 text-amber-700",
-  Rejected: "bg-red-50 text-red-600",
-  Pending: "bg-slate-100 text-slate-600",
+  Completed: "bg-[#E6F4EA] text-[#0B5934] dark:bg-backgroundbg-green dark:text-text-colortext-green",
+  "In Progress": "bg-amber-50 text-amber-700 dark:bg-backgroundbg-yellow dark:text-text-colortext-yellow",
+  Rejected: "bg-red-50 text-red-600 dark:bg-backgroundbg-red dark:text-text-colortext-red",
+  Pending: "bg-slate-100 text-slate-600 dark:bg-backgroundbg-bluish-gray dark:text-text-colortext-gray",
 };
 
 const headClass =
-  "h-10 whitespace-nowrap bg-[#F8F8F8] px-3 text-xs font-medium text-slate-700";
+  "h-10 whitespace-nowrap bg-[#F8F8F8] px-3 text-xs font-medium text-slate-700 dark:bg-backgroundbg-black dark:text-text-colortext-black";
 
 const filterClass =
-  "h-9 w-[180px] rounded-md border border-strokestroke-gray bg-white px-3 text-xs text-[#333333] outline-none focus:border-[#046A39] focus:ring-1 focus:ring-[#046A39]/20";
+  "h-9 w-[180px] rounded-md border border-strokestroke-gray bg-backgroundbg-white px-3 text-xs text-text-colortext-black outline-none focus:border-[#046A39] focus:ring-1 focus:ring-[#046A39]/20";
 
 type Props = {
   summaries: MoSummary[];
@@ -105,13 +105,13 @@ export default function IqcHistoryTable({
     dateRange.type !== "all";
 
   return (
-    <section className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
+    <section className="overflow-hidden rounded-lg border border-strokestroke-gray bg-backgroundbg-white">
       <div className="border-b border-strokestroke-gray px-[18px] py-4">
         <div className="mb-4">
-          <h2 className="text-sm font-semibold text-[#111111]">
+          <h2 className="text-sm font-semibold text-text-colortext-black">
             {t("history.submittedMo")}
           </h2>
-          <p className="mt-1 text-xs text-[#8F8F8E]">
+          <p className="mt-1 text-xs text-text-colortext-gray">
             {t("history.showingRecords", {
               shown: filteredSummaries.length,
               total: summaries.length,
@@ -123,18 +123,18 @@ export default function IqcHistoryTable({
           <div className="w-full sm:w-[250px]">
             <label
               htmlFor="iqc-history-search"
-              className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+              className="mb-1.5 block text-xs font-medium text-text-colortext-gray"
             >
               {t("history.searchLabel")}
             </label>
             <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#A3A3A1]" />
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-colortext-gray" />
               <Input
                 id="iqc-history-search"
                 value={search}
                 onChange={(event) => onSearchChange(event.target.value)}
                 placeholder={t("history.searchPlaceholder")}
-                className="h-9 rounded-md border-strokestroke-gray pl-9 text-xs placeholder:text-[#A3A3A1]"
+                className="h-9 rounded-md border-strokestroke-gray bg-backgroundbg-white pl-9 text-xs text-text-colortext-black placeholder:text-text-colortext-gray"
               />
             </div>
           </div>
@@ -142,7 +142,7 @@ export default function IqcHistoryTable({
           <div>
             <label
               htmlFor="iqc-history-status"
-              className="mb-1.5 block text-xs font-medium text-[#5F5F5E]"
+              className="mb-1.5 block text-xs font-medium text-text-colortext-gray"
             >
               {t("history.statusLabel")}
             </label>
@@ -163,7 +163,7 @@ export default function IqcHistoryTable({
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-[#5F5F5E]">
+            <label className="mb-1.5 block text-xs font-medium text-text-colortext-gray">
               {t("history.dateRangeLabel")}
             </label>
             <CalendarPickerModal
@@ -178,7 +178,7 @@ export default function IqcHistoryTable({
             <button
               type="button"
               onClick={onResetFilters}
-              className="h-9 text-xs font-medium text-[#046A39] hover:underline"
+              className="h-9 text-xs font-medium text-primaryprimary-green hover:underline"
             >
               {t("history.clearFilters")}
             </button>
@@ -190,7 +190,7 @@ export default function IqcHistoryTable({
       <div className="overflow-x-auto">
         <Table className="min-w-[1020px]">
           <TableHeader>
-            <TableRow className="hover:bg-[#F8F8F8]">
+            <TableRow className="hover:bg-[#F8F8F8] dark:hover:bg-backgroundbg-black">
               <TableHead className={headClass}>{t("common.moCode")}</TableHead>
               <TableHead className={headClass}>
                 {t("common.returnId")}
@@ -211,7 +211,7 @@ export default function IqcHistoryTable({
               <TableRow>
                 <TableCell
                   colSpan={6}
-                  className="px-3 py-10 text-center text-sm text-[#5F5F5E]"
+                  className="px-3 py-10 text-center text-sm text-text-colortext-gray"
                 >
                   {summaries.length === 0
                     ? t("iqcHistory.empty")
@@ -225,12 +225,12 @@ export default function IqcHistoryTable({
                 return (
                   <TableRow
                     key={summary.moCode}
-                    className="h-12 hover:bg-[#FAFAFA]"
+                    className="h-12 hover:bg-[#FAFAFA] dark:hover:bg-backgroundbg-black"
                   >
                     <TableCell className="p-0">
                       <Link
                         href={href}
-                        className="flex h-12 w-full items-center px-3 py-2 text-xs font-medium text-[#111111] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primaryprimary-green"
+                        className="flex h-12 w-full items-center px-3 py-2 text-xs font-medium text-text-colortext-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primaryprimary-green"
                       >
                         {summary.moCode}
                       </Link>
@@ -254,7 +254,7 @@ export default function IqcHistoryTable({
                     <TableCell className="p-0">
                       <Link
                         href={href}
-                        className="flex h-12 w-full items-center whitespace-nowrap px-3 py-2 text-xs text-[#5F5F5E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primaryprimary-green"
+                        className="flex h-12 w-full items-center whitespace-nowrap px-3 py-2 text-xs text-text-colortext-gray focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primaryprimary-green"
                       >
                         {summary.submittedAt}
                       </Link>

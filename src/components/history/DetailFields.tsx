@@ -11,7 +11,7 @@ export default function DetailFields({ fields }: { fields: DetailField[] }) {
           <dt className="text-xs text-text-colortext-gray">{field.label}</dt>
           <dd
             title={field.value}
-            className="truncate text-sm font-medium text-black"
+            className="truncate text-sm font-medium text-text-colortext-black"
           >
             {field.value || "—"}
           </dd>

@@ -48,9 +48,9 @@ export default function KpiCard() {
   const lastIndex = chartItems.length - 1;
 
   return (
-    <Card className="min-w-0 flex-1 overflow-visible rounded-lg border-slate-200 bg-white shadow-none">
+    <Card className="min-w-0 flex-1 overflow-visible rounded-lg border-strokestroke-gray bg-backgroundbg-white shadow-none">
       <CardHeader className="flex flex-row items-center justify-between gap-3 border-b px-5 py-3">
-        <CardTitle className="text-sm font-semibold text-slate-900">
+        <CardTitle className="text-sm font-semibold text-text-colortext-black">
           {t("dashboard.kpi.title")}
         </CardTitle>
 
@@ -65,7 +65,7 @@ export default function KpiCard() {
           </Button>
 
           <Select value={taskFilter} onValueChange={setTaskFilter}>
-            <SelectTrigger className="h-8 w-[132px] gap-2 border-slate-200 px-3 text-xs font-normal">
+            <SelectTrigger className="h-8 w-[132px] gap-2 border-strokestroke-gray bg-backgroundbg-white px-3 text-xs font-normal text-text-colortext-black">
               <ListFilter className="h-3.5 w-3.5 shrink-0" />
               <SelectValue placeholder={t("dashboard.kpi.allTasks")} />
             </SelectTrigger>
@@ -86,7 +86,7 @@ export default function KpiCard() {
             style={{ height: chartHeight }}
           >
             <span
-              className="whitespace-nowrap text-[9px] text-slate-500"
+              className="whitespace-nowrap text-[9px] text-text-colortext-gray"
               style={{
                 writingMode: "vertical-rl",
                 transform: "rotate(180deg)",
@@ -104,7 +104,7 @@ export default function KpiCard() {
             {axisValues.map((value) => (
               <span
                 key={value}
-                className="absolute right-1.5 -translate-y-1/2 text-[10px] leading-none text-slate-600"
+                className="absolute right-1.5 -translate-y-1/2 text-[10px] leading-none text-text-colortext-dark"
                 style={{ top: `${((chartMax - value) / chartMax) * 100}%` }}
               >
                 {value}
@@ -115,7 +115,7 @@ export default function KpiCard() {
           {/* Plot area */}
           <div className="min-w-0 flex-1">
             <div
-              className="relative border-b border-l border-slate-200"
+              className="relative border-b border-l border-strokestroke-gray"
               style={{ height: chartHeight }}
             >
               {/* Dashed gridlines (0 is the solid baseline) */}
@@ -124,7 +124,7 @@ export default function KpiCard() {
                 .map((value) => (
                   <div
                     key={value}
-                    className="pointer-events-none absolute inset-x-0 border-t border-dashed border-slate-200"
+                    className="pointer-events-none absolute inset-x-0 border-t border-dashed border-strokestroke-gray"
                     style={{
                       top: `${((chartMax - value) / chartMax) * 100}%`,
                     }}
@@ -166,7 +166,7 @@ export default function KpiCard() {
                       {/* Hover highlight band */}
                       <div
                         className={cn(
-                          "pointer-events-none absolute inset-0 rounded-t-md bg-slate-100/70 opacity-0 transition-opacity duration-150",
+                          "pointer-events-none absolute inset-0 rounded-t-md bg-backgroundbg-bluish-gray opacity-0 transition-opacity duration-150",
                           isActive && "opacity-100"
                         )}
                       />
@@ -175,22 +175,22 @@ export default function KpiCard() {
                       {isActive && (
                         <div
                           className={cn(
-                            "pointer-events-none absolute z-20 w-max rounded-md border border-slate-200 bg-white p-3 text-[10px] shadow-md",
+                            "pointer-events-none absolute z-20 w-max rounded-md border border-strokestroke-gray bg-backgroundbg-white p-3 text-[10px] text-text-colortext-dark shadow-md",
                             tooltipAlign
                           )}
                           style={{ bottom: tallest + 10 }}
                         >
-                          <p className="mb-2 font-semibold text-slate-900">
+                          <p className="mb-2 font-semibold text-text-colortext-black">
                             {item.label}
                           </p>
 
                           {showNormal && (
                             <div className="flex items-center justify-between gap-4">
-                              <span className="flex items-center gap-1.5 text-slate-600">
+                              <span className="flex items-center gap-1.5 text-text-colortext-dark">
                                 <span className="h-2 w-2 rounded-full bg-[#128d2a]" />
                                 {t("dashboard.kpi.flowNormal")}
                               </span>
-                              <span className="font-semibold text-slate-900">
+                              <span className="font-semibold text-text-colortext-black">
                                 {t("dashboard.kpi.daysValue", { value: item.normal.toFixed(1) })}
                               </span>
                             </div>
@@ -198,11 +198,11 @@ export default function KpiCard() {
 
                           {showAbnormal && (
                             <div className="mt-1.5 flex items-center justify-between gap-4">
-                              <span className="flex items-center gap-1.5 text-slate-600">
+                              <span className="flex items-center gap-1.5 text-text-colortext-dark">
                                 <span className="h-2 w-2 rounded-full bg-[#cf2635]" />
                                 {t("dashboard.kpi.flowAbnormal")}
                               </span>
-                              <span className="font-semibold text-slate-900">
+                              <span className="font-semibold text-text-colortext-black">
                                 {t("dashboard.kpi.daysValue", { value: item.abnormal.toFixed(1) })}
                               </span>
                             </div>
@@ -213,7 +213,7 @@ export default function KpiCard() {
                       {showNormal && (
                         <div
                           className={cn(
-                            "relative w-3 rounded-t-[2px] bg-gradient-to-t from-[#4ce498] to-[#128d2a] transition-all duration-150 sm:w-[22px]",
+                            "relative w-3 rounded-t-[2px] bg-gradient-to-t from-[#4ce498] to-[#128d2a] transition-all duration-150 sm:w-[22px] dark:from-[#35C978] dark:to-[#0D6B36]",
                             dimmed && "opacity-40",
                             isActive && "brightness-110"
                           )}
@@ -224,7 +224,7 @@ export default function KpiCard() {
                       {showAbnormal && (
                         <div
                           className={cn(
-                            "relative w-3 rounded-t-[2px] bg-gradient-to-t from-[#ff8b4d] to-[#cf2635] transition-all duration-150 sm:w-[22px]",
+                            "relative w-3 rounded-t-[2px] bg-gradient-to-t from-[#ff8b4d] to-[#cf2635] transition-all duration-150 sm:w-[22px] dark:from-[#D97842] dark:to-[#A91F2B]",
                             dimmed && "opacity-40",
                             isActive && "brightness-110"
                           )}
@@ -244,7 +244,7 @@ export default function KpiCard() {
                   key={item.label}
                   className={cn(
                     "whitespace-nowrap text-center text-[8px] font-medium transition-colors sm:text-[10px]",
-                    activeIndex === index ? "text-slate-900" : "text-slate-600"
+                    activeIndex === index ? "text-text-colortext-black" : "text-text-colortext-dark"
                   )}
                 >
                   {item.label}
@@ -255,7 +255,7 @@ export default function KpiCard() {
         </div>
 
         {/* Legend */}
-        <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-[10px] text-slate-600">
+        <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-[10px] text-text-colortext-dark">
           {showNormal && (
             <span className="flex items-center gap-1.5">
               <span className="h-2.5 w-2.5 rounded-full bg-[#128d2a]" />

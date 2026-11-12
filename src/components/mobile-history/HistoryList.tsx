@@ -115,7 +115,7 @@ export default function HistoryList({
               <span
                 className={`flex h-9 items-center rounded-full border px-3 text-[13px] font-semibold ${
                   active
-                    ? "border-[#006B3C]/25 bg-[#E7F5EC] text-[#006B3C]"
+                    ? "border-[#006B3C]/25 bg-[#E7F5EC] text-[#006B3C] dark:border-emerald-900 dark:bg-backgroundbg-green dark:text-text-colortext-green"
                     : "border-strokestroke-gray bg-backgroundbg-white text-text-colortext-gray"
                 }`}
               >

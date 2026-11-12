@@ -45,14 +45,14 @@ export default function IqcVerificationMobile({
       : "pb-[calc(var(--bottom-nav-h)+24px)] max-md:pb-[calc(var(--bottom-nav-h)+12px)]"; // nav only
 
   return (
-    <main className="mobile-body-copy relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray antialiased max-md:bg-white">
+    <main className="mobile-body-copy relative min-h-screen w-full overflow-hidden bg-backgroundbg-gray antialiased max-md:bg-white dark:max-md:bg-backgroundbg-gray">
       {/* Desktop decorative background */}
       <section
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-[255px] overflow-hidden max-md:hidden"
       >
-        <div className="absolute -left-[90px] -top-[80px] h-[270px] w-[620px] rounded-[50%] bg-[#d8f4e2]" />
-        <div className="absolute -left-[100px] top-[80px] h-[190px] w-[620px] rounded-[50%] bg-[#effbf3]" />
+        <div className="absolute -left-[90px] -top-[80px] h-[270px] w-[620px] rounded-[50%] bg-[#d8f4e2] dark:bg-[#12251B]" />
+        <div className="absolute -left-[100px] top-[80px] h-[190px] w-[620px] rounded-[50%] bg-[#effbf3] dark:bg-[#101A15]" />
       </section>
       <MobileCircleBackground />
 
@@ -77,11 +77,11 @@ export default function IqcVerificationMobile({
           onNavigate={(item) => {
             switch (item) {
               case "identity":
-                router.push(`/iqc/${moData.moNumber}`);
+                router.push("/iqc");
                 break;
 
               case "verification":
-                // Already here.
+                router.push("/iqc-verification");
                 break;
 
               case "history":

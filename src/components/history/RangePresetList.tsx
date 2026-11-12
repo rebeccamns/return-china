@@ -25,7 +25,7 @@ export default function RangePresetList({
     <div
       role="group"
       aria-label={t("history.dateRangeLabel")}
-      className="flex shrink-0 gap-2 overflow-x-auto border-b border-[#E4E4E2] bg-[#F8F8F8] p-2 md:w-[160px] md:flex-col md:gap-0.5 md:overflow-visible md:border-b-0 md:border-r md:p-2.5"
+      className="scrollbar-none flex shrink-0 gap-2 overflow-x-auto border-b border-[#E4E4E2] bg-[#F8F8F8] p-2 md:w-[160px] md:flex-col md:gap-0.5 md:overflow-visible md:border-b-0 md:border-r md:p-2.5 dark:border-strokestroke-gray dark:bg-backgroundbg-bluish-gray"
     >
       {presets.map((preset) => {
         const active = preset.id === activeId;
@@ -37,8 +37,8 @@ export default function RangePresetList({
             aria-pressed={active}
             onClick={() => onSelect(preset)}
             className={cn(
-              "flex h-8 shrink-0 items-center justify-between gap-2 whitespace-nowrap rounded-md px-2.5 text-xs font-medium text-[#555554] transition-colors hover:bg-white md:w-full",
-              active && "bg-[#E7F5EC] text-[#08783F] hover:bg-[#E7F5EC]",
+              "flex h-8 shrink-0 items-center justify-between gap-2 whitespace-nowrap rounded-md px-2.5 text-xs font-medium text-[#555554] transition-colors hover:bg-white md:w-full dark:text-text-colortext-gray dark:hover:bg-backgroundbg-black",
+              active && "bg-[#E7F5EC] text-[#08783F] hover:bg-[#E7F5EC] dark:bg-backgroundbg-green dark:text-text-colortext-green dark:hover:bg-backgroundbg-green",
             )}
           >
             <span>{t(preset.labelKey)}</span>

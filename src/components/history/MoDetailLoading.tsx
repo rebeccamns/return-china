@@ -17,10 +17,10 @@ export default function MoDetailLoading() {
           aria-label={t("common.loading")}
           className="mt-[52px] w-full space-y-5 px-[18px] py-5"
         >
-          <div className="h-4 w-48 animate-pulse rounded bg-slate-200" />
-          <div className="h-16 animate-pulse rounded-lg bg-white" />
-          <div className="h-32 animate-pulse rounded-lg bg-white" />
-          <div className="h-64 animate-pulse rounded-lg bg-white" />
+          <div className="h-4 w-48 animate-pulse rounded bg-slate-200 dark:bg-backgroundbg-bluish-gray" />
+          <div className="h-16 animate-pulse rounded-lg bg-backgroundbg-white" />
+          <div className="h-32 animate-pulse rounded-lg bg-backgroundbg-white" />
+          <div className="h-64 animate-pulse rounded-lg bg-backgroundbg-white" />
         </div>
       </div>
     </main>

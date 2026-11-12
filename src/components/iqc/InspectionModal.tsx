@@ -56,7 +56,7 @@ export default function InspectionModal({
         />
 
         <div className="flex flex-col items-center text-center">
-          <span className="flex h-14 w-14 max-md:h-12 max-md:w-12 items-center justify-center rounded-full bg-[#E7F5EC]">
+          <span className="flex h-14 w-14 max-md:h-12 max-md:w-12 items-center justify-center rounded-full bg-[#E7F5EC] dark:bg-backgroundbg-green">
             <Icon
               className="h-7 w-7 text-primaryprimary-green"
               strokeWidth={1.8}

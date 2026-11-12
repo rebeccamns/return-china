@@ -59,8 +59,8 @@ export default function StickerScanModal({
       >
         <div className="mb-4 max-md:mb-3 flex items-start justify-between gap-3">
           <div>
-            <div className="mb-3 max-md:mb-2 flex h-8 w-8 max-md:h-12 max-md:w-12 items-center justify-center rounded-full bg-[#E7F5EC]">
-              <ScanLine className="h-4 w-4 max-md:h-6 max-md:w-6 text-[#006B3C]" />
+            <div className="mb-3 max-md:mb-2 flex h-8 w-8 max-md:h-12 max-md:w-12 items-center justify-center rounded-full bg-[#E7F5EC] dark:bg-backgroundbg-green">
+              <ScanLine className="h-4 w-4 max-md:h-6 max-md:w-6 text-[#006B3C] dark:text-text-colortext-green" />
             </div>
             <h2 id="sticker-scan-title" className="text-[16px] max-md:text-heading font-semibold leading-6 text-text-colortext-black">
               {t("staffReturnSticker.scanModal.title")}

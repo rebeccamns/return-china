@@ -45,7 +45,7 @@ export default function MobileBottomNav({
   return (
     <nav
       aria-label="Mobile navigation"
-      className="fixed inset-x-0 bottom-0 z-40 bg-white/70 pb-[calc(var(--bottom-nav-pad-b)+env(safe-area-inset-bottom,0px))] shadow-[0_-4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xl backdrop-saturate-150 supports-[not_(backdrop-filter:blur(1px))]:bg-white"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-strokestroke-gray bg-glass pb-[calc(var(--bottom-nav-pad-b)+env(safe-area-inset-bottom,0px))] shadow-[0_-4px_16px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_16px_rgba(0,0,0,0.4)] backdrop-blur-xl backdrop-saturate-150 supports-[not_(backdrop-filter:blur(1px))]:bg-backgroundbg-white"
     >
       <div
         className="mx-auto flex h-[var(--bottom-nav-content-h)] w-full max-w-[412px] items-center px-2"
@@ -65,8 +65,8 @@ export default function MobileBottomNav({
               <span
                 className={`flex h-10 w-10 aspect-square shrink-0 items-center justify-center rounded-full transition-[background-color,transform] duration-200 group-active:scale-90 group-focus-visible:ring-2 group-focus-visible:ring-primaryprimary-green motion-reduce:transition-none motion-reduce:group-active:scale-100 ${
                   active
-                    ? "bg-[#E7F5EC] text-[#006B3C]"
-                    : "bg-transparent text-text-colortext-gray group-active:bg-backgroundbg-gray md:group-hover:bg-backgroundbg-gray md:group-hover:text-text-colortext-dark"
+                    ? "bg-[#E7F5EC] text-[#006B3C] dark:bg-backgroundbg-green dark:text-brand-green-fg"
+                    : "bg-transparent text-text-colortext-gray group-active:bg-backgroundbg-bluish-gray md:group-hover:bg-backgroundbg-bluish-gray md:group-hover:text-text-colortext-dark"
                 }`}
               >
                 <Icon

@@ -44,11 +44,11 @@ function StatusIcon({ status }: { status: StageStatus }) {
           : Circle;
   const color =
     status === "completed"
-      ? "text-[#006B3C]"
+      ? "text-[#006B3C] dark:text-text-colortext-green"
       : status === "rejected"
         ? "text-red-600"
         : status === "in-progress"
-          ? "text-amber-600"
+          ? "text-amber-600 dark:text-text-colortext-yellow"
           : "text-text-colortext-gray";
 
   return <Icon aria-hidden="true" className={`h-5 w-5 ${color}`} />;

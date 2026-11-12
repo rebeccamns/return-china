@@ -36,14 +36,14 @@ const TopBarSection = (): JSX.Element => {
     : ["—", "--:--"];
 
   return (
-    <header className="fixed top-0 left-[255px] right-0 z-[2] flex h-[52px] items-center border-b border-mode-app-border bg-white/70 pl-0 pr-6 backdrop-blur-xl backdrop-saturate-150 ">
+    <header className="fixed top-0 left-[255px] right-0 z-[2] flex h-[52px] items-center border-b border-strokestroke-gray bg-glass pl-0 pr-6 backdrop-blur-xl backdrop-saturate-150 supports-[not(backdrop-filter)]:bg-backgroundbg-white">
       <div className="flex flex-1 self-stretch items-center justify-end gap-6 px-5">
         <LanguageSwitcher />
         <div className="inline-flex flex-[0_0_auto] items-center gap-6">
           {topBarDetails.map((detail) => (
             <span
               key={detail}
-              className="relative mt-[-1.00px] w-fit whitespace-nowrap text-xs font-medium leading-4 text-black"
+              className="relative mt-[-1.00px] w-fit whitespace-nowrap text-xs font-medium leading-4 text-text-colortext-black"
             >
               {detail}
             </span>

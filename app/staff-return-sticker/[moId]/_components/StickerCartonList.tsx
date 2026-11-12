@@ -30,7 +30,7 @@ export default function StickerCartonList({
           onClick={() => onSelect(carton)}
           className="flex min-h-[60px] max-md:min-h-[52px] w-full items-center gap-3 px-4 py-2.5 max-md:px-3.5 max-md:py-2 text-left transition active:scale-[0.98] active:bg-backgroundbg-gray focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryprimary-green"
         >
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[13px] max-md:text-secondary font-semibold text-[#006B3C]">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[13px] max-md:text-secondary font-semibold text-[#006B3C] dark:bg-backgroundbg-green dark:text-text-colortext-green">
             {carton.code.slice(-2)}
           </span>
 
@@ -48,7 +48,7 @@ export default function StickerCartonList({
           {carton.scanned ? (
             <span
               aria-label={t("staffReturnSticker.stickerScanned")}
-              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[#006B3C]"
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[#006B3C] dark:bg-backgroundbg-green dark:text-text-colortext-green"
             >
               <Check className="h-4 w-4" />
             </span>

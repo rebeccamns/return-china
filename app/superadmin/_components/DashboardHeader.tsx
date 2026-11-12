@@ -73,11 +73,11 @@ export default function DashboardHeader({
     <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
       {/* Page Title & Scope summary */}
       <div className="flex items-center gap-3">
-        <h1 className="text-base font-semibold leading-tight text-[#111111]">
+        <h1 className="text-base font-semibold leading-tight text-text-colortext-black">
           {t("superadmin.dashboard")}
         </h1>
-        <span className="hidden items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-medium text-emerald-800 md:inline-flex">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-pulse" />
+        <span className="hidden items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-medium text-emerald-800 dark:border-strokestroke-green/50 dark:bg-backgroundbg-green dark:text-text-colortext-green md:inline-flex">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-600 dark:bg-brand-green-fg" />
           {selectedPeriodLabel} · {model === "all" ? "All Models" : model}
         </span>
       </div>
@@ -88,7 +88,7 @@ export default function DashboardHeader({
         <div
           role="tablist"
           aria-label={t("superadmin.timeGranularity")}
-          className="flex h-8 items-center rounded-md border border-strokestroke-gray bg-white p-0.5"
+          className="flex h-8 items-center rounded-md border border-strokestroke-gray bg-backgroundbg-white p-0.5"
         >
           {MODES.map((item) => {
             const active = item.value === mode;
@@ -104,7 +104,7 @@ export default function DashboardHeader({
                   "h-7 rounded px-2.5 text-xs transition-colors sm:px-3",
                   active
                     ? "bg-[#08783F] font-semibold text-white shadow-xs"
-                    : "font-medium text-[#444444] hover:bg-slate-50",
+                    : "font-medium text-text-colortext-dark hover:bg-backgroundbg-bluish-gray",
                 )}
               >
                 {t(MODE_LABEL_KEYS[item.value])}
@@ -122,12 +122,12 @@ export default function DashboardHeader({
           title={t("superadmin.period")}
           selectedLabel={selectedPeriodLabel}
           ariaLabel={t("superadmin.period")}
-          buttonClassName="h-8 min-w-[110px] text-xs font-medium px-2.5"
+          buttonClassName="h-8 min-w-[110px] border-strokestroke-gray bg-backgroundbg-white px-2.5 text-xs font-medium text-text-colortext-black hover:bg-backgroundbg-bluish-gray"
         />
 
         {/* Model filter */}
         <Select value={model} onValueChange={onModelChange}>
-          <SelectTrigger className="h-8 w-[116px] rounded-md border-strokestroke-gray bg-white text-xs font-medium px-2.5">
+          <SelectTrigger className="h-8 w-[116px] rounded-md border-strokestroke-gray bg-backgroundbg-white px-2.5 text-xs font-medium text-text-colortext-black">
             <SelectValue placeholder="Model" />
           </SelectTrigger>
           <SelectContent align="end">

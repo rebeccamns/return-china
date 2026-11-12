@@ -46,7 +46,7 @@ export default function IqcIdentityDesktop({ identity }: Props) {
           <div className="mb-4">
             <Link
               href="/iqc"
-              className="inline-flex h-8 items-center gap-2 rounded-md border border-strokestroke-gray bg-white px-3 text-xs font-medium text-[#5F5F5E] transition-colors hover:border-[#B7DEC4] hover:text-[#006B3C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#008348]"
+              className="inline-flex h-8 items-center gap-2 rounded-md border border-strokestroke-gray bg-backgroundbg-white px-3 text-xs font-medium text-text-colortext-gray transition-colors hover:border-[#B7DEC4] hover:text-[#006B3C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#008348]"
             >
               <ArrowLeft className="h-4 w-4" />
               {t("iqc.selectMoTitle")}
@@ -55,17 +55,17 @@ export default function IqcIdentityDesktop({ identity }: Props) {
 
           <div className="mb-5 flex items-start justify-between gap-4">
             <div>
-              <h1 className="text-lg font-semibold text-[#111111]">
+              <h1 className="text-lg font-semibold text-text-colortext-black">
                 {t("iqc.title")}
               </h1>
-              <p className="mt-1 text-sm text-[#8F8F8E]">
+              <p className="mt-1 text-sm text-text-colortext-gray">
                 {t("iqc.desktopSubtitle")}
               </p>
             </div>
 
-            <div className="inline-flex h-8 shrink-0 items-center gap-2 rounded-lg border border-strokestroke-gray bg-white px-3">
-              <ClipboardList className="h-4 w-4 text-[#0B5934]" />
-              <span className="text-sm text-[#5F5F5E]">
+            <div className="inline-flex h-8 shrink-0 items-center gap-2 rounded-lg border border-strokestroke-gray bg-backgroundbg-white px-3">
+              <ClipboardList className="h-4 w-4 text-[#0B5934] dark:text-text-colortext-green" />
+              <span className="text-sm text-text-colortext-gray">
                 {t("iqc.inspectedSummary", {
                   inspected: identity.inspectedCount,
                   total: identity.moData.totalMaterials,
@@ -77,7 +77,7 @@ export default function IqcIdentityDesktop({ identity }: Props) {
           {identity.submitted && !noticeDismissed && (
             <div
               role="status"
-              className="mb-4 flex items-start gap-3 rounded-lg border border-[#B7DEC4] bg-[#EAF6EE] px-4 py-3 text-xs text-[#0b5934]"
+              className="mb-4 flex items-start gap-3 rounded-lg border border-[#B7DEC4] bg-[#EAF6EE] px-4 py-3 text-xs text-[#0b5934] dark:border-emerald-900 dark:bg-backgroundbg-green dark:text-text-colortext-green"
             >
               <CheckCircle className="mt-px h-4 w-4 shrink-0" />
               <div className="flex-1">
@@ -96,13 +96,13 @@ export default function IqcIdentityDesktop({ identity }: Props) {
 
           <MoSummaryPanel identity={identity} />
 
-          <section className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
+          <section className="overflow-hidden rounded-lg border border-strokestroke-gray bg-backgroundbg-white">
             <div className="flex items-center justify-between border-b border-strokestroke-gray px-[18px] py-4">
               <div>
-                <h2 className="text-sm font-semibold text-[#111111]">
+                <h2 className="text-sm font-semibold text-text-colortext-black">
                   {t("common.materialList")}
                 </h2>
-                <p className="mt-1 text-xs text-[#8F8F8E]">
+                <p className="mt-1 text-xs text-text-colortext-gray">
                   {t(
                     identity.moData.totalMaterials === 1
                       ? "common.materialSingular"
@@ -117,7 +117,7 @@ export default function IqcIdentityDesktop({ identity }: Props) {
               <MaterialInspectionList identity={identity} />
 
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                <span className="text-xs text-[#5F5F5E]">
+                <span className="text-xs text-text-colortext-gray">
                   {t("iqc.inspectionProgress", {
                     inspected: identity.inspectedCount,
                     total: identity.moData.totalMaterials,

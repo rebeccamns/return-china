@@ -130,8 +130,8 @@ export default function CalendarSelectionPanel({
 
   return (
     <div ref={panelRef} className="flex flex-col">
-      <header className="flex min-h-10 items-center border-b border-[#E4E4E2] px-4 py-2.5 pr-12">
-        <h2 className="text-sm font-semibold text-[#222222]">{title}</h2>
+      <header className="flex min-h-10 items-center border-b border-[#E4E4E2] px-4 py-2.5 pr-12 dark:border-strokestroke-gray">
+        <h2 className="text-sm font-semibold text-text-colortext-black">{title}</h2>
       </header>
 
       {mode === "single" ? (
@@ -160,23 +160,23 @@ export default function CalendarSelectionPanel({
         </div>
       ) : (
         <>
-          <div className="flex items-center justify-between border-b border-[#E4E4E2] px-3 py-2">
+          <div className="flex items-center justify-between border-b border-[#E4E4E2] px-3 py-2 dark:border-strokestroke-gray">
             <button
               type="button"
               aria-label={t("history.calendarPicker.previousYear")}
               onClick={() => setViewYear((year) => year - 1)}
-              className="flex h-8 w-8 items-center justify-center rounded-md text-[#555554] hover:bg-[#F0F0EE]"
+              className="flex h-8 w-8 items-center justify-center rounded-md text-[#555554] hover:bg-[#F0F0EE] dark:text-text-colortext-gray dark:hover:bg-backgroundbg-black"
             >
               <ChevronLeft className="h-4 w-4" aria-hidden="true" />
             </button>
-            <h3 className="text-sm font-semibold text-[#222222]">
+            <h3 className="text-sm font-semibold text-text-colortext-black">
               {viewYear}
             </h3>
             <button
               type="button"
               aria-label={t("history.calendarPicker.nextYear")}
               onClick={() => setViewYear((year) => year + 1)}
-              className="flex h-8 w-8 items-center justify-center rounded-md text-[#555554] hover:bg-[#F0F0EE]"
+              className="flex h-8 w-8 items-center justify-center rounded-md text-[#555554] hover:bg-[#F0F0EE] dark:text-text-colortext-gray dark:hover:bg-backgroundbg-black"
             >
               <ChevronRight className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -198,7 +198,7 @@ export default function CalendarSelectionPanel({
                   className={`h-9 rounded-md px-2 text-xs transition-colors ${
                     selected
                       ? "bg-[#08783F] font-medium text-white"
-                      : "text-[#222222] hover:bg-[#F0F0EE]"
+                      : "text-[#222222] hover:bg-[#F0F0EE] dark:text-text-colortext-black dark:hover:bg-backgroundbg-black"
                   }`}
                 >
                   {monthLabel}
@@ -209,11 +209,11 @@ export default function CalendarSelectionPanel({
         </>
       )}
 
-      <footer className="flex justify-end gap-2 border-t border-[#E4E4E2] px-3 py-2.5">
+      <footer className="flex justify-end gap-2 border-t border-[#E4E4E2] px-3 py-2.5 dark:border-strokestroke-gray">
         <Button
           type="button"
           variant="outline"
-          className="h-9 border-[#D5D5D3] bg-white px-3 text-xs"
+          className="h-9 border-strokestroke-gray bg-backgroundbg-white px-3 text-xs"
           onClick={onCancel}
         >
           {t("common.cancel")}

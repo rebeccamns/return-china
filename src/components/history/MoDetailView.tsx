@@ -62,10 +62,10 @@ function OverallStatusBadge({ status }: { status: MOStatus }) {
     <span
       className={cn(
         "inline-flex shrink-0 items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold",
-        status === "Completed" && "bg-[#E6F4EA] text-[#0B5934]",
-        status === "Rejected" && "bg-red-50 text-red-600",
-        status === "In Progress" && "bg-amber-50 text-amber-700",
-        status === "Pending" && "bg-slate-100 text-slate-600",
+        status === "Completed" && "bg-[#E6F4EA] text-[#0B5934] dark:bg-backgroundbg-green dark:text-text-colortext-green",
+        status === "Rejected" && "bg-red-50 text-red-600 dark:bg-backgroundbg-red dark:text-text-colortext-red",
+        status === "In Progress" && "bg-amber-50 text-amber-700 dark:bg-backgroundbg-yellow dark:text-text-colortext-yellow",
+        status === "Pending" && "bg-slate-100 text-slate-600 dark:bg-backgroundbg-bluish-gray dark:text-text-colortext-gray",
       )}
     >
       <Icon aria-hidden="true" className="h-3.5 w-3.5" />
@@ -97,10 +97,10 @@ function StageStatusBadge({ status }: { status: StageDetail["status"] }) {
     <span
       className={cn(
         "inline-flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium",
-        status === "completed" && "bg-[#E6F4EA] text-[#0B5934]",
-        status === "rejected" && "bg-red-50 text-red-600",
-        status === "in-progress" && "bg-amber-50 text-amber-700",
-        status === "pending" && "bg-slate-100 text-slate-600",
+        status === "completed" && "bg-[#E6F4EA] text-[#0B5934] dark:bg-backgroundbg-green dark:text-text-colortext-green",
+        status === "rejected" && "bg-red-50 text-red-600 dark:bg-backgroundbg-red dark:text-text-colortext-red",
+        status === "in-progress" && "bg-amber-50 text-amber-700 dark:bg-backgroundbg-yellow dark:text-text-colortext-yellow",
+        status === "pending" && "bg-slate-100 text-slate-600 dark:bg-backgroundbg-bluish-gray dark:text-text-colortext-gray",
       )}
     >
       <Icon aria-hidden="true" className="h-3.5 w-3.5" />
@@ -143,12 +143,12 @@ function StageMeta({ stage }: { stage: StageDetail }) {
         </span>
       )}
       {stage.completionMessage && (
-        <span className="text-black">
+        <span className="text-text-colortext-black">
           {t(stage.completionMessage)}
         </span>
       )}
       {stage.rejectionReason && (
-        <span className="w-full rounded-md border border-red-200 bg-red-50 p-2 text-red-700">
+        <span className="w-full rounded-md border border-red-200 bg-red-50 p-2 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
           <span className="font-semibold">
             {t("history.detail.rejectionReason")}:
           </span>{" "}
@@ -165,7 +165,7 @@ function SummaryField({ label, value }: { label: string; value: string }) {
       <dt className="text-xs text-text-colortext-gray">{label}</dt>
       <dd
         title={value}
-        className="truncate text-sm font-semibold text-black"
+        className="truncate text-sm font-semibold text-text-colortext-black"
       >
         {value}
       </dd>
@@ -185,7 +185,7 @@ function StageDetails({
 
   if (!canView) {
     return (
-      <div className="mt-3 flex items-center gap-2 rounded-md bg-slate-50 p-3 text-xs text-text-colortext-gray">
+      <div className="mt-3 flex items-center gap-2 rounded-md bg-slate-50 p-3 text-xs text-text-colortext-gray dark:bg-backgroundbg-bluish-gray">
         <EyeOff aria-hidden="true" className="h-4 w-4 shrink-0" />
         {t("history.detail.noAccess")}
       </div>
@@ -196,7 +196,7 @@ function StageDetails({
     return (
       <div
         aria-disabled="true"
-        className="mt-3 rounded-md border border-dashed border-strokestroke-gray bg-slate-50 p-3"
+        className="mt-3 rounded-md border border-dashed border-strokestroke-gray bg-slate-50 p-3 dark:bg-backgroundbg-bluish-gray"
       >
         <p className="text-xs font-medium text-text-colortext-gray">
           {t("history.detail.details")}
@@ -215,7 +215,7 @@ function StageDetails({
       value={stage.stageKey}
       className="mt-3 border-0"
     >
-      <AccordionTrigger className="rounded-md border border-strokestroke-gray px-3 py-2 text-xs font-medium text-black hover:no-underline">
+      <AccordionTrigger className="rounded-md border border-strokestroke-gray px-3 py-2 text-xs font-medium text-text-colortext-black hover:no-underline">
         {t("history.detail.details")}
       </AccordionTrigger>
       <AccordionContent className="pt-3">
@@ -284,7 +284,7 @@ export default function MoDetailView({
           >
             <Link
               href={entryHref}
-              className="text-text-colortext-gray hover:text-black"
+              className="text-text-colortext-gray hover:text-text-colortext-black"
             >
               {entryLabel}
             </Link>
@@ -293,21 +293,21 @@ export default function MoDetailView({
             </span>
             <Link
               href={historyHref}
-              className="text-text-colortext-gray hover:text-black"
+              className="text-text-colortext-gray hover:text-text-colortext-black"
             >
               {t("navigation.history")}
             </Link>
             <span aria-hidden="true" className="text-[#B5B5B3]">
               ›
             </span>
-            <span aria-current="page" className="font-medium text-black">
+            <span aria-current="page" className="font-medium text-text-colortext-black">
               {t("history.detail.title")}
             </span>
           </nav>
 
           <header className="mb-5 flex flex-wrap items-start justify-between gap-3">
             <div>
-              <h1 className="text-lg font-semibold text-black">
+              <h1 className="text-lg font-semibold text-text-colortext-black">
                 {t("history.detail.title")}
               </h1>
               <p className="mt-1 text-xs text-text-colortext-gray">
@@ -328,11 +328,11 @@ export default function MoDetailView({
           {!mo ? (
             <section
               aria-labelledby="mo-detail-not-found"
-              className="rounded-lg border border-strokestroke-gray bg-white p-5"
+              className="rounded-lg border border-strokestroke-gray bg-backgroundbg-white p-5"
             >
               <h2
                 id="mo-detail-not-found"
-                className="text-sm font-semibold text-black"
+                className="text-sm font-semibold text-text-colortext-black"
               >
                 {t("history.detail.notFound")}
               </h2>
@@ -349,13 +349,13 @@ export default function MoDetailView({
             <div className="space-y-5">
               <section
                 aria-labelledby="mo-summary-heading"
-                className="rounded-lg border border-strokestroke-gray bg-white p-5"
+                className="rounded-lg border border-strokestroke-gray bg-backgroundbg-white p-5"
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0">
                     <h2
                       id="mo-summary-heading"
-                      className="break-all text-xl font-semibold text-black"
+                      className="break-all text-xl font-semibold text-text-colortext-black"
                     >
                       {mo.moCode}
                     </h2>
@@ -390,7 +390,7 @@ export default function MoDetailView({
                   <div>
                     <h2
                       id="process-timeline-heading"
-                      className="text-base font-semibold text-black"
+                      className="text-base font-semibold text-text-colortext-black"
                     >
                       {t("history.detail.processTimeline")}
                     </h2>
@@ -444,11 +444,11 @@ export default function MoDetailView({
                             <span className="my-1 min-h-8 w-px flex-1 bg-strokestroke-gray" />
                           )}
                         </div>
-                        <div className="mb-3 min-w-0 flex-1 rounded-md border border-strokestroke-gray bg-white p-4">
+                        <div className="mb-3 min-w-0 flex-1 rounded-md border border-strokestroke-gray bg-backgroundbg-white p-4">
                           <div className="flex flex-wrap items-center justify-between gap-2">
                             <h3
                               id={`stage-${stageKey}-heading`}
-                              className="text-sm font-semibold text-black"
+                              className="text-sm font-semibold text-text-colortext-black"
                             >
                               {t(STAGE_LABEL_KEYS[stageKey])}
                             </h3>

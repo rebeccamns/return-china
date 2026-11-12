@@ -43,16 +43,16 @@ import TaskProgressCard from "./TaskProgressCard";
 import SubmitFlowDialog, { type SubmitStep } from "./SubmitFlowDialog";
 
 const nestedHeadClass =
-  "bg-[#F8F8F8] px-3 text-xs font-semibold text-slate-700";
+  "bg-backgroundbg-bluish-gray px-3 text-xs font-semibold text-text-colortext-dark dark:bg-backgroundbg-black dark:text-text-colortext-black";
 const materialInputClass =
-  "h-8 w-full rounded-md border border-strokestroke-gray px-2 text-xs placeholder:text-[#A3A3A1]";
+  "h-8 w-full rounded-md border border-strokestroke-gray px-2 text-xs placeholder:text-text-colortext-gray";
 /* =========================================================
    PROGRESS BAR
 ========================================================= */
 
 function ProgressBar({ value = 46 }: { value?: number }) {
   return (
-    <div className="h-1.5 w-full rounded-full bg-slate-200">
+    <div className="h-1.5 w-full rounded-full bg-backgroundbg-black">
       <div
         className="h-1.5 rounded-full bg-gradient-to-r from-[#0b5934] to-[#15a760]"
         style={{ width: `${value}%` }}
@@ -105,7 +105,7 @@ function MaterialTableHeader() {
 
   return (
     <TableHeader>
-      <TableRow className="hover:bg-[#F8F8F8]">
+      <TableRow className="hover:bg-backgroundbg-bluish-gray">
         <TableHead className={nestedHeadClass}>{t("common.materialCode")}</TableHead>
         <TableHead className={nestedHeadClass}>{t("common.englishName")}</TableHead>
         <TableHead className={nestedHeadClass}>{t("common.chinaName")}</TableHead>
@@ -161,7 +161,7 @@ function MaterialFields({
           <span className="inline-flex items-center gap-2 text-xs">
             {material.code || "—"}
             {isRejected && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-1.5 py-0.5 text-[10px] font-medium text-red-700">
+              <span className="inline-flex items-center gap-1 rounded-full bg-backgroundbg-red px-1.5 py-0.5 text-[10px] font-medium text-text-colortext-red">
                 <AlertCircle className="h-3 w-3" />
                 Rejected
               </span>
@@ -237,8 +237,10 @@ function MaterialFields({
           <span
             className={cn(
               "inline-flex rounded-full px-2 py-0.5 text-xs font-medium",
-              material.category === "Wait repair" && "bg-yellow-100 text-yellow-800",
-              material.category === "Idle OK" && "bg-green-100 text-green-800",
+              material.category === "Wait repair" &&
+                "bg-yellow-100 text-yellow-800 dark:bg-backgroundbg-yellow dark:text-text-colortext-yellow",
+              material.category === "Idle OK" &&
+                "bg-green-100 text-green-800 dark:bg-backgroundbg-green dark:text-text-colortext-green",
             )}
           >
             {material.category === "Wait repair"
@@ -525,7 +527,7 @@ export function RevisionNotice() {
   }
 
   return (
-    <Card className="overflow-hidden rounded-lg border-strokestroke-gray bg-white">
+    <Card className="overflow-hidden rounded-lg border-strokestroke-gray bg-backgroundbg-white">
       <SubmitFlowDialog
         step={submitStep}
         confirmTitle={t("submitFlow.resubmitConfirmTitle")}
@@ -540,19 +542,19 @@ export function RevisionNotice() {
       />
       <CardContent className="flex items-center justify-between gap-4 px-4 py-3">
         <div className="flex min-w-0 items-center gap-3">
-          <Info className="h-4 w-4 shrink-0 text-red-500" />
+          <Info className="h-4 w-4 shrink-0 text-text-colortext-red" />
           <div className="min-w-0">
-            <h2 className="text-sm font-semibold text-red-500">
+            <h2 className="text-sm font-semibold text-text-colortext-red">
               {t("dashboard.revision.title")}
             </h2>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-text-colortext-gray">
               {t("dashboard.revision.description")}
             </p>
           </div>
         </div>
 
         <div className="flex shrink-0 items-center gap-5">
-          <Badge className="rounded bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-500 hover:bg-red-50">
+          <Badge className="rounded bg-backgroundbg-red px-2 py-0.5 text-xs font-semibold text-text-colortext-red hover:bg-backgroundbg-red">
             {t(
               items.length === 1
                 ? "dashboard.revision.itemSingular"
@@ -564,7 +566,7 @@ export function RevisionNotice() {
             variant="ghost"
             type="button"
             onClick={toggleShowAll}
-            className="h-auto gap-1.5 p-0 text-xs font-semibold text-slate-700 hover:bg-transparent hover:text-slate-900"
+            className="h-auto gap-1.5 p-0 text-xs font-semibold text-text-colortext-dark hover:bg-transparent hover:text-text-colortext-black"
           >
             {showAll ? t("common.hideAll") : t("common.viewAll")}
             <ChevronDown
@@ -587,7 +589,7 @@ export function RevisionNotice() {
         <div className="min-h-0 overflow-hidden">
           <div className="border-t border-strokestroke-gray px-4 pb-4 pt-3">
             <div className="mb-3 flex items-center justify-end">
-              <p className="ml-auto pb-2 text-xs text-[#8F8F8E]">
+              <p className="ml-auto pb-2 text-xs text-text-colortext-gray">
                 {t("history.showingRecords", {
                   shown: items.length,
                   total: items.length,
@@ -615,7 +617,7 @@ export function RevisionNotice() {
                     <TableRow>
                       <TableCell
                         colSpan={7}
-                        className="px-3 py-10 text-center text-sm text-[#5F5F5E]"
+                        className="px-3 py-10 text-center text-sm text-text-colortext-dark"
                       >
                         {t("history.noMatchingRecords")}
                       </TableCell>
@@ -628,7 +630,7 @@ export function RevisionNotice() {
                     return (
                       <React.Fragment key={item.id}>
                         <TableRow
-                          className="h-12 cursor-pointer hover:bg-slate-50"
+                          className="h-12 cursor-pointer hover:bg-backgroundbg-bluish-gray"
                           onClick={() => toggleRow(item.id)}
                         >
                           <TableCell className="px-3">
@@ -655,7 +657,7 @@ export function RevisionNotice() {
                               <Button
                                 type="button"
                                 variant="ghost"
-                                className="h-7 px-2 text-xs font-medium text-[#08783F] hover:bg-[#E7F5EC] hover:text-[#066B3B]"
+                                className="h-7 px-2 text-xs font-medium text-text-colortext-green hover:bg-backgroundbg-green hover:text-text-colortext-green"
                                 onClick={(event) => {
                                   event.stopPropagation();
                                   startEdit(item);
@@ -669,7 +671,7 @@ export function RevisionNotice() {
 
                         {isExpanded && (
                           <TableRow>
-                            <TableCell colSpan={7} className="bg-white p-3">
+                            <TableCell colSpan={7} className="bg-backgroundbg-white p-3">
                               <div className="overflow-x-auto">
                                 <Table className="min-w-[1450px]">
                                   <MaterialTableHeader />
@@ -679,7 +681,7 @@ export function RevisionNotice() {
                                         key={`${item.id}-${index}`}
                                         className={cn(
                                           material.isRejected &&
-                                            "bg-red-50/50 hover:bg-red-50/70",
+                                            "bg-backgroundbg-red/50 hover:bg-backgroundbg-red/70",
                                         )}
                                       >
                                         <MaterialFields
@@ -736,7 +738,7 @@ export function RevisionNotice() {
                                     </Button>
                                   </div>
                                 ) : (
-                                  <span className="text-xs text-slate-500">
+                                  <span className="text-xs text-text-colortext-gray">
                                     Read-only view
                                   </span>
                                 )}
@@ -974,14 +976,14 @@ function OngoingMoTable() {
   }
 
   return (
-    <Card className="overflow-hidden rounded-lg border-[var(--strokestroke-gray)]">
+    <Card className="overflow-hidden rounded-lg border-[var(--strokestroke-gray)] bg-backgroundbg-white">
       <CardHeader className="px-4 py-3">
         <CardTitle className="text-sm font-semibold">{t("dashboard.ongoingMo.title")}</CardTitle>
       </CardHeader>
 
       <CardContent className="px-4 pb-4">
         <div className="mb-3 flex items-center justify-end">
-          <p className="text-xs text-[#8F8F8E]">
+          <p className="text-xs text-text-colortext-gray">
             {t("history.showingRecords", {
               shown: rows.length,
               total: rows.length,
@@ -1009,7 +1011,7 @@ function OngoingMoTable() {
                 <TableRow>
                   <TableCell
                     colSpan={7}
-                    className="px-3 py-10 text-center text-sm text-[#5F5F5E]"
+                    className="px-3 py-10 text-center text-sm text-text-colortext-dark"
                   >
                     {rows.length === 0
                       ? t("common.noData")
@@ -1023,7 +1025,7 @@ function OngoingMoTable() {
                 return (
                   <React.Fragment key={row.id}>
                     <TableRow
-                      className="h-12 cursor-pointer hover:bg-slate-50"
+                      className="h-12 cursor-pointer hover:bg-backgroundbg-bluish-gray"
                       onClick={() => setExpandedId(isExpanded ? null : row.id)}
                     >
                       <TableCell className="w-12 px-3">
@@ -1126,7 +1128,7 @@ function OngoingMoTable() {
 
                     {isExpanded && (
                         <TableRow>
-                          <TableCell colSpan={7} className="bg-white p-3">
+                          <TableCell colSpan={7} className="bg-backgroundbg-white p-3">
                             <div className="overflow-x-auto">
                               <Table className="min-w-[1450px]">
                                 <MaterialTableHeader />
@@ -1236,9 +1238,9 @@ function OngoingMoTable() {
                                             className={cn(
                                               "inline-flex rounded-full px-2 py-0.5 text-xs font-medium",
                                               material.category === "Wait repair" &&
-                                                "bg-yellow-100 text-yellow-800",
+                                              "bg-backgroundbg-yellow text-text-colortext-yellow",
                                               material.category === "Idle OK" &&
-                                                "bg-green-100 text-green-800",
+                                              "bg-backgroundbg-green text-text-colortext-green",
                                             )}
                                           >
                                             {material.category === "Wait repair"
@@ -1354,11 +1356,16 @@ export default function DashboardContent(): JSX.Element {
   return (
     <main>
       <div className="mx-auto flex w-full max-w-[1625px] flex-col gap-5">
-        <nav aria-label="Breadcrumb" className="text-xs text-slate-500">
+        <nav
+          aria-label="Breadcrumb"
+          className="text-xs text-text-colortext-gray"
+        >
           {t("dashboard.breadcrumb")}
         </nav>
 
-        <h1 className="text-lg font-semibold text-slate-950">{t("dashboard.title")}</h1>
+        <h1 className="text-lg font-semibold text-text-colortext-black">
+          {t("dashboard.title")}
+        </h1>
 
         <section className="grid grid-cols-1 gap-5 xl:grid-cols-2">
           <TaskProgressCard />

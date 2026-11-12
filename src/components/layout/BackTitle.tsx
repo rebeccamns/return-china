@@ -20,7 +20,7 @@ export default function BackTitle({
   titleExtra,
 }: BackTitleProps) {
   const titleClass =
-    "truncate text-[22px] max-md:text-title font-semibold leading-7 tracking-[-0.01em] text-text-colortext-black";
+    "truncate text-[22px] max-md:text-title font-semibold leading-7 tracking-[-0.01em] text-text-colortext-black dark:text-white";
 
   return (
     <div>

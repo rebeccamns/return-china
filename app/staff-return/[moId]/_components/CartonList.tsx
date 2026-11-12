@@ -157,7 +157,7 @@ export default function CartonList({
           {t("staffReturn.cartonQuantity")}
         </label>
 
-        <div className="flex items-center justify-between rounded-2xl bg-slate-50 p-1.5">
+        <div className="flex items-center justify-between rounded-2xl bg-slate-50 p-1.5 dark:bg-backgroundbg-bluish-gray">
           <button
             type="button"
             onClick={() => setCount(count - 1)}
@@ -195,7 +195,7 @@ export default function CartonList({
           </button>
         </div>
 
-        <p className="mt-3 text-center text-[13px] max-md:text-secondary font-medium max-md:font-normal leading-[18px] text-[#006B3C]">
+        <p className="mt-3 text-center text-[13px] max-md:text-secondary font-medium max-md:font-normal leading-[18px] text-[#006B3C] dark:text-text-colortext-green">
           {t("staffReturn.willCreate", { range: previewRange })}
         </p>
 
@@ -261,7 +261,7 @@ export default function CartonList({
                   onClick={() => onOpenCarton(carton)}
                   className="flex min-h-[60px] max-md:min-h-[52px] w-full items-center gap-4 max-md:gap-3 px-4 py-2.5 max-md:px-3.5 max-md:py-2 text-left transition-colors active:bg-backgroundbg-gray"
                 >
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-50">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-50 dark:bg-backgroundbg-bluish-gray">
                     <Package
                       className="h-6 w-6 text-[#929292]"
                       strokeWidth={1.5}
@@ -279,9 +279,9 @@ export default function CartonList({
                   </div>
 
                   {carton.saved ? (
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC]">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] dark:bg-backgroundbg-green">
                       <Check
-                        className="h-4 w-4 text-primaryprimary-green"
+                        className="h-4 w-4 text-primaryprimary-green dark:text-text-colortext-green"
                         strokeWidth={3}
                       />
                     </span>
@@ -292,7 +292,7 @@ export default function CartonList({
                   ) : null}
 
                   <ChevronRight
-                    className="h-5 w-5 shrink-0 text-[#C4C4C4]"
+                    className="h-5 w-5 shrink-0 text-[#C4C4C4] dark:text-icon-muted"
                     strokeWidth={2}
                   />
                 </button>

@@ -250,10 +250,10 @@ export default function EximPage() {
 
           <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <h1 className="text-lg font-semibold text-[#111111]">
+              <h1 className="text-lg font-semibold text-text-colortext-black">
                 {t("exim.title")}
               </h1>
-              <p className="mt-1 text-sm text-[#8F8F8E]">
+              <p className="mt-1 text-sm text-text-colortext-gray">
                 Review pending MOs and complete their brand and model
                 information.
               </p>
@@ -264,21 +264,21 @@ export default function EximPage() {
                 <label htmlFor="exim-list-search" className="sr-only">
                   {t("history.searchLabel")}
                 </label>
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#A3A3A1]" />
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-colortext-gray" />
                 <Input
                   id="exim-list-search"
                   value={listSearch}
                   onChange={(event) => setListSearch(event.target.value)}
                   placeholder={t("exim.searchPlaceholder")}
-                  className="h-9 rounded-md border-strokestroke-gray pl-9 text-xs placeholder:text-[#A3A3A1]"
+                  className="h-9 rounded-md border-strokestroke-gray pl-9 text-xs placeholder:text-text-colortext-gray"
                 />
               </div>
-              <div className="flex h-9 shrink-0 items-center gap-2 rounded-lg border border-strokestroke-gray bg-white px-3">
-                <ClipboardList className="h-4 w-4 text-[#0B5934]" />
-                <span className="text-sm text-[#5F5F5E]">
+              <div className="flex h-9 shrink-0 items-center gap-2 rounded-lg border border-strokestroke-gray bg-backgroundbg-white px-3">
+                <ClipboardList className="h-4 w-4 text-text-colortext-green" />
+                <span className="text-sm text-text-colortext-dark">
                   {t("common.pendingMos")}
                 </span>
-                <span className="text-sm font-semibold text-[#111111]">
+                <span className="text-sm font-semibold text-text-colortext-black">
                   {mos.length}
                 </span>
               </div>
@@ -291,8 +291,8 @@ export default function EximPage() {
               className={cn(
                 "mb-4 flex items-start gap-3 rounded-lg border px-4 py-3 text-xs",
                 notice.type === "success"
-                  ? "border-[#B7DEC4] bg-[#EAF6EE] text-[#0b5934]"
-                  : "border-red-200 bg-red-50 text-red-700",
+                  ? "border-strokestroke-green bg-backgroundbg-green text-text-colortext-green"
+                  : "border-strokestroke-red bg-backgroundbg-red text-text-colortext-red",
               )}
             >
               {notice.type === "success" ? (
@@ -313,13 +313,13 @@ export default function EximPage() {
             </div>
           )}
 
-          <section className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
+          <section className="overflow-hidden rounded-lg border border-strokestroke-gray bg-backgroundbg-white">
             <div className="flex items-center justify-between border-b border-strokestroke-gray px-[18px] py-4">
               <div>
-                <h2 className="text-sm font-semibold text-[#111111]">
+                <h2 className="text-sm font-semibold text-text-colortext-black">
                   Task / MO List
                 </h2>
-                <p className="mt-1 text-xs text-[#8F8F8E]">
+                <p className="mt-1 text-xs text-text-colortext-gray">
                   Select an MO to view and complete its material details.
                 </p>
               </div>
@@ -327,23 +327,23 @@ export default function EximPage() {
 
             {mos.length === 0 ? (
               <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-[#EAF6EE]">
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-backgroundbg-green">
                   <Package
-                    className="h-6 w-6 text-[#0B5934]"
+                    className="h-6 w-6 text-text-colortext-green"
                     strokeWidth={1.5}
                   />
                 </div>
 
-                <p className="text-sm font-medium text-[#111111]">
+                <p className="text-sm font-medium text-text-colortext-black">
                   {t("exim.noMoWaiting")}
                 </p>
 
-                <p className="mt-1 max-w-sm text-xs text-[#8F8F8E]">
+                <p className="mt-1 max-w-sm text-xs text-text-colortext-gray">
                   {t("exim.noMoWaitingHint")}
                 </p>
               </div>
             ) : filteredMos.length === 0 ? (
-              <p className="px-6 py-10 text-center text-sm text-[#8F8F8E]">
+              <p className="px-6 py-10 text-center text-sm text-text-colortext-gray">
                 {t("history.noMatchingRecords")}
               </p>
             ) : (
@@ -368,84 +368,84 @@ export default function EximPage() {
                         className={cn(
                           "flex w-full items-center gap-4 px-[18px] py-4 text-left transition-colors",
                           isExpanded
-                            ? "bg-[#F7FBF8]"
-                            : "bg-white hover:bg-slate-50",
+                            ? "bg-backgroundbg-green"
+                            : "bg-backgroundbg-white hover:bg-backgroundbg-bluish-gray",
                         )}
                       >
                         <div
                           className={cn(
                             "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg",
                             isExpanded
-                              ? "bg-[#EAF6EE]"
-                              : "bg-[#F4F4F4]",
+                              ? "bg-backgroundbg-green"
+                              : "bg-backgroundbg-bluish-gray",
                           )}
                         >
                           <Package
                             className={cn(
                               "h-5 w-5",
                               isExpanded
-                                ? "text-[#0B5934]"
-                                : "text-[#737373]",
+                                ? "text-text-colortext-green"
+                                : "text-text-colortext-gray",
                             )}
                             strokeWidth={1.7}
                           />
                         </div>
 
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-semibold text-[#111111]">
+                          <p className="text-sm font-semibold text-text-colortext-black">
                             {mo.code}
                           </p>
                           <MoDeadline moCode={mo.code} />
 
-                          <p className="mt-1 text-xs text-[#8F8F8E]">
+                          <p className="mt-1 text-xs text-text-colortext-gray">
                             {rowCount}{" "}
                             {rowCount === 1 ? "material" : "materials"}
                           </p>
                         </div>
 
                         {isExpanded ? (
-                          <span className="hidden text-xs text-[#0B5934] sm:block">
+                          <span className="hidden text-xs text-text-colortext-green sm:block">
                             {completedCount} / {rowCount} completed
                           </span>
                         ) : (
-                          <span className="hidden text-xs text-[#8F8F8E] sm:block">
+                          <span className="hidden text-xs text-text-colortext-gray sm:block">
                             View materials
                           </span>
                         )}
 
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md">
                           {isExpanded ? (
-                            <ChevronDown className="h-4 w-4 text-[#0B5934]" />
+                            <ChevronDown className="h-4 w-4 text-text-colortext-green" />
                           ) : (
-                            <ChevronRight className="h-4 w-4 text-[#737373]" />
+                            <ChevronRight className="h-4 w-4 text-text-colortext-gray" />
                           )}
                         </div>
                       </button>
 
                       {isExpanded && expanded && (
-                        <div className="border-t border-strokestroke-gray bg-white px-[18px] py-5">
+                        <div className="border-t border-strokestroke-gray bg-backgroundbg-white px-[18px] py-5">
                           <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
                             <div>
-                              <p className="text-sm font-semibold text-[#111111]">
+                              <p className="text-sm font-semibold text-text-colortext-black">
                                 Material Details
                               </p>
-                              <p className="mt-1 text-xs text-[#8F8F8E]">
+                              <p className="mt-1 text-xs text-text-colortext-gray">
                                 Enter the brand and model for every
                                 material before submitting this MO.
                               </p>
                             </div>
 
-                            <div className="inline-flex h-8 items-center gap-3 rounded-full bg-white px-4 text-xs">
-                              <span className="text-[#8F8F8E]">
+                            <div className="inline-flex h-8 items-center gap-3 rounded-full bg-backgroundbg-bluish-gray px-4 text-xs">
+                              <span className="text-text-colortext-gray">
                                 {t("common.mo")}
                               </span>
-                              <span className="font-medium text-[#111111]">
+                              <span className="font-medium text-text-colortext-black">
                                 {expanded.code}
                               </span>
                             </div>
                           </div>
 
-                          <div className="overflow-x-auto rounded-lg border border-strokestroke-gray bg-white">
+                          <div className="overflow-x-auto rounded-lg border border-strokestroke-gray bg-backgroundbg-white">
                             <EximMaterialTable
                               rows={expanded.rows}
                               onChange={updateRow}
@@ -453,7 +453,7 @@ export default function EximPage() {
                           </div>
 
                           <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                            <span className="text-xs text-[#5F5F5E]">
+                            <span className="text-xs text-text-colortext-dark">
                               {t("exim.materialsComplete", {
                                 filled,
                                 total,
@@ -495,12 +495,12 @@ export default function EximPage() {
             )}
           </section>
 
-          <section className="mt-5 overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
+          <section className="mt-5 overflow-hidden rounded-lg border border-strokestroke-gray bg-backgroundbg-white">
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-strokestroke-gray px-[18px] py-4">
-              <h2 className="text-sm font-semibold text-[#111111]">
+              <h2 className="text-sm font-semibold text-text-colortext-black">
                 {t("common.moSubmitted")}
               </h2>
-              <div className="flex items-center gap-3 text-xs text-[#8F8F8E]">
+              <div className="flex items-center gap-3 text-xs text-text-colortext-gray">
                 <span>
                   {t("common.submittedTodayCount", {
                     count: submittedTodayCount,
@@ -510,11 +510,11 @@ export default function EximPage() {
               </div>
             </div>
             {submittedMos.length === 0 ? (
-              <p className="px-[18px] py-6 text-sm text-[#8F8F8E]">
+              <p className="px-[18px] py-6 text-sm text-text-colortext-gray">
                 {t("common.noSubmittedMos")}
               </p>
             ) : filteredSubmittedMos.length === 0 ? (
-              <p className="px-[18px] py-6 text-sm text-[#8F8F8E]">
+              <p className="px-[18px] py-6 text-sm text-text-colortext-gray">
                 {t("history.noMatchingRecords")}
               </p>
             ) : (
@@ -532,37 +532,37 @@ export default function EximPage() {
                             isExpanded ? null : mo.code,
                           )
                         }
-                        className="flex w-full items-center gap-4 bg-white px-[18px] py-4 text-left transition-colors hover:bg-slate-50"
+                        className="flex w-full items-center gap-4 bg-backgroundbg-white px-[18px] py-4 text-left text-text-colortext-black transition-colors hover:bg-backgroundbg-bluish-gray"
                       >
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#EAF6EE]">
-                          <Package className="h-5 w-5 text-[#0B5934]" />
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-backgroundbg-green">
+                          <Package className="h-5 w-5 text-text-colortext-green" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-semibold text-[#111111]">
+                          <p className="text-sm font-semibold text-text-colortext-black">
                             {mo.code}
                           </p>
-                          <p className="mt-1 text-xs text-[#8F8F8E]">
+                          <p className="mt-1 text-xs text-text-colortext-gray">
                             {t("common.materialPlural", {
                               count: mo.rows.length,
                             })}
                           </p>
                           <MoDeadline moCode={mo.code} />
-                          <p className="mt-1 text-[11px] text-[#8F8F8E]">
+                          <p className="mt-1 text-[11px] text-text-colortext-gray">
                             {formatDateTime(mo.submittedAt, locale)}
                           </p>
                         </div>
-                        <span className="hidden text-xs text-[#0B5934] sm:block">
+                        <span className="hidden text-xs text-text-colortext-green sm:block">
                           {t("common.viewSubmittedDetails")}
                         </span>
                         {isExpanded ? (
-                          <ChevronDown className="h-4 w-4 text-[#0B5934]" />
+                          <ChevronDown className="h-4 w-4 text-text-colortext-green" />
                         ) : (
-                          <ChevronRight className="h-4 w-4 text-[#737373]" />
+                          <ChevronRight className="h-4 w-4 text-text-colortext-gray" />
                         )}
                       </button>
                       {isExpanded && (
-                        <div className="border-t border-strokestroke-gray bg-white px-[18px] py-5">
-                          <div className="mb-3 text-xs text-[#5F5F5E]">
+                        <div className="border-t border-strokestroke-gray bg-backgroundbg-white px-[18px] py-5">
+                          <div className="mb-3 text-xs text-text-colortext-dark">
                             {t("common.submitted")}
                           </div>
                           <div className="overflow-x-auto rounded-lg border border-strokestroke-gray">
@@ -599,7 +599,7 @@ export default function EximPage() {
           </DialogHeader>
 
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-[#111111]">
+            <label className="mb-1.5 block text-xs font-medium text-text-colortext-black">
               {t("exim.rejectDialog.reasonLabel")}{" "}
               <span className="text-red-500">*</span>
             </label>
@@ -609,7 +609,7 @@ export default function EximPage() {
               value={rejectReason}
               onChange={(event) => setRejectReason(event.target.value)}
               placeholder={t("exim.rejectDialog.reasonPlaceholder")}
-              className="w-full resize-none rounded-md border border-strokestroke-gray px-3 py-2 text-xs outline-none placeholder:text-[#A3A3A1] focus:border-primaryprimary-green"
+              className="w-full resize-none rounded-md border border-strokestroke-gray bg-backgroundbg-white px-3 py-2 text-xs text-text-colortext-black outline-none placeholder:text-text-colortext-gray focus:border-primaryprimary-green"
             />
           </div>
 

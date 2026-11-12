@@ -39,7 +39,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-backgroundbg-gray text-text-colortext-black">
         <I18nProvider>{children}</I18nProvider>
       </body>
     </html>

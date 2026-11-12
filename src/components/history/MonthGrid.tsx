@@ -81,14 +81,14 @@ export default function MonthGrid({
               type="button"
               onClick={prev.onClick}
               aria-label={prev.label}
-              className="flex h-8 w-8 items-center justify-center rounded-md text-[#555554] hover:bg-[#F0F0EE]"
+              className="flex h-8 w-8 items-center justify-center rounded-md text-[#555554] hover:bg-[#F0F0EE] dark:text-text-colortext-gray dark:hover:bg-backgroundbg-black"
             >
               <ChevronLeft className="h-4 w-4" strokeWidth={2} />
             </button>
           )}
         </div>
 
-        <h3 className="text-sm font-semibold text-[#222222]">{title}</h3>
+        <h3 className="text-sm font-semibold text-text-colortext-black">{title}</h3>
 
         <div className="h-8 w-8">
           {next && (
@@ -97,7 +97,7 @@ export default function MonthGrid({
               onClick={next.onClick}
               aria-label={next.label}
               className={cn(
-                "flex h-8 w-8 items-center justify-center rounded-md text-[#555554] hover:bg-[#F0F0EE]",
+                "flex h-8 w-8 items-center justify-center rounded-md text-[#555554] hover:bg-[#F0F0EE] dark:text-text-colortext-gray dark:hover:bg-backgroundbg-black",
                 next.mobileOnly && "md:hidden",
               )}
             >
@@ -118,7 +118,7 @@ export default function MonthGrid({
               key={index}
               role="columnheader"
               aria-label={weekday.long}
-              className="flex h-7 items-center justify-center text-[11px] font-medium text-[#777777]"
+              className="flex h-7 items-center justify-center text-[11px] font-medium text-[#777777] dark:text-text-colortext-gray"
             >
               {weekday.narrow}
             </div>
@@ -147,7 +147,7 @@ export default function MonthGrid({
                   aria-selected={selected || undefined}
                   className={cn(
                     "flex h-9 items-center justify-center",
-                    selected && "bg-[#E7F5EC]",
+                    selected && "bg-[#E7F5EC] dark:bg-backgroundbg-green",
                     selected && !prevSelected && "rounded-l-md",
                     selected && !nextSelected && "rounded-r-md",
                   )}
@@ -170,8 +170,8 @@ export default function MonthGrid({
                         isEdge
                           ? "bg-[#08783F] font-medium text-white"
                           : selected
-                            ? "text-[#08783F]"
-                            : "text-[#222222] hover:bg-[#F0F0EE]",
+                            ? "text-[#08783F] dark:text-text-colortext-green"
+                            : "text-[#222222] hover:bg-[#F0F0EE] dark:text-text-colortext-black dark:hover:bg-backgroundbg-black",
                       )}
                     >
                       {cell.day}
@@ -179,7 +179,7 @@ export default function MonthGrid({
                   ) : (
                     <span
                       aria-hidden="true"
-                      className="flex h-9 w-9 items-center justify-center text-xs text-[#C8C8C6]"
+                      className="flex h-9 w-9 items-center justify-center text-xs text-[#C8C8C6] dark:text-text-colortext-gray"
                     >
                       {cell.day}
                     </span>

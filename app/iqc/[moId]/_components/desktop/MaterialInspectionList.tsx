@@ -30,55 +30,55 @@ export default function MaterialInspectionList({ identity }: Props) {
 
   return (
     <>
-      <div className="overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
+      <div className="overflow-hidden rounded-lg border border-strokestroke-gray bg-backgroundbg-white">
         <div className="divide-y divide-strokestroke-gray">
           {identity.materials.map((material) => (
             <button
               key={material.id}
               type="button"
               onClick={() => setSelectedMaterialId(material.id)}
-              className="flex min-h-[72px] w-full items-center gap-4 px-4 py-3 text-left transition-colors hover:bg-[#FAFCFB] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primaryprimary-green"
+              className="flex min-h-[72px] w-full items-center gap-4 px-4 py-3 text-left transition-colors hover:bg-[#FAFCFB] dark:hover:bg-backgroundbg-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primaryprimary-green"
             >
               <span
                 className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
                   material.status === "PASS"
-                    ? "bg-[#EAF6EE]"
+                    ? "bg-[#EAF6EE] dark:bg-backgroundbg-green"
                     : material.status === "REJECT"
-                      ? "bg-red-50"
-                      : "bg-[#F4F4F4]"
+                      ? "bg-red-50 dark:bg-backgroundbg-red"
+                      : "bg-[#F4F4F4] dark:bg-backgroundbg-bluish-gray"
                 }`}
               >
                 {material.status === "PASS" ? (
-                  <Check className="h-5 w-5 text-[#0B5934]" />
+                  <Check className="h-5 w-5 text-[#0B5934] dark:text-text-colortext-green" />
                 ) : material.status === "REJECT" ? (
                   <X className="h-5 w-5 text-red-600" />
                 ) : (
                   <Package
-                    className="h-5 w-5 text-[#737373]"
+                    className="h-5 w-5 text-[#737373] dark:text-text-colortext-gray"
                     strokeWidth={1.7}
                   />
                 )}
               </span>
 
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-semibold text-[#111111]">
+                <span className="block truncate text-sm font-semibold text-text-colortext-black">
                   {material.code}
                 </span>
-                <span className="mt-1 block truncate text-xs text-[#8F8F8E]">
+                <span className="mt-1 block truncate text-xs text-text-colortext-gray">
                   {material.englishName} · {material.chinaName}
                 </span>
               </span>
 
-              <span className="hidden text-xs text-[#5F5F5E] sm:block">
+              <span className="hidden text-xs text-text-colortext-gray sm:block">
                 {material.qty} {t("common.units.pcs")}
               </span>
               <span
                 className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${
                   material.status === "PASS"
-                    ? "bg-[#E7F5EC] text-[#006B3C]"
+                    ? "bg-[#E7F5EC] text-[#006B3C] dark:bg-backgroundbg-green dark:text-text-colortext-green"
                     : material.status === "REJECT"
-                      ? "bg-red-50 text-red-600"
-                      : "bg-slate-100 text-slate-600"
+                      ? "bg-red-50 text-red-600 dark:bg-backgroundbg-red dark:text-text-colortext-red"
+                      : "bg-slate-100 text-slate-600 dark:bg-backgroundbg-bluish-gray dark:text-text-colortext-gray"
                 }`}
               >
                 {material.status === "PASS" ? (
@@ -90,7 +90,7 @@ export default function MaterialInspectionList({ identity }: Props) {
                 )}
                 {getStatusLabel(material, t)}
               </span>
-              <ChevronRight className="h-4 w-4 shrink-0 text-[#737373]" />
+              <ChevronRight className="h-4 w-4 shrink-0 text-[#737373] dark:text-text-colortext-gray" />
               <span className="sr-only">
                 {t("common.edit")} {material.code}
               </span>

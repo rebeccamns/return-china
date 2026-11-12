@@ -36,7 +36,7 @@ export default function StageDataContent({
 
   if (isEmpty(stage)) {
     return (
-      <p className="rounded-md bg-slate-50 p-3 text-xs text-text-colortext-gray">
+      <p className="rounded-md bg-slate-50 p-3 text-xs text-text-colortext-gray dark:bg-backgroundbg-bluish-gray">
         {t("history.detail.noData")}
       </p>
     );

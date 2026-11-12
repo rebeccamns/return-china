@@ -42,8 +42,8 @@ export default function SubmitFlowDialog({
         <div
           className={
             isSuccess
-              ? "mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#E7F5EC] text-[#008348]"
-              : "mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-amber-50 text-amber-600"
+              ? "mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#E7F5EC] text-[#008348] dark:bg-backgroundbg-green dark:text-text-colortext-green"
+              : "mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-amber-50 text-amber-600 dark:bg-backgroundbg-yellow dark:text-text-colortext-yellow"
           }
         >
           {isSuccess ? (

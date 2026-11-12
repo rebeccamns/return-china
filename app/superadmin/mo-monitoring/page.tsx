@@ -65,7 +65,7 @@ export default function MoMonitoringPage() {
           </nav>
 
           {/* Page title */}
-          <h1 className="mb-5 text-lg font-semibold text-[#111111]">
+          <h1 className="mb-5 text-lg font-semibold text-[#111111] dark:text-text-colortext-black">
             {t("moMonitoring.title")}
           </h1>
 

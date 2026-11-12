@@ -90,7 +90,7 @@ export default function ScanSheet({
           {title}
         </h2>
 
-        <div className="mt-3 rounded-xl bg-slate-50 px-4 py-3 max-md:px-3.5 max-md:py-3.5">
+        <div className="mt-3 rounded-xl bg-slate-50 px-4 py-3 max-md:px-3.5 max-md:py-3.5 dark:bg-backgroundbg-bluish-gray">
           <p className="break-words text-[15px] max-md:text-body font-semibold leading-5 text-text-colortext-black">
             {targetTitle}
           </p>
@@ -132,7 +132,7 @@ export default function ScanSheet({
         {error && (
           <p
             role="alert"
-            className="mt-3 rounded-xl bg-red-50 px-4 py-3 max-md:px-3.5 max-md:py-3.5 text-[13px] max-md:text-secondary leading-[18px] text-red-700"
+            className="mt-3 rounded-xl bg-red-50 px-4 py-3 max-md:px-3.5 max-md:py-3.5 text-[13px] max-md:text-secondary leading-[18px] text-red-700 dark:bg-red-950 dark:text-red-200"
           >
             {error}
           </p>

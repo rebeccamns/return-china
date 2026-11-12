@@ -12,7 +12,6 @@ import {
 import { useI18n } from "@/i18n";
 
 import StickyActionBar, { primaryButton } from "./StickyActionBar";
-import MoSummaryCard from "./MoSummaryCard";
 import {
   type Carton,
   type Material,
@@ -72,17 +71,13 @@ export default function MaterialList({
         {t("staffReturn.materialsCount", { count: carton.materials.length })}
       </p>
 
-      <div className="mb-3 max-md:mb-2 mt-2">
-        <MoSummaryCard compact />
-      </div>
-
       {isGroup && (
-        <div className="mt-3 flex items-start gap-3 rounded-2xl bg-[#E7F5EC] p-4 max-md:p-3.5">
+        <div className="mt-3 flex items-start gap-3 rounded-2xl bg-[#E7F5EC] p-4 max-md:p-3.5 dark:bg-backgroundbg-green">
           <Layers
-            className="mt-0.5 h-5 w-5 shrink-0 text-[#006B3C]"
+            className="mt-0.5 h-5 w-5 shrink-0 text-[#006B3C] dark:text-text-colortext-green"
             strokeWidth={1.8}
           />
-          <p className="text-[13px] max-md:text-secondary leading-[18px] text-[#006B3C]">
+          <p className="text-[13px] max-md:text-secondary leading-[18px] text-[#006B3C] dark:text-text-colortext-green">
             {t("staffReturn.sameDetailsBanner", { count: carton.codes.length })}
           </p>
         </div>
@@ -99,7 +94,7 @@ export default function MaterialList({
                   onClick={() => onEditMaterial(entry)}
                   className="flex min-h-[60px] max-md:min-h-[52px] w-full items-center gap-3 px-4 py-2.5 max-md:px-3.5 max-md:py-2 text-left transition-colors active:bg-backgroundbg-gray"
                 >
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[13px] max-md:text-secondary font-semibold text-[#006B3C]">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E7F5EC] text-[13px] max-md:text-secondary font-semibold text-[#006B3C] dark:bg-backgroundbg-green dark:text-text-colortext-green">
                     {index + 1}
                   </span>
 
@@ -157,7 +152,7 @@ export default function MaterialList({
                       {option.englishName}
                     </span>
                     {packed && (
-                      <span className="text-[12px] max-md:text-caption font-medium leading-4 text-[#006B3C]">
+                      <span className="text-[12px] max-md:text-caption font-medium leading-4 text-[#006B3C] dark:text-text-colortext-green">
                         {t("staffReturn.packedSummary", {
                           pieces: packed.pieces,
                           cartons: packed.cartons,

@@ -45,9 +45,9 @@ export default function CartonVerificationList({
                   onClick={() => onOpenCarton(carton)}
                   className="flex min-h-[60px] max-md:min-h-[52px] w-full items-center gap-3 px-4 py-2.5 max-md:px-3.5 max-md:py-2 text-left transition-colors active:bg-backgroundbg-gray"
                 >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-50">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-50 dark:bg-backgroundbg-black">
                     <Package
-                      className="h-5 w-5 text-[#929292]"
+                      className="h-5 w-5 text-[#929292] dark:text-text-colortext-gray"
                       strokeWidth={1.5}
                     />
                   </span>
@@ -77,7 +77,7 @@ export default function CartonVerificationList({
                   ) : null}
 
                   <ChevronRight
-                    className="h-5 w-5 shrink-0 text-[#C4C4C4]"
+                    className="h-5 w-5 shrink-0 text-[#C4C4C4] dark:text-text-colortext-gray"
                     strokeWidth={2}
                   />
                 </button>
@@ -88,7 +88,7 @@ export default function CartonVerificationList({
       </div>
 
       {allVerified && !submitted && (
-        <p className="mt-4 max-md:mt-3 rounded-xl bg-[#E7F5EC] px-4 py-3 max-md:px-3.5 max-md:py-3.5 text-[13px] max-md:text-secondary leading-[18px] text-[#006B3C]">
+        <p className="mt-4 max-md:mt-3 rounded-xl bg-[#E7F5EC] px-4 py-3 max-md:px-3.5 max-md:py-3.5 text-[13px] max-md:text-secondary leading-[18px] text-[#006B3C] dark:bg-backgroundbg-green dark:text-text-colortext-green">
           {t("iqc.verify.allVerified")}
         </p>
       )}

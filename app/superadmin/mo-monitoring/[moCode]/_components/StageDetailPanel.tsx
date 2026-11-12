@@ -31,14 +31,14 @@ export default function StageDetailPanel({
     .join(" · ");
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5">
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+    <div className="rounded-xl border border-gray-200 bg-white p-5 dark:border-strokestroke-gray dark:bg-backgroundbg-white">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-text-colortext-gray">
         {t("history.detail.details")}
       </p>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-3">
-          <h3 className="text-base font-semibold text-gray-900">
+          <h3 className="text-base font-semibold text-gray-900 dark:text-text-colortext-black">
             {STEP_DISPLAY[step]}
           </h3>
           <StatusBadge status="Completed" />
@@ -56,7 +56,7 @@ export default function StageDetailPanel({
         )}
       </div>
 
-      <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500">
+      <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-text-colortext-gray">
         {(stage?.timestamp ?? timelineEntry?.time) && (
           <span>
             <span className="font-medium">{t("history.detail.timestamp")}:</span>{" "}
@@ -75,7 +75,7 @@ export default function StageDetailPanel({
         {stage ? (
           <StageDataContent stage={stage} />
         ) : (
-          <p className="rounded-md bg-slate-50 p-3 text-xs text-gray-500">
+          <p className="rounded-md bg-slate-50 p-3 text-xs text-gray-500 dark:bg-backgroundbg-bluish-gray dark:text-text-colortext-gray">
             {t("history.detail.noData")}
           </p>
         )}

@@ -15,9 +15,9 @@ import type { ActivityLogEntry, ActivityStatus, StepName } from "../../../_lib/t
 type Filter = "all" | ActivityStatus;
 
 const STATUS_COLOR: Record<ActivityStatus, string> = {
-  Started: "text-blue-600",
-  Completed: "text-green-600",
-  Rejected: "text-red-600",
+  Started: "text-blue-600 dark:text-text-colortext-blue",
+  Completed: "text-green-600 dark:text-text-colortext-green",
+  Rejected: "text-red-600 dark:text-text-colortext-red",
 };
 
 type Props = {
@@ -39,10 +39,10 @@ export default function ActivityLog({ log: fullLog, flow }: Props) {
   }, [log, filter]);
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5">
+    <div className="rounded-xl border border-gray-200 bg-white p-5 dark:border-strokestroke-gray dark:bg-backgroundbg-white">
       {/* Header row */}
       <div className="mb-4 flex items-center justify-between gap-3">
-        <h3 className="text-base font-semibold text-gray-900">
+        <h3 className="text-base font-semibold text-gray-900 dark:text-text-colortext-black">
           {t("moMonitoring.detail.activityLog")}
         </h3>
         <Select value={filter} onValueChange={setFilter}>
@@ -62,7 +62,7 @@ export default function ActivityLog({ log: fullLog, flow }: Props) {
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-sm">
           <thead>
-            <tr className="border-b border-gray-100">
+            <tr className="border-b border-gray-100 dark:border-strokestroke-gray">
               {(
                 [
                   ["moMonitoring.detail.tableTime", "w-36"],
@@ -74,7 +74,7 @@ export default function ActivityLog({ log: fullLog, flow }: Props) {
                 <th
                   key={key}
                   className={cn(
-                    "py-2 pr-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-500",
+                    "py-2 pr-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-text-colortext-gray",
                     cls,
                   )}
                 >
@@ -86,17 +86,17 @@ export default function ActivityLog({ log: fullLog, flow }: Props) {
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={4} className="py-8 text-center text-sm text-gray-400">
+                <td colSpan={4} className="py-8 text-center text-sm text-gray-400 dark:text-text-colortext-gray">
                   {t("common.noData")}
                 </td>
               </tr>
             ) : (
               filtered.map((entry, i) => (
-                <tr key={i} className="border-b border-gray-50 last:border-0">
-                  <td className="whitespace-nowrap py-3 pr-4 text-xs text-gray-500">
+                <tr key={i} className="border-b border-gray-50 last:border-0 dark:border-strokestroke-gray">
+                  <td className="whitespace-nowrap py-3 pr-4 text-xs text-gray-500 dark:text-text-colortext-gray">
                     {entry.time}
                   </td>
-                  <td className="py-3 pr-4 text-sm text-gray-700">
+                  <td className="py-3 pr-4 text-sm text-gray-700 dark:text-text-colortext-dark">
                     {entry.processStep}
                   </td>
                   <td className="py-3 pr-4">
@@ -109,7 +109,7 @@ export default function ActivityLog({ log: fullLog, flow }: Props) {
                       {entry.activityStatus}
                     </span>
                   </td>
-                  <td className="py-3 text-sm text-gray-600">
+                  <td className="py-3 text-sm text-gray-600 dark:text-text-colortext-dark">
                     {entry.remarks}
                   </td>
                 </tr>
@@ -121,4 +121,3 @@ export default function ActivityLog({ log: fullLog, flow }: Props) {
     </div>
   );
 }
-

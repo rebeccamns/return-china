@@ -35,25 +35,25 @@ export default function SltPerformanceCard({
   );
 
   return (
-    <section className="min-w-0 overflow-hidden rounded-lg border border-strokestroke-gray bg-white">
+    <section className="min-w-0 overflow-hidden rounded-lg border border-strokestroke-gray bg-backgroundbg-white">
       {/* Header */}
       <header className="flex h-11 items-center justify-between border-b border-strokestroke-gray px-5">
         <div className="flex items-center gap-2">
-          <h2 className="text-sm font-semibold text-[#111111]">
+          <h2 className="text-sm font-semibold text-text-colortext-black">
             {t("superadmin.slt.title")}
           </h2>
-          <span className="hidden text-xs text-[#777775] sm:inline">
+          <span className="hidden text-xs text-text-colortext-gray sm:inline">
             · {t("superadmin.slt.subtitle")}
           </span>
         </div>
 
-        <span className="text-xs text-[#777775] font-medium">
+        <span className="text-xs font-medium text-text-colortext-gray">
           Target: 100% within SLT
         </span>
       </header>
 
       <div className="px-4 pt-3 pb-2 sm:px-5">
-        <ul className="divide-y divide-dashed divide-[#F0F0EE]">
+        <ul className="divide-y divide-dashed divide-strokestroke-gray">
           {displayRows.map((row) => {
             const isBottleneck =
               row.overPct === maxOverPct && row.overPct >= ALERT_OVER_PCT;
@@ -62,9 +62,9 @@ export default function SltPerformanceCard({
             return (
               <li
                 key={row.stage}
-                className="grid h-8 sm:h-8.5 grid-cols-[160px_minmax(0,1fr)_140px] items-center px-2 transition-colors hover:bg-slate-50/70"
+                className="grid h-8 sm:h-8.5 grid-cols-[160px_minmax(0,1fr)_140px] items-center px-2 transition-colors hover:bg-backgroundbg-bluish-gray"
               >
-                <span className="truncate text-xs sm:text-[13px] font-medium text-[#111111]">
+                <span className="truncate text-xs font-medium text-text-colortext-black sm:text-[13px]">
                   {stageLabelKey(row.stage)
                     ? t(stageLabelKey(row.stage)!)
                     : row.stage}
@@ -91,7 +91,7 @@ export default function SltPerformanceCard({
                 </div>
 
                 <div className="flex items-center justify-end gap-2.5 text-right">
-                  <span className="text-xs text-[#777775]">
+                  <span className="text-xs text-text-colortext-gray">
                     {t(
                       row.mos === 1
                         ? "superadmin.slt.moSingular"
@@ -101,15 +101,15 @@ export default function SltPerformanceCard({
                   </span>
 
                   {isBottleneck ? (
-                    <span className="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700">
+                    <span className="inline-flex items-center rounded-full bg-backgroundbg-red px-2 py-0.5 text-xs font-semibold text-text-colortext-red">
                       {row.overPct}% over SLT
                     </span>
                   ) : alert ? (
-                    <span className="text-xs font-medium text-[#b3202d]">
+                    <span className="text-xs font-medium text-text-colortext-red">
                       {row.overPct}% over
                     </span>
                   ) : (
-                    <span className="text-xs text-[#8a8a88]">
+                    <span className="text-xs text-text-colortext-gray">
                       {row.overPct}% over
                     </span>
                   )}
@@ -120,7 +120,7 @@ export default function SltPerformanceCard({
         </ul>
 
         {/* Linked Color-coded Legends */}
-        <div className="flex items-center justify-center gap-8 border-t border-[#EEEEEC] pt-3 pb-1.5 text-xs text-[#555555]">
+        <div className="flex items-center justify-center gap-8 border-t border-strokestroke-gray pt-3 pb-1.5 text-xs text-text-colortext-dark">
           <span className="flex items-center gap-2">
             <span className="h-3 w-3 rounded-full bg-gradient-to-br from-[#128d2a] to-[#4fd18b]" />
             {t("superadmin.slt.withinSlt")}

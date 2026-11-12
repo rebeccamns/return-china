@@ -43,27 +43,27 @@ export default function CurrentStageCard({ mo, flow, onIntervene }: Props) {
   const canIntervene = currentRole === "superadmin";
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5">
+    <div className="rounded-xl border border-gray-200 bg-white p-5 dark:border-strokestroke-gray dark:bg-backgroundbg-white">
       {/* Header */}
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-text-colortext-gray">
         {t("moMonitoring.detail.currentStageLabel")}
       </p>
 
       <div className="flex flex-wrap items-center gap-3">
-        <h3 className="text-base font-semibold text-gray-900">
+        <h3 className="text-base font-semibold text-gray-900 dark:text-text-colortext-black">
           {t("moMonitoring.detail.flowLabel", { n: String(flowN), name: stepName })}
         </h3>
         <StatusBadge status={badgeStatus} />
       </div>
 
-      <p className="mt-1 text-xs text-gray-400">
+      <p className="mt-1 text-xs text-gray-400 dark:text-text-colortext-gray">
         {t("moMonitoring.detail.lastUpdated")} {lastEdit}
       </p>
 
       {/* Info banner */}
-      <div className="mt-4 flex items-start gap-2 rounded-lg bg-gray-50 px-3 py-3">
-        <Info className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" strokeWidth={1.75} />
-        <p className="text-sm text-gray-600">
+      <div className="mt-4 flex items-start gap-2 rounded-lg bg-gray-50 px-3 py-3 dark:bg-backgroundbg-bluish-gray">
+        <Info className="mt-0.5 h-4 w-4 shrink-0 text-gray-400 dark:text-text-colortext-gray" strokeWidth={1.75} />
+        <p className="text-sm text-gray-600 dark:text-text-colortext-dark">
           {t("moMonitoring.detail.infoMessage", { step: stepName })}
         </p>
       </div>
@@ -82,4 +82,3 @@ export default function CurrentStageCard({ mo, flow, onIntervene }: Props) {
     </div>
   );
 }
-

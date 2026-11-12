@@ -59,7 +59,7 @@ function ProgressBar({ completed, total = 7 }: { completed: number; total?: numb
   const pct = Math.min(100, Math.round((completed / total) * 100));
   return (
     <div className="flex items-center gap-2">
-      <div className="h-1.5 w-24 overflow-hidden rounded-full bg-gray-200">
+      <div className="h-1.5 w-24 overflow-hidden rounded-full bg-gray-200 dark:bg-backgroundbg-black">
         <div
           className="h-full rounded-full bg-gradient-to-r from-[#058346] to-[#7ed957]"
           style={{ width: `${pct}%` }}
@@ -69,7 +69,7 @@ function ProgressBar({ completed, total = 7 }: { completed: number; total?: numb
           aria-valuemax={total}
         />
       </div>
-      <span className="text-xs tabular-nums text-gray-500">
+      <span className="text-xs tabular-nums text-gray-500 dark:text-text-colortext-gray">
         {completed}/{total}
       </span>
     </div>
@@ -86,13 +86,18 @@ const STEP_STATUS_KEYS = {
 } as const;
 
 const STEP_STATUS_STYLE: Record<TimelineStep["status"], string> = {
-  completed: "border border-green-200 bg-green-50 text-green-700",
-  reopened: "border border-green-200 bg-green-50 text-green-700",
-  in_progress: "border border-yellow-200 bg-yellow-50 text-yellow-700",
-  not_started: "border border-gray-200 bg-gray-100 text-gray-600",
+  completed:
+    "border border-green-200 bg-green-50 text-green-700 dark:border-strokestroke-green dark:bg-backgroundbg-green dark:text-text-colortext-green",
+  reopened:
+    "border border-green-200 bg-green-50 text-green-700 dark:border-strokestroke-green dark:bg-backgroundbg-green dark:text-text-colortext-green",
+  in_progress:
+    "border border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-strokestroke-yellow dark:bg-backgroundbg-yellow dark:text-text-colortext-yellow",
+  not_started:
+    "border border-gray-200 bg-gray-100 text-gray-600 dark:border-strokestroke-gray dark:bg-backgroundbg-bluish-gray dark:text-text-colortext-gray",
 };
 
-const nestedHeadClass = "h-9 bg-[#F8F8F8] px-4 text-xs font-semibold text-slate-700";
+const nestedHeadClass =
+  "h-9 bg-[#F8F8F8] px-4 text-xs font-semibold text-slate-700 dark:bg-backgroundbg-bluish-gray dark:text-text-colortext-dark";
 
 function ExpandedRow({
   mo,
@@ -104,12 +109,12 @@ function ExpandedRow({
   const { t } = useI18n();
 
   return (
-    <TableRow className="bg-white hover:bg-white">
-      <TableCell colSpan={8} className="bg-white px-12 py-3">
+    <TableRow className="bg-white hover:bg-white dark:bg-backgroundbg-white dark:hover:bg-backgroundbg-white">
+      <TableCell colSpan={8} className="bg-white px-12 py-3 dark:bg-backgroundbg-white">
         <div className="overflow-hidden rounded-md border border-strokestroke-gray">
           <Table>
             <TableHeader>
-              <TableRow className="hover:bg-[#F8F8F8]">
+              <TableRow className="hover:bg-[#F8F8F8] dark:hover:bg-backgroundbg-bluish-gray">
                 <TableHead className={nestedHeadClass}>{t("moMonitoring.columns.flow")}</TableHead>
                 <TableHead className={nestedHeadClass}>{t("moMonitoring.columns.status")}</TableHead>
                 <TableHead className={nestedHeadClass}>{t("moMonitoring.columns.lastEdit")}</TableHead>
@@ -118,8 +123,8 @@ function ExpandedRow({
             </TableHeader>
             <TableBody>
               {mo.timeline.map((step) => (
-                <TableRow key={step.step} className="bg-white hover:bg-white">
-                  <TableCell className="px-4 py-2 text-xs font-medium text-gray-800">
+                <TableRow key={step.step} className="bg-white hover:bg-white dark:bg-backgroundbg-white dark:hover:bg-backgroundbg-white">
+                  <TableCell className="px-4 py-2 text-xs font-medium text-gray-800 dark:text-text-colortext-dark">
                     {STEP_DISPLAY[step.step]}
                   </TableCell>
                   <TableCell className="px-4 py-2">
@@ -132,7 +137,7 @@ function ExpandedRow({
                       {t(STEP_STATUS_KEYS[step.status])}
                     </span>
                   </TableCell>
-                  <TableCell className="whitespace-nowrap px-4 py-2 text-xs text-gray-500">
+                  <TableCell className="whitespace-nowrap px-4 py-2 text-xs text-gray-500 dark:text-text-colortext-gray">
                     {step.time ?? "—"}
                   </TableCell>
                   <TableCell className="px-4 py-2 text-right">
@@ -196,7 +201,7 @@ function ActionDropdown({
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
         onKeyDown={handleKey}
-        className="flex h-8 w-8 items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F]"
+        className="flex h-8 w-8 items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F] dark:border-strokestroke-gray dark:text-text-colortext-gray dark:hover:bg-backgroundbg-bluish-gray"
       >
         <MoreHorizontal className="h-4 w-4" />
       </button>
@@ -204,7 +209,7 @@ function ActionDropdown({
       {open && (
         <div
           role="menu"
-          className="absolute right-0 z-50 mt-1 min-w-[160px] rounded-lg border border-gray-200 bg-white py-1 shadow-lg"
+          className="absolute right-0 z-50 mt-1 min-w-[160px] rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-strokestroke-gray dark:bg-backgroundbg-white"
         >
           {[
             { label: t("moMonitoring.viewDetail"), action: onViewDetail },
@@ -216,7 +221,7 @@ function ActionDropdown({
               role="menuitem"
               type="button"
               onClick={() => { setOpen(false); action(); }}
-              className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-gray-50"
+              className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-gray-50 dark:text-text-colortext-dark dark:hover:bg-backgroundbg-bluish-gray dark:focus-visible:bg-backgroundbg-bluish-gray"
             >
               {label}
             </button>
@@ -312,25 +317,25 @@ export default function MoTable({ mos, onIntervene }: Props) {
   }, [totalPages, safePage]);
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white">
+    <div className="rounded-xl border border-gray-200 bg-white dark:border-strokestroke-gray dark:bg-backgroundbg-white">
       {/* Card header */}
-      <div className="border-b border-gray-100 px-5 py-4">
-        <h2 className="text-base font-semibold text-gray-900">
+      <div className="border-b border-gray-100 px-5 py-4 dark:border-strokestroke-gray">
+        <h2 className="text-base font-semibold text-gray-900 dark:text-text-colortext-black">
           {t("moMonitoring.moList")}
         </h2>
       </div>
 
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-gray-100 px-5 py-3">
+      <div className="flex flex-wrap items-center gap-2 border-b border-gray-100 px-5 py-3 dark:border-strokestroke-gray">
         {/* Search */}
         <div className="relative flex-1 min-w-[220px] max-w-sm">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-text-colortext-gray" />
           <input
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={t("moMonitoring.searchPlaceholder")}
-            className="h-9 w-full rounded-md border border-gray-200 bg-white pl-9 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#058346] focus:outline-none focus:ring-1 focus:ring-[#058346]"
+            className="h-9 w-full rounded-md border border-gray-200 bg-white pl-9 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#058346] focus:outline-none focus:ring-1 focus:ring-[#058346] dark:border-strokestroke-gray dark:bg-backgroundbg-white dark:text-text-colortext-black dark:placeholder:text-text-colortext-gray"
           />
         </div>
 
@@ -338,7 +343,7 @@ export default function MoTable({ mos, onIntervene }: Props) {
           {/* Status filter */}
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="h-9 w-auto min-w-[130px] text-sm">
-              <span className="text-gray-500 mr-1">{t("moMonitoring.statusLabel")}:</span>
+              <span className="mr-1 text-gray-500 dark:text-text-colortext-gray">{t("moMonitoring.statusLabel")}:</span>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -352,7 +357,7 @@ export default function MoTable({ mos, onIntervene }: Props) {
           {/* Step filter */}
           <Select value={stepFilter} onValueChange={setStepFilter}>
             <SelectTrigger className="h-9 w-auto min-w-[150px] text-sm">
-              <span className="text-gray-500 mr-1">{t("moMonitoring.currentStepLabel")}:</span>
+              <span className="mr-1 text-gray-500 dark:text-text-colortext-gray">{t("moMonitoring.currentStepLabel")}:</span>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -366,7 +371,7 @@ export default function MoTable({ mos, onIntervene }: Props) {
           {/* Model filter */}
           <Select value={modelFilter} onValueChange={setModelFilter}>
             <SelectTrigger className="h-9 w-auto min-w-[130px] text-sm">
-              <span className="text-gray-500 mr-1">{t("moMonitoring.modelLabel")}:</span>
+              <span className="mr-1 text-gray-500 dark:text-text-colortext-gray">{t("moMonitoring.modelLabel")}:</span>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -418,8 +423,8 @@ export default function MoTable({ mos, onIntervene }: Props) {
               {paginated.length === 0 ? (
                 <TableRow className="hover:bg-transparent">
                   <TableCell colSpan={8} className="py-16 text-center">
-                    <p className="text-sm font-medium text-gray-500">{t("moMonitoring.noMoFound")}</p>
-                    <p className="mt-1 text-xs text-gray-400">{t("moMonitoring.noMoFoundHint")}</p>
+                    <p className="text-sm font-medium text-gray-500 dark:text-text-colortext-gray">{t("moMonitoring.noMoFound")}</p>
+                    <p className="mt-1 text-xs text-gray-400 dark:text-text-colortext-gray">{t("moMonitoring.noMoFoundHint")}</p>
                   </TableCell>
                 </TableRow>
               ) : (
@@ -429,7 +434,7 @@ export default function MoTable({ mos, onIntervene }: Props) {
                     <TableRow
                       key={mo.moCode}
                       onClick={() => router.push(`/superadmin/mo-monitoring/${mo.moCode}`)}
-                      className="h-12 cursor-pointer hover:bg-[#FAFAFA]"
+                      className="h-12 cursor-pointer hover:bg-[#FAFAFA] dark:hover:bg-backgroundbg-bluish-gray"
                     >
                       <TableCell
                         className="w-12 px-3 py-2 text-center"
@@ -438,7 +443,7 @@ export default function MoTable({ mos, onIntervene }: Props) {
                         <button
                           type="button"
                           aria-label={isExpanded ? t("common.collapseRow") : t("common.expandRow")}
-                          className="flex h-7 w-7 items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F]"
+                          className="flex h-7 w-7 items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F] dark:border-strokestroke-gray dark:text-text-colortext-gray dark:hover:bg-backgroundbg-bluish-gray"
                         >
                           {isExpanded ? (
                             <Minus className="h-3.5 w-3.5" />
@@ -447,16 +452,16 @@ export default function MoTable({ mos, onIntervene }: Props) {
                           )}
                         </button>
                       </TableCell>
-                      <TableCell className="px-4 py-2 text-xs text-gray-700">{mo.moCode}</TableCell>
-                      <TableCell className="px-4 py-2 text-xs text-gray-700">{mo.model}</TableCell>
-                      <TableCell className="px-4 py-2 text-xs text-gray-700">{STEP_DISPLAY[mo.currentStep]}</TableCell>
+                      <TableCell className="px-4 py-2 text-xs text-gray-700 dark:text-text-colortext-dark">{mo.moCode}</TableCell>
+                      <TableCell className="px-4 py-2 text-xs text-gray-700 dark:text-text-colortext-dark">{mo.model}</TableCell>
+                      <TableCell className="px-4 py-2 text-xs text-gray-700 dark:text-text-colortext-dark">{STEP_DISPLAY[mo.currentStep]}</TableCell>
                       <TableCell className="px-4 py-2">
                         <ProgressBar completed={mo.completedSteps} />
                       </TableCell>
                       <TableCell className="px-4 py-2">
                         <StatusBadge status={mo.status} />
                       </TableCell>
-                      <TableCell className="whitespace-nowrap px-4 py-2 text-xs text-gray-500">
+                      <TableCell className="whitespace-nowrap px-4 py-2 text-xs text-gray-500 dark:text-text-colortext-gray">
                         {mo.lastUpdated}
                       </TableCell>
                       <TableCell
@@ -494,14 +499,14 @@ export default function MoTable({ mos, onIntervene }: Props) {
       </div>
 
       {/* Footer */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 px-5 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 px-5 py-3 dark:border-strokestroke-gray">
         {/* Rows per page */}
-        <div className="flex items-center gap-2 text-sm text-gray-600">
+        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-text-colortext-gray">
           <span>{t("moMonitoring.rowsPerPage")}</span>
           <select
             value={rowsPerPage}
             onChange={(e) => { setRowsPerPage(Number(e.target.value)); setPage(1); }}
-            className="h-8 rounded border border-gray-200 bg-white px-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#058346]"
+            className="h-8 rounded border border-gray-200 bg-white px-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#058346] dark:border-strokestroke-gray dark:bg-backgroundbg-white dark:text-text-colortext-black"
           >
             {ROWS_OPTIONS.map((n) => (
               <option key={n} value={n}>{n}</option>
@@ -516,14 +521,14 @@ export default function MoTable({ mos, onIntervene }: Props) {
             disabled={safePage <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             aria-label="Previous page"
-            className="flex h-8 w-8 items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F]"
+            className="flex h-8 w-8 items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F] dark:border-strokestroke-gray dark:text-text-colortext-gray dark:hover:bg-backgroundbg-bluish-gray"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
 
           {pageNumbers.map((pg, i) =>
             pg === "..." ? (
-              <span key={`ellipsis-${i}`} className="flex h-8 w-8 items-center justify-center text-sm text-gray-400">
+              <span key={`ellipsis-${i}`} className="flex h-8 w-8 items-center justify-center text-sm text-gray-400 dark:text-text-colortext-gray">
                 …
               </span>
             ) : (
@@ -534,8 +539,8 @@ export default function MoTable({ mos, onIntervene }: Props) {
                 className={cn(
                   "flex h-8 w-8 items-center justify-center rounded text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F]",
                   pg === safePage
-                    ? "border border-gray-300 bg-white font-semibold text-gray-900"
-                    : "text-gray-500 hover:bg-gray-50",
+                    ? "border border-gray-300 bg-white font-semibold text-gray-900 dark:border-strokestroke-gray dark:bg-backgroundbg-bluish-gray dark:text-text-colortext-black"
+                    : "text-gray-500 hover:bg-gray-50 dark:text-text-colortext-gray dark:hover:bg-backgroundbg-bluish-gray",
                 )}
               >
                 {pg}
@@ -548,7 +553,7 @@ export default function MoTable({ mos, onIntervene }: Props) {
             disabled={safePage >= totalPages}
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             aria-label="Next page"
-            className="flex h-8 w-8 items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F]"
+            className="flex h-8 w-8 items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#08783F] dark:border-strokestroke-gray dark:text-text-colortext-gray dark:hover:bg-backgroundbg-bluish-gray"
           >
             <ChevronRight className="h-4 w-4" />
           </button>

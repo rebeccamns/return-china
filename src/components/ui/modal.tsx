@@ -43,7 +43,7 @@ export function Modal({
           w-full
           max-w-[315px]
           rounded-md
-          bg-white
+          bg-backgroundbg-white
           px-4
           pb-4
           pt-6
@@ -66,9 +66,9 @@ export function Modal({
             items-center
             justify-center
             rounded-full
-            text-[#9CA3AF]
-            hover:bg-[#F5F5F5]
-            hover:text-[#666666]
+            text-text-colortext-gray
+            hover:bg-backgroundbg-gray
+            hover:text-text-colortext-black
           "
           aria-label={t("common.close")}
         >
